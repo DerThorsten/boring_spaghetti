@@ -1,13 +1,26 @@
 \documentclass[10pt,twocolumn,letterpaper]{article}
 
+\usepackage{eso-pic}
 \usepackage{cvpr}
 \usepackage{times}
 \usepackage{epsfig}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
-%\usepackage[square,sort,comma,numbers]{natbib}
+
+
+
+
 % Include other packages here, before hyperref.
+\usepackage{caption}
+\usepackage{subcaption}
+%for tikz
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning,automata,shadows,fit,shapes}
+\usetikzlibrary{arrows,petri,topaths}
+\usepackage{tkz-berge}
+
+
 
 % If you comment hyperref and then uncomment it, you should delete
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
@@ -84,6 +97,139 @@ have become increasingly popular for energy minimization~\cite{???,kappes_2014_w
 For many large scale computer vision applications fusion moves lead to good approximations
 with state of the art any time performance~\cite{kappes_2014_ws}.
 
+
+
+\begin{figure}
+\centering
+\begin{subfigure}[b]{0.5\linewidth}
+   \resizebox{1.0\linewidth}{!}{
+      \begin{tikzpicture}[scale=1.0,transform shape]
+        \tikzstyle{VertexStyle}=[circle,minimum size = 0.5cm,inner sep = 0pt,draw, font=\small, node distance = 5cm]
+        %
+        \Vertex[x=0*2,y=3*2] {1}
+        \Vertex[x=1*2,y=3*2] {2}
+        \Vertex[x=2*2,y=3*2] {3}
+        \Vertex[x=3*2,y=3*2] {4}
+        \Vertex[x=0*2,y=2*2] {5}
+        \Vertex[x=1*2,y=2*2] {6}
+        \Vertex[x=2*2,y=2*2] {7}
+        \Vertex[x=3*2,y=2*2] {8}
+        \Vertex[x=0*2,y=1*2] {9}
+        \Vertex[x=1*2,y=1*2] {10}
+        \Vertex[x=2*2,y=1*2] {11}
+        \Vertex[x=3*2,y=1*2] {12}
+        \Vertex[x=0*2,y=0*2] {13}
+        \Vertex[x=1*2,y=0*2] {14}
+        \Vertex[x=2*2,y=0*2] {15}
+        \Vertex[x=3*2,y=0*2] {16}
+        %
+        \tikzstyle{LabelStyle}=[fill=white,fill opacity=0.5,opacity=0.99,text opacity=1, font=\tiny]
+
+        \tikzstyle{EdgeStyle}=[solid]
+        %
+        \Edge[label=$w_{(1, 2)}$](1)(2)
+        \Edge[label=$w_{(2, 3)}$](2)(3)
+        \Edge[label=$w_{(3, 4)}$](3)(4)
+        %
+        \Edge[label=$w_{(5, 6)}$](5)(6)
+        \Edge[label=$w_{(6, 7)}$](6)(7)
+        \Edge[label=$w_{(7, 8)}$](7)(8)
+        %
+        \Edge[label=$w_{(9, 10)}$](9)(10)
+        \Edge[label=$w_{(10, 11)}$](10)(11)
+        \Edge[label=$w_{(11, 12)}$](11)(12)
+        %
+        \Edge[label=$w_{(13, 14)}$](13)(14)
+        \Edge[label=$w_{(14, 15)}$](14)(15)
+        \Edge[label=$w_{(15, 16)}$](15)(16)
+        %
+        % 
+        %
+        \Edge[label=$w_{(1, 5)}$](1)(5)
+        \Edge[label=$w_{(5, 9)}$](5)(9)
+        \Edge[label=$w_{(9, 13)}$](9)(13)
+        %
+        \Edge[label=$w_{(2, 6)}$](2)(6)
+        \Edge[label=$w_{(6, 10)}$](6)(10)
+        \Edge[label=$w_{(10, 14)}$](10)(14)
+        %
+        \Edge[label=$w_{(3, 7)}$](3)(7)
+        \Edge[label=$w_{(7, 11)}$](7)(11)
+        \Edge[label=$w_{(11, 15)}$](11)(15)
+        %
+        \Edge[label=$w_{(4, 8)}$](4)(8)
+        \Edge[label=$w_{(8, 12)}$](8)(12)
+        \Edge[label=$w_{(12, 16)}$](12)(16)
+        %
+
+      \end{tikzpicture}
+   }
+\end{subfigure}%
+\begin{subfigure}[b]{0.5\linewidth}
+   \resizebox{1.0\linewidth}{!}{
+      \begin{tikzpicture}[scale=1.0,transform shape]
+        \tikzstyle{VertexStyle}=[circle,minimum size = 0.5cm,inner sep = 0pt,draw, font=\small, node distance = 5cm]
+        %
+        \Vertex[x=0*2,y=3*2] {1}
+        \Vertex[x=1*2,y=3*2] {2}
+        \Vertex[x=2*2,y=3*2] {3}
+        \Vertex[x=3*2,y=3*2] {4}
+        \Vertex[x=0*2,y=2*2] {5}
+        \Vertex[x=1*2,y=2*2] {6}
+        \Vertex[x=2*2,y=2*2] {7}
+        \Vertex[x=3*2,y=2*2] {8}
+        \Vertex[x=0*2,y=1*2] {9}
+        \Vertex[x=1*2,y=1*2] {10}
+        \Vertex[x=2*2,y=1*2] {11}
+        \Vertex[x=3*2,y=1*2] {12}
+        \Vertex[x=0*2,y=0*2] {13}
+        \Vertex[x=1*2,y=0*2] {14}
+        \Vertex[x=2*2,y=0*2] {15}
+        \Vertex[x=3*2,y=0*2] {16}
+        %
+        \tikzstyle{LabelStyle}=[fill=white,fill opacity=0.5,opacity=0.99,text opacity=1, font=\tiny]
+
+        \tikzstyle{EdgeStyle}=[solid]
+        %
+        \Edge[label=$w_{(1, 2)}$](1)(2)
+        \Edge[label=$w_{(2, 3)}$](2)(3)
+        \Edge[label=$w_{(3, 4)}$](3)(4)
+        %
+        \Edge[label=$w_{(5, 6)}$](5)(6)
+        \Edge[label=$w_{(6, 7)}$](6)(7)
+        \Edge[label=$w_{(7, 8)}$](7)(8)
+        %
+        \Edge[label=$w_{(9, 10)}$](9)(10)
+        \Edge[label=$w_{(10, 11)}$](10)(11)
+        \Edge[label=$w_{(11, 12)}$](11)(12)
+        %
+        \Edge[label=$w_{(13, 14)}$](13)(14)
+        \Edge[label=$w_{(14, 15)}$](14)(15)
+        \Edge[label=$w_{(15, 16)}$](15)(16)
+        %
+        % 
+        %
+        \Edge[label=$w_{(1, 5)}$](1)(5)
+        \tikzstyle{EdgeStyle}=[dashed] \Edge[label=$w_{(5, 9)}$](5)(9)\tikzstyle{EdgeStyle}=[solid]
+        \Edge[label=$w_{(9, 13)}$](9)(13)
+        %
+        \Edge[label=$w_{(2, 6)}$](2)(6)
+        \Edge[label=$w_{(6, 10)}$](6)(10)
+        \Edge[label=$w_{(10, 14)}$](10)(14)
+        %
+        \Edge[label=$w_{(3, 7)}$](3)(7)
+        \Edge[label=$w_{(7, 11)}$](7)(11)
+        \Edge[label=$w_{(11, 15)}$](11)(15)
+        %
+        \Edge[label=$w_{(4, 8)}$](4)(8)
+        \Edge[label=$w_{(8, 12)}$](8)(12)
+        \Edge[label=$w_{(12, 16)}$](12)(16)
+        %
+
+      \end{tikzpicture}
+   }
+\end{subfigure}%
+\end{figure}
 
 
 \subsection{Language}
