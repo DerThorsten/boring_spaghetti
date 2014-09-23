@@ -22,12 +22,18 @@ public:
       const size_t maxIterations,
       const bool useBookkeeping,
       const double threshold,
+      const bool startFromThreshold,
+      const bool doCutMove,
+      const bool doGlueCutMove ,
       const std::string illustrationOut
    ) {
       p.planar_          = planar;
       p.maxIterations_   = maxIterations;
       p.useBookkeeping_  = useBookkeeping;
       p.threshold_       = threshold;
+      p.startFromThreshold_ = startFromThreshold;
+      p.doCutMove_ = doCutMove;
+      p.doGlueCutMove_ = doGlueCutMove;
       p.illustrationOut_ = illustrationOut;
    } 
 
@@ -38,15 +44,21 @@ public:
       .def_readwrite("maxIterations", &Parameter::maxIterations_," ")
       .def_readwrite("useBookkeeping",  &Parameter::useBookkeeping_, " use useBookkeeping")
       .def_readwrite("threshold",       &Parameter::threshold_,      " threshold")
+      .def_readwrite("startFromThreshold", &Parameter::startFromThreshold_, "start from threshold")
+      .def_readwrite("doCutMove", &Parameter::doCutMove_, "do  the cut move")
+      .def_readwrite("doGlueCutMove", &Parameter::doGlueCutMove_, "do  the glue and cut move")
       .def_readwrite("illustrationOut", &Parameter::illustrationOut_," write out file for illustrations (for figures)")
       
       .def ("set", &SelfType::set, 
          (
-            boost::python::arg("planar")          = true,
-            boost::python::arg("maxIterations")   = 1,
-            boost::python::arg("useBookkeeping")  = true,
-            boost::python::arg("threshold")       = 0.0,
-            boost::python::arg("illustrationOut") = ""
+            boost::python::arg("planar")             = true,
+            boost::python::arg("maxIterations")      = 1,
+            boost::python::arg("useBookkeeping")     = true,
+            boost::python::arg("threshold")          = 0.0,
+            boost::python::arg("startFromThreshold") = true,
+            boost::python::arg("doCutMove") = true,
+            boost::python::arg("doGlueCutMove") = true,
+            boost::python::arg("illustrationOut")    = ""
          ) 
       )
    ;

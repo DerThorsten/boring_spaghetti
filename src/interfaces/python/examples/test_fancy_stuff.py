@@ -10,7 +10,8 @@ numpy.random.seed(42)
 #gm=opengm.loadGm("/home/tbeier/datasets/image-seg/291000.bmp.h5","gm")
 gm=opengm.loadGm("/home/tbeier/datasets/image-seg/148026.bmp.h5","gm")
 #gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-450/gm_knott_3d_102.h5","gm")#(ROTTEN)
-gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-300/gm_knott_3d_078.h5","gm")
+#gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-450/gm_knott_3d_096.h5","gm")
+#gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-300/gm_knott_3d_078.h5","gm")
 #gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-150/gm_knott_3d_038.h5","gm")
 
 #---------------------------------------------------------------
@@ -26,72 +27,147 @@ print gm
 
 
 
-
-
+verbose = True
+useQpbo = False
+useCgc = True
+useWs = False
 
 with opengm.Timer("with new method"):
 
-    infParam = opengm.InfParam(
-        numStopIt=0,
-        numIt=40,
-        generator='qpboBased'
-    )
-    inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
-    # inf.setStartingPoint(arg)
-    # start inference (in this case verbose infernce)
-    visitor=inf.verboseVisitor(printNth=1,multiline=False)
-    inf.infer(visitor)
-    arg = inf.arg()
+    fusionParam = opengm.InfParam(fusionSolver = 'cgc', planar=True)
+
+    arg = None
+    if useQpbo:
+        infParam = opengm.InfParam(
+            numStopIt=0,
+            numIt=40,
+            generator='qpboBased',
+            fusionParam = fusionParam
+        )
+        inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
+        # inf.setStartingPoint(arg)
+        # start inference (in this case verbose infernce)
+        visitor=inf.verboseVisitor(printNth=1,multiline=False)
+        if verbose:
+            inf.infer(visitor)
+        else:
+            inf.infer()
+        inf.infer()
+        arg = inf.arg()
 
 
     proposalParam = opengm.InfParam(
-        randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=1.000000001, ignoreSeed=True),
+        randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=1.700000001, ignoreSeed=False),
         stopWeight=0.0,
-        reduction=0.85,
+        reduction=0.95,
         setCutToZero=False
     )
+    
+
 
     infParam = opengm.InfParam(
         numStopIt=100,
-        numIt=400,
+        numIt=40,
         generator='randomizedHierarchicalClustering',
-        proposalParam=proposalParam
+        proposalParam=proposalParam,
+        fusionParam = fusionParam
     )
 
 
-    #proposalParam = opengm.InfParam(
-    #    randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=0.100000001,ignoreSeed=False),
-    #    seedFraction = 0.01
-    #)
-    #infParam = opengm.InfParam(
-    #    numStopIt=10,
-    #    numIt=40,
-    #    generator='randomizedWatershed',
-    #    proposalParam=proposalParam
-    #)
-
-
     inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
-    inf.setStartingPoint(arg)
+    if arg is not None:
+        inf.setStartingPoint(arg)
     # start inference (in this case verbose infernce)
     visitor=inf.verboseVisitor(printNth=1,multiline=False)
-    inf.infer(visitor)
+    if verbose:
+        inf.infer(visitor)
+    else:
+        inf.infer()
     arg = inf.arg()
 
+    if useWs:
+        print "ws"
+        proposalParam = opengm.InfParam(
+            randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=1.100000001,ignoreSeed=False),
+            seedFraction = 0.5
+        )
+        infParam = opengm.InfParam(
+            numStopIt=20,
+            numIt=20,
+            generator='randomizedWatershed',
+            proposalParam=proposalParam,
+            fusionParam = fusionParam
+        )
 
 
+        inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
+        if arg is not None:
+            inf.setStartingPoint(arg)
+        # start inference (in this case verbose infernce)
+        visitor=inf.verboseVisitor(printNth=1,multiline=False)
+        if verbose:
+            inf.infer(visitor)
+        else:
+            inf.infer()
+        arg = inf.arg()
+
+
+
+    if useQpbo:
+        infParam = opengm.InfParam(
+            numStopIt=0,
+            numIt=40,
+            generator='qpboBased',
+            fusionParam = fusionParam
+        )
+        inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
+        inf.setStartingPoint(arg)
+        # start inference (in this case verbose infernce)
+        visitor=inf.verboseVisitor(printNth=10)
+
+    if useCgc:
+        print "cgc"
+
+        infParam = opengm.InfParam(
+            planar=False,
+            startFromThreshold=False,
+            doCutMove = False,
+            doGlueCutMove = True,
+            maxIterations = 1
+        )
+        inf=opengm.inference.Cgc(gm, parameter=infParam)
+        if arg is not None:
+            inf.setStartingPoint(arg)
+        # start inference (in this case verbose infernce)
+        visitor=inf.verboseVisitor(printNth=10)
+        if verbose:
+            inf.infer(visitor)
+        else:
+            inf.infer()
+
+        arg = inf.arg()
+
+
+    print gm.evaluate(arg)
+
+
+
+with opengm.Timer("with cgc method"):
 
     infParam = opengm.InfParam(
-        numStopIt=0,
-        numIt=40,
-        generator='qpboBased'
+        planar=False
     )
-    inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
-    inf.setStartingPoint(arg)
+    inf=opengm.inference.Cgc(gm, parameter=infParam)
+    # inf.setStartingPoint(arg)
     # start inference (in this case verbose infernce)
-    visitor=inf.verboseVisitor(printNth=1,multiline=False)
-    inf.infer(visitor)
+    visitor=inf.verboseVisitor(printNth=10)
+    if verbose:
+        inf.infer(visitor)
+    else:
+        inf.infer()
+
     arg = inf.arg()
+    print gm.evaluate(arg)
 
 
 with opengm.Timer("with multicut method"):
@@ -102,6 +178,12 @@ with opengm.Timer("with multicut method"):
     inf=opengm.inference.Multicut(gm, parameter=infParam)
     # inf.setStartingPoint(arg)
     # start inference (in this case verbose infernce)
-    visitor=inf.verboseVisitor(printNth=1,multiline=False)
-    inf.infer(visitor)
+    visitor=inf.verboseVisitor(printNth=10)
+    if verbose:
+        inf.infer(visitor)
+    else:
+        inf.infer()
+
     arg = inf.arg()
+    print gm.evaluate(arg)
+

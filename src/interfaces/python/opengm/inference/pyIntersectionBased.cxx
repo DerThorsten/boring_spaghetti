@@ -1,3 +1,4 @@
+#ifndef NOVIGRA
 #include <boost/python.hpp>
 #include <string>
 #include "inf_def_visitor.hxx"
@@ -6,6 +7,10 @@
 #include <param/intersection_based_param.hxx>
 
 
+
+#ifdef WITH_CPLEX
+#include "opengm/inference/auxiliary/fusion_move/permutable_label_fusion_mover.hxx"
+#endif
 
 template<class GEN>
 void export_intersection_based_t( InfSetup & setup, const std::string & genName){
@@ -86,6 +91,9 @@ void export_intersection_based(){
     ;
 
 
+    exportInfParam<  opengm::PermutableLabelFusionMove<GM, ACC> >("_PermutableLabelFusionMove"); // "IntersectionBased"
+
+    
 
 
     #ifndef NOVIGRA
@@ -118,8 +126,7 @@ void export_intersection_based(){
         export_intersection_based_t<GEN>(setup, genName);
     }
     
-
-
 }
 
 template void export_intersection_based<opengm::python::GmAdder,opengm::Minimizer>();
+#endif

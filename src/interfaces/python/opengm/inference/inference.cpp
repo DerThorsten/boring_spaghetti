@@ -78,8 +78,10 @@
 #include "pySelfFusion.hxx"
 #include "pyFusionBased.hxx"
 
+#ifndef NOVIGRA
 #ifdef WITH_CPLEX
 #include "pyIntersectionBased.hxx"
+#endif
 #endif
 //#include "pySwendsenWang.hxx"
 
@@ -179,7 +181,9 @@ BOOST_PYTHON_MODULE_INIT(_inference) {
          #ifdef WITH_CPLEX
          export_cplex<opengm::python::GmAdder,opengm::Minimizer>();
          export_multicut<opengm::python::GmAdder,opengm::Minimizer>();
+         #ifndef NOVIGRA
          export_intersection_based<opengm::python::GmAdder,opengm::Minimizer>();
+         #endif
          #endif
 
          //export_lp_inference<opengm::python::GmAdder,opengm::Minimizer>();

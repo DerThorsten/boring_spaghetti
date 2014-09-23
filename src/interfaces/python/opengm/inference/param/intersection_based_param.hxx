@@ -4,7 +4,7 @@
 #include "empty_param.hxx"
 #include "param_exporter_base.hxx"
 //solver specific
-#include <opengm/inference/fusion_based_inf.hxx>
+#include "opengm/inference/intersection_based_inf.hxx"
 
 using namespace boost::python;
 
@@ -16,16 +16,19 @@ public:
     typedef typename INFERENCE::Parameter Parameter;
     typedef typename INFERENCE::ProposalGen Gen;
     typedef typename Gen::Parameter GenParameter;
+    typedef typename INFERENCE::FusionParameter FusionParameter;
     typedef InfParamExporterIntersectionBased<INFERENCE> SelfType;
 
     inline static void set 
     (
         Parameter & p,
         const GenParameter & proposalParam,
+        const FusionParameter & fusionParam,
         const size_t         numIt,
         const size_t         numStopIt
     ) {
         p.proposalParam_ = proposalParam;
+        p.fusionParam_ = fusionParam;
         p.numIt_ = numIt;
         p.numStopIt_ = numStopIt;
     } 
@@ -35,11 +38,13 @@ public:
 
     class_<Parameter > ( className.c_str() , init< > ())
         .def_readwrite("proposalParam",&Parameter::proposalParam_,"parameters of the proposal generator")
+        .def_readwrite("fusionParam",&Parameter::fusionParam_,"parameters of the fusion move solver")
         .def_readwrite("numIt",&Parameter::numIt_,"total number of iterations")
         .def_readwrite("numStopIt",&Parameter::numStopIt_,"stop after n not successful steps")
         .def ("set", &SelfType::set, 
             (
                 boost::python::arg("proposalParam")=GenParameter(),
+                boost::python::arg("fusionParam")=FusionParameter(),
                 boost::python::arg("numIt")=1000, 
                 boost::python::arg("numStopIt")=0
             ) 
@@ -51,7 +56,67 @@ public:
 };
 
 
+template<class GM, class ACC>
+class InfParamExporter<
+    opengm::PermutableLabelFusionMove<GM, ACC>
+>{
 
+public:
+    typedef opengm::PermutableLabelFusionMove<GM, ACC> FM;
+    typedef typename FM::ValueType ValueType;
+    typedef typename FM::Parameter Parameter;
+    typedef InfParamExporter< FM > SelfType;   
+
+
+
+
+    inline static void set 
+    (
+        Parameter & p,
+        const typename FM::FusionSolver fusionSolver,
+        const bool planar
+    ) {
+        p.fusionSolver_ = fusionSolver;
+        p.planar_ = planar;
+
+    } 
+
+    void static exportInfParam(const std::string & className){
+
+
+
+
+        enum_<typename FM::FusionSolver> ("_IntersectionBased_FusionMover_FusionSolverEnum_")
+          .value("default", FM::DefaultSolver)
+          .value("multicut", FM::MulticutSolver)
+          .value("cgc", FM::CgcSolver)
+          .value("hc", FM::HierachicalClusteringSolver)
+       ;
+
+
+
+        class_<Parameter > ( className.c_str() , init< > ())
+            .def_readwrite("fusionSolver",&Parameter::fusionSolver_,"fusionSolver parameter")
+            .def_readwrite("planar",&Parameter::planar_,"planar")
+            .def ("set", &SelfType::set, 
+                (
+                    boost::python::arg("fusionSolver")= typename FM::FusionSolver(),
+                    boost::python::arg("planar")=false
+                ) 
+            )
+        ;
+    }
+};
+
+
+
+
+
+
+
+
+
+#ifndef NOVIGRA
 template<class GM, class ACC>
 class InfParamExporter<
     opengm::proposal_gen::RandomizedHierarchicalClustering<GM, ACC>
@@ -142,6 +207,7 @@ public:
     }
 };
 
+#endif
 
 
 
@@ -156,8 +222,9 @@ template<class GM,class ACC>                                  \
 class InfParamExporter<          clsName <GM,ACC>     >       \
 : public  InfParamExporterEmpty< clsName < GM,ACC>    > {     \
 };
-
+#ifdef WITH_QPBO
 _EMPTY_PROPOSAL_PARAM(opengm::proposal_gen::QpboBased)
+#endif
 //_EMPTY_PROPOSAL_PARAM(opengm::proposal_gen::Random2Gen)
 #undef _EMPTY_PROPOSAL_PARAM
 

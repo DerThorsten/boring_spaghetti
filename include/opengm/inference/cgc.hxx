@@ -147,12 +147,18 @@ public:
          const size_t maxIterations  = 1,
          const bool useBookkeeping   = true,
          const double threshold      = 0.0, 
+         const bool startFromThreshold = true,
+         const bool doCutMove = true,
+         const bool doGlueCutMove = true,
          const std::string illustrationOut = ""
       ):
          planar_(planar),
          maxIterations_(maxIterations),
          useBookkeeping_(useBookkeeping),
          threshold_(threshold),
+         startFromThreshold_(startFromThreshold),
+         doCutMove_(doCutMove),
+         doGlueCutMove_(doGlueCutMove_),
          illustrationOut_(illustrationOut)
       {}
       
@@ -160,6 +166,9 @@ public:
       size_t maxIterations_;
       bool useBookkeeping_;
       double threshold_;
+      bool startFromThreshold_;
+      bool doCutMove_;
+      bool doGlueCutMove_;
       std::string illustrationOut_;
 
 
@@ -371,7 +380,8 @@ InferenceTermination CGC<GM,ACC>::infer
 {
    //std::cout << boost::format("CGC: infer for %d primary, %d dual variables\n") % gm_.numberOfVariables() % gm_.numberOfFactors();
    visitor.begin(*this);
-   startFromThreshold(gm_,lambdas_,argPrimal_, 0);
+   if(param_.startFromThreshold_)
+      startFromThreshold(gm_,lambdas_,argPrimal_, 0);
    for(IndexType f=0;f<numDualVar_;++f){
       const IndexType v1=gm_[f].variableIndex(0);
       const IndexType v2=gm_[f].variableIndex(1);
@@ -386,11 +396,13 @@ InferenceTermination CGC<GM,ACC>::infer
    ValueType valA = 0.0;
    ValueType valB = 0.0;
    for(size_t i=0;i<param_.maxIterations_;++i){
-      if(value_<valA || i==0){
+      if(param_.doCutMove_ && ( value_<valA || i==0)){
+         //std::cout<<"rec 2 coloring\n";
          this->recursive2Coloring(visitor);
          valA=value_;
       }
-      if(value_<valB || i==0){
+      if(param_.doGlueCutMove_ && (value_<valB || i==0)){
+         //std::cout<<"greedy 2 coloring\n";
          this->greedy2ColoringPlanar(visitor);
          valB=value_;
       }

@@ -18,38 +18,32 @@
 #include "opengm/inference/messagepassing/messagepassing.hxx"
 
 #ifdef WITH_CPLEX
-#include "opengm/inference/lpcplex.hxx"
 #include "opengm/inference/auxiliary/fusion_move/permutable_label_fusion_mover.hxx"
 #endif
 
-
+#ifdef WITH_QPBO
+#include <QPBO.h>
+#endif
 
 #include <stdlib.h>     /* srand, rand */
 
 
 #include "opengm/inference/lazyflipper.hxx"
 
-// fusion move model generator
-#include "opengm/inference/auxiliary/fusion_move/fusion_mover.hxx"
 
 
 
-
-
-
-
-#ifndef NOVIGRA
 #include <vigra/adjacency_list_graph.hxx>
 #include <vigra/merge_graph_adaptor.hxx>
 #include <vigra/hierarchical_clustering.hxx>
 #include <vigra/priority_queue.hxx>
 #include <vigra/random.hxx>
 #include <vigra/graph_algorithms.hxx>
-#endif 
 
 
 
-#include <QPBO.h>
+
+
 
 namespace opengm
 {
@@ -66,7 +60,7 @@ namespace opengm
 
 namespace proposal_gen{
 
-    #ifndef NOVIGRA
+
 
 
     template<class VALUE_TYPE>
@@ -150,9 +144,9 @@ namespace proposal_gen{
     };
 
 
-
+    #ifndef NOVIGRA
     template<class GM, class ACC >
-    class McClusterOp{
+    class RandMcClusterOp{
     public:
         typedef ACC AccumulationType;
         typedef GM GraphicalModelType;
@@ -194,7 +188,7 @@ namespace proposal_gen{
         };
 
 
-        McClusterOp(const Graph & graph , MergeGraph & mergegraph, 
+        RandMcClusterOp(const Graph & graph , MergeGraph & mergegraph, 
                     const Parameter & param)
         :
             graph_(graph),
@@ -295,9 +289,6 @@ namespace proposal_gen{
         WeightRand wRandomizer_;
     };
 
-
-
-
     template<class GM, class ACC>
     class RandomizedHierarchicalClustering{
     public:
@@ -340,7 +331,7 @@ namespace proposal_gen{
             bool setCutToZero_;
         };
 
-        typedef McClusterOp<GM, ACC > Cop;
+        typedef RandMcClusterOp<GM, ACC > Cop;
         typedef typename Cop::Parameter CopParam;
         typedef vigra::HierarchicalClustering< Cop > HC;
         typedef typename HC::Parameter HcParam;
@@ -618,7 +609,7 @@ namespace proposal_gen{
     #endif
 
 
-
+    #ifdef WITH_QPBO
     template<class GM, class ACC>
     class QpboBased{
     public:
@@ -626,23 +617,14 @@ namespace proposal_gen{
         typedef GM GraphicalModelType;
         OPENGM_GM_TYPE_TYPEDEFS;
 
-        typedef vigra::AdjacencyListGraph Graph;
 
 
         class Parameter
         {
-
         public:
+            Parameter(){
 
-
-            //Parameter(
-//
-//
-            //)
-            //{
-//
-            //}
-
+            }
         };
 
 
@@ -730,7 +712,7 @@ namespace proposal_gen{
         size_t iteration_; 
     };
 
-
+    #endif 
 }
 
 
