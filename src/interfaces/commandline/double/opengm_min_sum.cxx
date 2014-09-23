@@ -27,10 +27,17 @@
 #include "../../common/caller/nesterov_caller.hxx"
 #include "../../common/caller/partitionmove_caller.hxx"
 #include "../../common/caller/greedygremlin_caller.hxx"
+#include "../../common/caller/selffusion_caller.hxx"
+#include "../../common/caller/fusion_caller.hxx"
 
 #ifdef WITH_TRWS
 #include "../../common/caller/trws_caller.hxx"
 #endif
+
+#if (defined(WITH_MAXFLOW) )
+#include "../../common/caller/lsatr_caller.hxx"
+#endif
+
 
 #if (defined(WITH_MAXFLOW) || defined(WITH_BOOST))
 #include "../../common/caller/graphcut_caller.hxx"
@@ -156,6 +163,8 @@ int main(int argc, char** argv) {
       interface::NesterovCaller<InterfaceType, GmType, AccumulatorType>,
       interface::PartitionMoveCaller<InterfaceType, GmType, AccumulatorType>,
       interface::GreedyGremlinCaller<InterfaceType, GmType, AccumulatorType>,
+      interface::SelfFusionCaller<InterfaceType, GmType, AccumulatorType>,
+      interface::FusionCaller<InterfaceType, GmType, AccumulatorType>,
       opengm::meta::ListEnd
    >::type NativeInferenceTypeList;
 
@@ -213,6 +222,9 @@ int main(int argc, char** argv) {
 
 #ifdef WITH_GUROBI
       // interface::LPGurobiCaller<InterfaceType, GmType, AccumulatorType>,
+#endif
+#ifdef WITH_MAXFLOW
+      interface::LSA_TRCaller<InterfaceType, GmType, AccumulatorType>,
 #endif
 
 #ifdef WITH_DAOOPT

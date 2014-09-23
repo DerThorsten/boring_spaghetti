@@ -45,17 +45,36 @@ class Timer(object):
 
 
 
+def weightRandomizer(noiseType = 'normalAdd', noiseParam=1.0, seed=42, ignoreSeed = True):
+    p =  inference.adder.minimizer.solver._WeightRandomizerParameter_()
+    ntenum = inference.adder.minimizer.solver._WeightRandomization_NoiseType_
+    if noiseType == 'none' or noiseType =='noNoise':
+        nt =ntenum.none
+    elif noiseType == 'normalAdd':
+        nt =ntenum.normalAdd
+    elif noiseType == 'normalMult':
+        nt =ntenum.normalMult
+    elif noiseType == 'uniformAdd':
+        nt =ntenum.uniformAdd
+    else:
+        raise RuntimeError("unknown noise type")
 
-def saveGm(gm,f,d='gm'):
+    p.noiseType = nt
+    p.noiseParam = float(noiseParam)
+    p.seed = int(seed)
+    p.ignoreSeed = bool(ignoreSeed)
+    return p
+
+def saveGm(gm, f, d='gm'):
   """ save a graphical model to a hdf5 file:
   Args:
     gm : graphical model to save
     f  : filepath 
     g  : dataset (defaut : 'gm')
   """
-  hdf5.saveGraphicalModel(f,d)
+  hdf5.saveGraphicalModel(gm, f, d)
 
-def loadGm(f,d='gm',operator='adder'):
+def loadGm(f, d='gm', operator='adder'):
   """ save a graphical model to a hdf5 file:
   Args:
     f  : filepath 
@@ -343,7 +362,8 @@ class __CheapInitialization__(object):
           print "move local opt"
           self.arg_ = self.gm_.moveLocalOpt('minimizer')
           print "done"
-          visitor.visit(self)
+          if visitor is not None:
+            visitor.visit(self)
 
         # end inference
         if visitor is not None:

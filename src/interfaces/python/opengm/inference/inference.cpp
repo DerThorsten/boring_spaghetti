@@ -73,10 +73,14 @@
 #endif
 
 //#include "pyPbp.hxx"
-//#include "pySelfFusion.hxx"
 
 #include "pyFusionMoves.hxx"
+#include "pySelfFusion.hxx"
+#include "pyFusionBased.hxx"
 
+#ifdef WITH_CPLEX
+#include "pyIntersectionBased.hxx"
+#endif
 //#include "pySwendsenWang.hxx"
 
 //#include "pyLpInference.hxx"
@@ -175,6 +179,7 @@ BOOST_PYTHON_MODULE_INIT(_inference) {
          #ifdef WITH_CPLEX
          export_cplex<opengm::python::GmAdder,opengm::Minimizer>();
          export_multicut<opengm::python::GmAdder,opengm::Minimizer>();
+         export_intersection_based<opengm::python::GmAdder,opengm::Minimizer>();
          #endif
 
          //export_lp_inference<opengm::python::GmAdder,opengm::Minimizer>();
@@ -194,6 +199,9 @@ BOOST_PYTHON_MODULE_INIT(_inference) {
          #ifdef WITH_AD3
          export_ad3<opengm::python::GmAdder,opengm::Minimizer>();
          #endif
+
+         export_self_fusion<opengm::python::GmAdder,opengm::Minimizer>();
+         export_fusion_based<opengm::python::GmAdder,opengm::Minimizer>();
       }
       // maximizer
       {

@@ -4,12 +4,17 @@
 #include <opengm/inference/dualdecomposition/dualdecomposition_subgradient.hxx>
 #include <opengm/inference/dynamicprogramming.hxx>
 #include <opengm/inference/messagepassing/messagepassing.hxx>
+#include <opengm/inference/astar.hxx>
 #ifdef WITH_CPLEX
 #include <opengm/inference/lpcplex.hxx>
 #endif
 #include <opengm/inference/graphcut.hxx>
 #ifdef WITH_MAXFLOW
 #  include <opengm/inference/auxiliary/minstcutkolmogorov.hxx>
+#endif
+
+#ifdef WITH_QPBO
+#include <opengm/inference/reducedinference.hxx>
 #endif
 
 #include "inference_caller_base.hxx"
@@ -102,6 +107,7 @@ namespace opengm {
          subInfs.push_back("DPHTree");
          subInfs.push_back("GraphCut"); 
          subInfs.push_back("RILP");
+         subInfs.push_back("ASTAR");
          addArgument(StringArgument<>(subInf_, 
                                       "", "subInf", "Algorithm used for subproblems", subInfs[2], subInfs));
          std::vector<std::string> decompositions;
@@ -266,7 +272,15 @@ namespace opengm {
 #else
             std::cout << "QPBO not enabled!!!" <<std::endl;
 #endif       
-         }
+         } 
+         else if((*this).subInf_.compare("ASTAR")==0){
+            typedef opengm::AStar<SubGmType, ACC>            InfType; 
+            typedef opengm::DualDecompositionSubGradient<GM,InfType,DualBlockType>  DDType;
+            typedef typename  DDType::TimingVisitorType      TimingVisitorType;
+            typename DDType::Parameter parameter;
+            setParameter(parameter);
+            this-> template infer<DDType, TimingVisitorType, typename DDType::Parameter>(model, output, verbose, parameter);
+         } 
          else{
             std::cout << "Unknown Sub-Inference-Algorithm !!!" <<std::endl;
          }
