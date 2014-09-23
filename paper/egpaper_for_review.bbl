@@ -1,0 +1,64 @@
+\begin{thebibliography}{10}\itemsep=-1pt
+
+\bibitem{Alpher02}
+A.~Alpher.
+\newblock Frobnication.
+\newblock {\em Journal of Foo}, 12(1):234--778, 2002.
+
+\bibitem{Alpher03}
+A.~Alpher and J.~P.~N. Fotheringham-Smythe.
+\newblock Frobnication revisited.
+\newblock {\em Journal of Foo}, 13(1):234--778, 2003.
+
+\bibitem{Alpher04}
+A.~Alpher, J.~P.~N. Fotheringham-Smythe, and G.~Gamow.
+\newblock Can a machine frobnicate?
+\newblock {\em Journal of Foo}, 14(1):234--778, 2004.
+
+\bibitem{andres_2011_iccv}
+B.~Andres, J.~H. Kappes, T.~Beier, U.~K{\"o}the, and F.~A. Hamprecht.
+\newblock Probabilistic image segmentation with closedness constraints.
+\newblock In {\em ICCV}, pages 2611--2618. IEEE, 2011.
+
+\bibitem{Authors14}
+Authors.
+\newblock The frobnicatable foo filter, 2014.
+\newblock Face and Gesture submission ID 324. Supplied as additional material
+  {\tt fg324.pdf}.
+
+\bibitem{Authors14b}
+Authors.
+\newblock Frobnication tutorial, 2014.
+\newblock Supplied as additional material {\tt tr.pdf}.
+
+\bibitem{bagon_2011_arxiv}
+S.~Bagon and M.~Galun.
+\newblock Large scale correlation clustering optimization.
+\newblock {\em CoRR}, abs/1112.2903, 2011.
+
+\bibitem{beier_2014_cvpr}
+T.~Beier, T.~Kroeger, J.~H. Kappes, U.~Koethe, and F.~Hamprecht.
+\newblock {Cut, Glue \& Cut: A Fast, Approximate Solver for Multicut
+  Partitioning}.
+\newblock In {\em IEEE Conference on Computer Vision and Pattern Recognition
+  2014}, 2014.
+
+\bibitem{kappes_2014_ws}
+J.~H. Kappes, T.~Beier, and C.~Schn\"orr.
+\newblock Map-inference on large scale higher-order discrete graphical models
+  by fusion moves.
+\newblock In {\em International Workshop on Graphical Models in Computer
+  Vision}, 2014.
+\newblock Oral.
+
+\bibitem{kappes_2011_emmcvpr}
+J.~H. Kappes, M.~Speth, B.~Andres, G.~Reinelt, and C.~Schn{\"o}rr.
+\newblock Globally optimal image partitioning by multicuts.
+\newblock In {\em EMMCVPR}, pages 31--44. Springer, 2011.
+
+\bibitem{yarkony_2012_eccv}
+J.~Yarkony, A.~Ihler, and C.~C. Fowlkes.
+\newblock Fast planar correlation clustering for image segmentation.
+\newblock In {\em ECCV}. Springer, 2012.
+
+\end{thebibliography}
