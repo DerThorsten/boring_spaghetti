@@ -1430,6 +1430,103 @@ namespace pygm {
          }
          return gm;
       }
+
+    template<class GM>
+    GM * gridPatchAffinityGm
+    (
+        opengm::python::NumpyView<typename GM::ValueType,2> nonLocalCost,
+        opengm::python::NumpyView<typename GM::ValueType,2> localCost,
+        int r,
+        int stepsize,
+        int start,
+        float truncate
+    ){
+        typedef typename GM::SpaceType Space;
+        typedef typename GM::ValueType ValueType;
+        typedef typename GM::IndexType IndexType;
+        typedef typename GM::LabelType LabelType;
+        typedef typename GM::FunctionIdentifier FunctionIdentifier;
+        typedef opengm::ExplicitFunction<ValueType,IndexType,LabelType> ExplicitFunctionType;
+        typedef std::pair<FunctionIdentifier,ExplicitFunctionType &> FidRefPair;
+
+
+        GM * gm=NULL;
+        {
+            releaseGIL rgil;
+            const size_t shape[]={nonLocalCost.shape(0),nonLocalCost.shape(1)};
+            const size_t numVar=shape[0]*shape[1];
+            const size_t numLabels=numVar;
+            { // scope to delete space
+                Space space(numVar,numLabels);
+                gm = new GM(space);
+            }
+
+
+            IndexType c[2]={0,0};
+            ExplicitFunctionType f(&numLabels,&numLabels+1);
+
+            for(c[0]=0;c[0]<shape[0];++c[0])
+            for(c[1]=0;c[1]<shape[1];++c[1]){
+
+
+                size_t vis[2] ={ c[1] + c[0]*shape[1], 0};
+
+                const float x = c[0];
+                const float y = c[1];
+
+                // local
+                if(c[0]+1 < shape[0]){
+                    // add factor
+                    vis[1] = c[1] + (c[0] + 1) * shape[1];
+                    const float val = (localCost(c[0], c[1]) + localCost(c[0] + 1, c[1]))/2.0f;
+                    opengm::python::GmPottsFunction localF(numLabels, numLabels, 0.0, val );
+                    gm->addFactor(gm->addFunction(localF), vis, vis + 2);
+                }
+                if(c[1]+1 < shape[1]){
+                    // add factor
+                    vis[1] = c[1] + 1 + c[0]* shape[1];
+                    const float val = (localCost(c[0], c[1]) + localCost(c[0], c[1] + 1))/2.0f;
+                    opengm::python::GmPottsFunction localF(numLabels, numLabels, 0.0, val );
+                    gm->addFactor(gm->addFunction(localF), vis, vis + 2);
+                }
+
+                // non local
+                for(size_t xx=start; xx<r; xx+=stepsize)
+                for(size_t yy=start; yy<r; yy+=stepsize){
+                    if(xx + yy > 1){
+                        if(c[1] + yy + 1 < shape[1] && c[0] + xx + 1 < shape[0]){
+                            // search for max value along line between 
+                            // (x,y) and (x+xx, y+yy)
+                            float maxVal = -1.0*std::numeric_limits<float>::infinity();
+
+                            const float dx = xx;
+                            const float dy = yy;
+                            const float l = std::sqrt(dx*dx + dy*dy);
+                            const size_t nSamples = (1.5f * l + 0.5);
+                            const float increment = 1.0f / nSamples;
+                            float t=0.0;
+                            for(size_t i=0; i<nSamples; ++i,t+=increment){
+                                t = std::min(1.0f, t);
+                                const size_t oX = std::min(size_t(x + t*dx + 0.5), shape[0]-1);
+                                const size_t oY = std::min(size_t(y + t*dy + 0.5), shape[1]-1);
+
+                                const float val = nonLocalCost(x,y);
+                                maxVal = std::max(val, maxVal);
+                            }
+                            // add factor
+                            vis[1] = c[1] + yy + (c[0] + xx) * shape[1];
+                            if(maxVal>=truncate){
+                                opengm::python::GmPottsFunction nonLocalF(numLabels, numLabels, 0.0, -1.0 * maxVal );
+                                gm->addFactor(gm->addFunction(nonLocalF), vis, vis + 2);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return gm;
+    }
+
 }
 
 
@@ -1526,7 +1623,8 @@ void export_gm() {
 	"Returns:\n"
    	"  The grid graphical model\n\n"
    );
-   
+   def("gridPatchAffinityGm", &pygmgen::gridPatchAffinityGm<PyGm>,return_value_policy<manage_new_object>())
+   ;
 
 
 	class_<PyGm > ("GraphicalModel", 
