@@ -9,16 +9,17 @@
 \usepackage{amssymb}
 
 
-
-
 % Include other packages here, before hyperref.
-\usepackage{framed}
+\usepackage{my_macros}
+%\usepackage{framed}
 \usepackage{caption}
 \usepackage{subcaption}
 %for tikz
 \usepackage{tikz}
 \usetikzlibrary{arrows,positioning,automata,shadows,fit,shapes}
 \usetikzlibrary{arrows,petri,topaths}
+\usetikzlibrary{positioning,fit,calc}
+\usetikzlibrary{shapes.arrows,chains,decorations.pathreplacing,fadings}
 \usepackage{tkz-berge}
 
 \definecolor{shadecolor}{rgb}{0.01,0.199,0.1}
@@ -36,8 +37,8 @@
 % Pages are numbered in submission mode, and unnumbered in camera-ready
 \ifcvprfinal\pagestyle{empty}\fi
 \begin{document}
-%\GraphInit[vstyle=Normal] 
 %%%%%%%%% TITLE
+\include{my_macros.tex}
 \title{FancyMc Moves \\ Fusion Moves for Multicut Objectives}
 
 \author{First Author\\
@@ -91,20 +92,7 @@ with state of the art any time performance~\cite{kappes_2014_ws}.
 
 
 
-\begin{figure}[t]
-\begin{center}
-\fbox{\rule{0pt}{2in} \rule{0.9\linewidth}{0pt}}
-   %\includegraphics[width=0.8\linewidth]{egfigure.eps}
-\end{center}
-   \caption{Example of caption.  It is set in Roman so that mathematics
-   (always set in Roman: $B \sin A = A \sin B$) may be included without an
-   ugly clash.}
-\label{fig:long}
-\label{fig:onecol}
-\end{figure}
 
-
-.
 
 %------------------------------------------------------------------------
 \section{Name of My Method (Union Fusion Cut)}
@@ -114,6 +102,8 @@ Good approximate solvers for planar graphs exist \cite{beier_2014_cvpr,yarkony_2
 but have difficulties to find good solutions for non planar graphs \cite{beier_2014_cvpr}.
 
 
+
+\input{alg_graph.tex}
 
 \input{move_graph.tex}
 
