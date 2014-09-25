@@ -9,7 +9,7 @@ grad = vigra.filters.gaussianGradientMagnitude(vigra.colors.transform_Lab2RGB(im
 grad -= grad.min()
 grad /= grad.max()
 grad2 = grad.copy()
-grad2[numpy.where(grad2<0.3)] = 0
+#grad2[numpy.where(grad2<0.3)] = 0
 
 grad2 = numpy.exp(1.5*grad2)-1.0
 show = True
@@ -21,14 +21,14 @@ if show:
 
 expGrad = numpy.exp(-2.1*grad)
 w =  2*expGrad -1.0
-w-=w.min()
+w-=w.min()*2.5
 
 if show:
     imgplot = plt.imshow(w.swapaxes(0,1))
     plt.colorbar()
     plt.show()
 
-gm = opengm.adder.gridPatchAffinityGm(grad2.astype(numpy.float64), 10.0*w.astype(numpy.float64), 40, 3 ,20, 0.01)
+gm = opengm.adder.gridPatchAffinityGm(grad2.astype(numpy.float64), w.astype(numpy.float64), 40, 3 ,20, 0.01)
 print gm
 
 verbose = True
@@ -70,7 +70,7 @@ with opengm.Timer("with new method"):
 
     infParam = opengm.InfParam(
         numStopIt=20,
-        numIt=100,
+        numIt=200,
         generator='randomizedHierarchicalClustering',
         proposalParam=proposalParam,
         fusionParam = fusionParam

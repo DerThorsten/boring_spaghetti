@@ -1434,12 +1434,15 @@ namespace pygm {
     template<class GM>
     GM * gridPatchAffinityGm
     (
+        //opengm::python::NumpyView<typename GM::ValueType,3> image,
+        //opengm::python::NumpyView<typename GM::ValueType,2> gradient,
         opengm::python::NumpyView<typename GM::ValueType,2> nonLocalCost,
         opengm::python::NumpyView<typename GM::ValueType,2> localCost,
         int r,
         int stepsize,
         int start,
-        float truncate
+        float truncateLow,
+        float truncateHigh
     ){
         typedef typename GM::SpaceType Space;
         typedef typename GM::ValueType ValueType;
@@ -1463,7 +1466,6 @@ namespace pygm {
 
 
             IndexType c[2]={0,0};
-            ExplicitFunctionType f(&numLabels,&numLabels+1);
 
             for(c[0]=0;c[0]<shape[0];++c[0])
             for(c[1]=0;c[1]<shape[1];++c[1]){
@@ -1474,50 +1476,80 @@ namespace pygm {
                 const float x = c[0];
                 const float y = c[1];
 
+                size_t localCounter = 0;
+                if(c[0]+1 < shape[0]){
+                    ++localCounter;
+                }
+                if(c[1]+1 < shape[1]){
+                    ++localCounter;
+                }
                 // local
                 if(c[0]+1 < shape[0]){
                     // add factor
                     vis[1] = c[1] + (c[0] + 1) * shape[1];
-                    const float val = (localCost(c[0], c[1]) + localCost(c[0] + 1, c[1]))/2.0f;
+                    float val = (localCost(c[0], c[1]) + localCost(c[0] + 1, c[1]))/2.0f;
+                    val/=localCounter;
+                    //std::cout<<"LOCAL "<<val<<"\n";
                     opengm::python::GmPottsFunction localF(numLabels, numLabels, 0.0, val );
                     gm->addFactor(gm->addFunction(localF), vis, vis + 2);
                 }
                 if(c[1]+1 < shape[1]){
                     // add factor
                     vis[1] = c[1] + 1 + c[0]* shape[1];
-                    const float val = (localCost(c[0], c[1]) + localCost(c[0], c[1] + 1))/2.0f;
+                    float val = (localCost(c[0], c[1]) + localCost(c[0], c[1] + 1))/2.0f;
+                    val/=localCounter;
+                    //std::cout<<"LOCAL "<<val<<"\n";
                     opengm::python::GmPottsFunction localF(numLabels, numLabels, 0.0, val );
                     gm->addFactor(gm->addFunction(localF), vis, vis + 2);
                 }
+                size_t nonLocalCounter = 0;
+                // count non local
+                for(size_t xx=0; xx<r; xx+=stepsize)
+                for(size_t yy=0; yy<r; yy+=stepsize){
+                    if( std::sqrt( float(xx*xx) + float(yy*yy)) > float(start) ){
+                        if(c[1] + yy  < shape[1] && c[0] + xx < shape[0]){
+                            ++nonLocalCounter;
+                        }
+                    }
+                }
 
-                // non local
-                for(size_t xx=start; xx<r; xx+=stepsize)
-                for(size_t yy=start; yy<r; yy+=stepsize){
-                    if(xx + yy > 1){
-                        if(c[1] + yy + 1 < shape[1] && c[0] + xx + 1 < shape[0]){
-                            // search for max value along line between 
-                            // (x,y) and (x+xx, y+yy)
-                            float maxVal = -1.0*std::numeric_limits<float>::infinity();
 
-                            const float dx = xx;
-                            const float dy = yy;
-                            const float l = std::sqrt(dx*dx + dy*dy);
-                            const size_t nSamples = (1.5f * l + 0.5);
-                            const float increment = 1.0f / nSamples;
-                            float t=0.0;
-                            for(size_t i=0; i<nSamples; ++i,t+=increment){
-                                t = std::min(1.0f, t);
-                                const size_t oX = std::min(size_t(x + t*dx + 0.5), shape[0]-1);
-                                const size_t oY = std::min(size_t(y + t*dy + 0.5), shape[1]-1);
+                if(nonLocalCost(c[0], c[1]) < truncateHigh){
+                    // non local
+                    for(size_t xx=0; xx<r; xx+=stepsize)
+                    for(size_t yy=0; yy<r; yy+=stepsize){
+                        if( std::sqrt( float(xx*xx) + float(yy*yy)) > float(start) ){
+                            if(c[1] + yy  < shape[1] && c[0] + xx < shape[0]){
 
-                                const float val = nonLocalCost(x,y);
-                                maxVal = std::max(val, maxVal);
-                            }
-                            // add factor
-                            vis[1] = c[1] + yy + (c[0] + xx) * shape[1];
-                            if(maxVal>=truncate){
-                                opengm::python::GmPottsFunction nonLocalF(numLabels, numLabels, 0.0, -1.0 * maxVal );
-                                gm->addFactor(gm->addFunction(nonLocalF), vis, vis + 2);
+                                if(nonLocalCost(c[0]+xx, c[1]+yy) < truncateHigh ){
+                                    // search for max value along line between 
+                                    // (x,y) and (x+xx, y+yy)
+                                    float maxVal = -1.0*std::numeric_limits<float>::infinity();
+
+                                    const float dx = xx;
+                                    const float dy = yy;
+                                    const float l = std::sqrt(dx*dx + dy*dy);
+                                    const size_t nSamples = (1.5f * l + 0.5);
+                                    const float increment = 1.0f / nSamples;
+                                    float t=0.0;
+                                    for(size_t i=0; i<nSamples; ++i,t+=increment){
+                                        t = std::min(1.0f, t);
+                                        const size_t oX = std::min(size_t(x + t*dx + 0.5), shape[0]-1);
+                                        const size_t oY = std::min(size_t(y + t*dy + 0.5), shape[1]-1);
+
+                                        const float val = nonLocalCost(oX,oY);
+                                        maxVal = std::max(val, maxVal);
+                                    }
+                                    // add factor
+                                    vis[1] = c[1] + yy + (c[0] + xx) * shape[1];
+                                    
+                                    if(maxVal>=truncateLow){
+                                        maxVal/=nonLocalCounter;
+                                        //std::cout<<"max val"<<maxVal<<"\n";
+                                        opengm::python::GmPottsFunction nonLocalF(numLabels, numLabels, 0.0, -1.0 * maxVal );
+                                        gm->addFactor(gm->addFunction(nonLocalF), vis, vis + 2);
+                                    }
+                                }
                             }
                         }
                     }

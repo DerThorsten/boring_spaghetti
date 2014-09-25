@@ -117,6 +117,7 @@ void export_intersection_based(){
     }
     #endif
      // Qpbo Based
+    #ifdef WITH_QPBO
     {   
         setup.isDefault=false;
         const std::string genName("qpboBased");
@@ -125,6 +126,7 @@ void export_intersection_based(){
         export_intersection_based_proposal_param<GEN>(setup, genName);
         export_intersection_based_t<GEN>(setup, genName);
     }
+    #endif
     
 }
 
