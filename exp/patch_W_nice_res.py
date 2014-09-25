@@ -11,6 +11,7 @@ grad /= grad.max()
 grad2 = grad.copy()
 grad2[numpy.where(grad2<0.3)] = 0
 
+
 grad2 = numpy.exp(1.5*grad2)-1.0
 show = True
 
