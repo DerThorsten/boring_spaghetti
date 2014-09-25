@@ -3,15 +3,13 @@ import opengm
 import numpy
 import matplotlib.pyplot as plt
 img = vigra.readImage('/home/tbeier/datasets/BSR/BSDS500/data/images/train/56028.jpg')
-img = vigra.readImage('/home/tbeier/datasets/BSR/BSDS500/data/images/val/69020.jpg')
+img = vigra.readImage('/home/tbeier/datasets/BSR/BSDS500/data/images/train/118035.jpg')
 img = img[::1, ::1,:]
 grad = vigra.filters.gaussianGradientMagnitude(vigra.colors.transform_Lab2RGB(img), 1.5).squeeze()
 grad -= grad.min()
 grad /= grad.max()
 grad2 = grad.copy()
-t = 0.1
-grad2[numpy.where(grad2<t)] = 0
-grad2[numpy.where(grad2>=t)] = 1
+grad2[numpy.where(grad2<0.3)] = 0
 
 grad2 = numpy.exp(1.5*grad2)-1.0
 show = True
@@ -30,7 +28,7 @@ if show:
     plt.colorbar()
     plt.show()
 
-gm = opengm.adder.gridPatchAffinityGm(grad2.astype(numpy.float64), 10.0*w.astype(numpy.float64), 20, 4,10, 0.01)
+gm = opengm.adder.gridPatchAffinityGm(grad2.astype(numpy.float64), 10.0*w.astype(numpy.float64), 40, 3 ,20, 0.01)
 print gm
 
 verbose = True
@@ -41,7 +39,6 @@ useWs = False
 with opengm.Timer("with new method"):
 
     fusionParam = opengm.InfParam(fusionSolver = 'cgc', planar=False)
-
     arg = None
     if useQpbo:
         infParam = opengm.InfParam(
@@ -73,7 +70,7 @@ with opengm.Timer("with new method"):
 
     infParam = opengm.InfParam(
         numStopIt=20,
-        numIt=50,
+        numIt=100,
         generator='randomizedHierarchicalClustering',
         proposalParam=proposalParam,
         fusionParam = fusionParam
