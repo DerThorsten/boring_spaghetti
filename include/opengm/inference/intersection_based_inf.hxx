@@ -505,12 +505,14 @@ namespace proposal_gen{
             Parameter(
                 const float seedFraction = 0.01,
                 const bool ignoreNegativeWeights = false,
+                const bool seedFromNegativeEdges = true,
                 const WeightRandomizationParam randomizer = WeightRandomizationParam()
 
             )
             :
                 seedFraction_(seedFraction),
                 ignoreNegativeWeights_(ignoreNegativeWeights),
+                seedFromNegativeEdges_(seedFromNegativeEdges),
                 randomizer_(randomizer)
             {
 
@@ -518,6 +520,7 @@ namespace proposal_gen{
 
             float seedFraction_;
             bool ignoreNegativeWeights_;
+            bool seedFromNegativeEdges_;
             WeightRandomizationParam randomizer_;
         };
 
@@ -532,7 +535,8 @@ namespace proposal_gen{
             graph_(),
             weights_(gm_.numberOfFactors()),
             rWeights_(),
-            seeds_()
+            seeds_(),
+            negativeFactors_()
         {
 
             LabelType lAA[2]={0, 0};
@@ -551,6 +555,9 @@ namespace proposal_gen{
                     if(!param_.ignoreNegativeWeights_ || weight >= 0){
                         const GraphEdge gEdge = graph_.addEdge(gm_[i].variableIndex(0),gm_[i].variableIndex(1));
                         weights_[gEdge.id()]+=weight;
+                    }
+                    if(param_.seedFromNegativeEdges_ && weight < 0){
+                        negativeFactors_.push_back(i);
                     }
                 }
             }
@@ -583,9 +590,23 @@ namespace proposal_gen{
             VectorViewNodeMap<Graph, std::vector<LabelType> > sMap(graph_, seeds_);
             VectorViewNodeMap<Graph, std::vector<LabelType> > lMap(graph_, proposal);
 
-            for(size_t i=0; i<nSeeds; ++i){
-                const int randId = wRandomizer_.randGen().uniformInt(graph_.nodeNum());
-                seeds_[randId] = i+1;
+
+            if(!param_.seedFromNegativeEdges_){
+                for(size_t i=0; i<nSeeds; ++i){
+                    const int randId = wRandomizer_.randGen().uniformInt(graph_.nodeNum());
+                    seeds_[randId] = i+1;
+                }
+            }
+            else{
+                for(size_t i=0; i<nSeeds/2; ++i){
+                    const int randId = wRandomizer_.randGen().uniformInt(negativeFactors_.size());
+                    const IndexType fi  = negativeFactors_[randId];
+                    const vi0 = gm_[fi].variableIndex(0);
+                    const vi1 = gm_[fi].variableIndex(1);
+
+                    seeds_[vi0] = (2*i)+1;
+                    seeds_[vi0] = (2*i+1)+1;
+                }
             }
 
             // negate
@@ -603,6 +624,7 @@ namespace proposal_gen{
         std::vector<ValueType>  weights_;
         std::vector<ValueType>  rWeights_;
         std::vector<LabelType>  seeds_;
+        std::vector<IndexType> negativeFactors_;
     };
     #endif
 
