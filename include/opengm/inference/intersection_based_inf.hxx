@@ -510,14 +510,15 @@ namespace proposal_gen{
 
 
 
-
             Parameter(
                 const float seedFraction = 0.01,
+                const bool ignoreNegativeWeights = false,
                 const WeightRandomizationParam randomizer = WeightRandomizationParam()
 
             )
             :
                 seedFraction_(seedFraction),
+                ignoreNegativeWeights_(ignoreNegativeWeights),
                 randomizer_(randomizer)
             {
 
@@ -713,6 +714,11 @@ namespace proposal_gen{
     };
 
     #endif 
+
+
+
+
+
 }
 
 

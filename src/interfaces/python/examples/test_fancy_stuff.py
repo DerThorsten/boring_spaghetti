@@ -178,8 +178,8 @@ with opengm.Timer("with multicut method"):
     inf=opengm.inference.Multicut(gm, parameter=infParam)
     # inf.setStartingPoint(arg)
     # start inference (in this case verbose infernce)
-    visitor=inf.verboseVisitor(printNth=10)
-    if verbose:
+visitor=inf.verboseVisitor(printNth=10)
+if verbose:
         inf.infer(visitor)
     else:
         inf.infer()
