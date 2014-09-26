@@ -170,16 +170,19 @@ public:
     struct Parameter{
         Parameter(
             const FusionSolver fusionSolver = SelfType::DefaultSolver,
-            const bool planar = false
+            const bool planar = false,
+            const int nThreads = -1
         )
         : 
             fusionSolver_(fusionSolver),
-            planar_(planar)
+            planar_(planar),
+            nThreads_(nThreads)
         {
 
         }
         FusionSolver fusionSolver_;
         bool planar_;
+        int nThreads_;
 
     };
 
@@ -489,13 +492,26 @@ public:
 
         std::vector<LabelType> subArg;
 
-        //::cout<<"WITH MC\n";
-        typedef Multicut<SubModel, Minimizer> Inf;
-        typedef  typename  Inf::Parameter Param;
-        Param p(0,0.0);
-        Inf inf(subGm,p);
-        inf.infer();
-        inf.arg(subArg);
+        try{
+            //::cout<<"WITH MC\n";
+            typedef Multicut<SubModel, Minimizer> Inf;
+            typedef  typename  Inf::Parameter Param;
+            Param p(0,0.0);
+
+            if(param_.nThreads_ <= 0){
+                p.numThreads_ = 0;
+            }
+            else{
+                p.numThreads_ = param_.nThreads_;
+            }
+
+            Inf inf(subGm,p);
+            inf.infer();
+            inf.arg(subArg);
+        }
+        catch(...){
+            std::cout<<"error from cplex\n....\n";
+        }
 
         for(IndexType vi=0; vi<gm_.numberOfVariables(); ++vi){
             res[vi] = subArg[ab[vi]];

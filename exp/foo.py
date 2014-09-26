@@ -40,7 +40,7 @@ print gm
 verbose = True
 useQpbo = False
 useRC = False
-useCgc = True
+useCgc = False
 useWs = True
 
 #with opengm.Timer("with cgc"):
@@ -57,7 +57,7 @@ useWs = True
 #
 with opengm.Timer("with new method"):
 
-    fusionParam = opengm.InfParam(fusionSolver = 'multicut', planar=False)
+    fusionParam = opengm.InfParam(fusionSolver = 'multicut', planar=False, nThreads=-1)
     arg = None
 
 
@@ -66,11 +66,13 @@ with opengm.Timer("with new method"):
         proposalParam = opengm.InfParam(
             randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=10.100000001,ignoreSeed=False),
             ignoreNegativeWeights = True,
-            seedFraction = 100.0
+            seedFromNegativeEdges = True,
+            seedFraction = 300.0
         )
         infParam = opengm.InfParam(
-            numStopIt=400,
-            numIt=2000,
+            numStopIt=100,
+            numIt=100,
+            parallelProposals=8,
             generator='randomizedWatershed',
             proposalParam=proposalParam,
             fusionParam = fusionParam

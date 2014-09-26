@@ -6,6 +6,8 @@
 #include <string>
 #include <iostream>
 
+#include <omp.h>
+
 #include "opengm/opengm.hxx"
 #include "opengm/inference/inference.hxx"
 #include "opengm/inference/visitors/visitors.hxx"
@@ -562,11 +564,11 @@ namespace proposal_gen{
                     ValueType val00  = gm_[i](lAA);
                     ValueType val01  = gm_[i](lAB);
                     ValueType weight = val01 - val00; 
-                    if(!param_.ignoreNegativeWeights_ || weight >= 0){
+                    if(!param_.ignoreNegativeWeights_ || weight >= 0.0){
                         const GraphEdge gEdge = graph_.addEdge(gm_[i].variableIndex(0),gm_[i].variableIndex(1));
                         weights_[gEdge.id()]+=weight;
                     }
-                    if(param_.seedFromNegativeEdges_ && weight < 0){
+                    if(param_.seedFromNegativeEdges_ && weight < 0.0){
                         negativeFactors_.push_back(i);
                     }
                 }
@@ -611,11 +613,11 @@ namespace proposal_gen{
                 for(size_t i=0; i<nSeeds/2; ++i){
                     const int randId = wRandomizer_.randGen().uniformInt(negativeFactors_.size());
                     const IndexType fi  = negativeFactors_[randId];
-                    const vi0 = gm_[fi].variableIndex(0);
-                    const vi1 = gm_[fi].variableIndex(1);
+                    const IndexType vi0 = gm_[fi].variableIndex(0);
+                    const IndexType vi1 = gm_[fi].variableIndex(1);
 
                     seeds_[vi0] = (2*i)+1;
-                    seeds_[vi0] = (2*i+1)+1;
+                    seeds_[vi1] = (2*i+1)+1;
                 }
             }
 
@@ -779,12 +781,14 @@ public:
             const ProposalParameter & proposalParam = ProposalParameter(),
             const FusionParameter   & fusionParam = FusionParameter(),
             const size_t numIt=1000,
-            const size_t numStopIt = 0
+            const size_t numStopIt = 0,
+            const size_t parallelProposals = 1
         )
             :   proposalParam_(proposalParam),
                 fusionParam_(fusionParam),
                 numIt_(numIt),
-                numStopIt_(numStopIt)
+                numStopIt_(numStopIt),
+                parallelProposals_(parallelProposals)
         {
 
         }
@@ -792,6 +796,7 @@ public:
         FusionParameter fusionParam_;
         size_t numIt_;
         size_t numStopIt_;
+        size_t parallelProposals_;
 
     };
 
@@ -808,6 +813,7 @@ public:
     virtual InferenceTermination arg(std::vector<LabelType> &, const size_t = 1) const ;
     virtual ValueType value()const {return bestValue_;}
 private:
+    typedef FusionMoverType * FusionMoverTypePtr;
 
 
     const GraphicalModelType &gm_;
@@ -815,6 +821,7 @@ private:
 
 
     FusionMoverType * fusionMover_;
+    FusionMoverTypePtr * fusionMoverArray_;
 
 
     PROPOSAL_GEN proposalGen_;
@@ -835,13 +842,26 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::IntersectionBasedInf
     :  gm_(gm),
        param_(parameter),
        fusionMover_(NULL),
+       fusionMoverArray_(NULL),
        proposalGen_(gm_, parameter.proposalParam_),
        bestValue_(),
        bestArg_(gm_.numberOfVariables(), 0),
        maxOrder_(gm.factorOrder())
 {
     ACC::neutral(bestValue_);   
-    fusionMover_ = new FusionMoverType(gm_,parameter.fusionParam_);
+
+
+    //fusionMover_ = 
+
+
+    size_t nFuser  = param_.parallelProposals_;
+    fusionMoverArray_ = new FusionMoverTypePtr[nFuser];
+
+    for(size_t f=0; f<nFuser; ++f){
+        fusionMoverArray_[f] = new FusionMoverType(gm_,parameter.fusionParam_);
+    }
+
+    fusionMover_ = fusionMoverArray_[0];
 
 
     //set default starting point
@@ -868,8 +888,11 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::IntersectionBasedInf
 template<class GM, class PROPOSAL_GEN>
 IntersectionBasedInf<GM, PROPOSAL_GEN>::~IntersectionBasedInf()
 {
+    for(size_t f=0; f<param_.parallelProposals_; ++f){
+        delete fusionMoverArray_[f];// = new FusionMoverType(gm_,parameter.fusionParam_);
+    }
 
-    delete fusionMover_;
+    delete[] fusionMoverArray_;
 }
 
 
@@ -936,20 +959,106 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::infer
 
     size_t countRoundsWithNoImprovement = 0;
 
+
+    size_t nFuser  = param_.parallelProposals_;
+
+    std::vector< std::vector<LabelType> > pVec;
+    std::vector< std::vector<LabelType> > rVec;
+
+    std::vector<ValueType> vVec;
+    std::vector<bool> dVec;
+    if(nFuser>1){
+        pVec.resize(nFuser);
+        rVec.resize(nFuser);
+        vVec.resize(nFuser);
+        dVec.resize(nFuser);
+        for(size_t i=0; i<nFuser; ++i){
+            pVec[i].resize(gm_.numberOfVariables());
+            rVec[i].resize(gm_.numberOfVariables());
+            dVec[i]=false;
+        }
+    }
+
     for(size_t iteration=0; iteration<param_.numIt_; ++iteration){
         // store initial value before one proposal  round
         const ValueType valueBeforeRound = bestValue_;
 
-        proposalGen_.getProposal(bestArg_,proposedState);
 
-        // this might be to expensive
-        ValueType proposalValue = gm_.evaluate(proposedState);
-        //ValueType proposalValue = 100000000000000000000000.0;
+        bool anyVar=true;
 
-   
+        if(nFuser == 1){
+            proposalGen_.getProposal(bestArg_,proposedState);
+            ValueType proposalValue = gm_.evaluate(proposedState);
+            anyVar = fusionMover_->fuse(bestArg_,proposedState, fusedState, 
+                                        bestValue_, proposalValue, bestValue_);
+        }
+        else{
 
-        const bool anyVar = fusionMover_->fuse(bestArg_,proposedState, fusedState, 
-                                                 bestValue_, proposalValue, bestValue_);
+            // get proposals (so far not in parallel)
+            //std::cout<<"generate proposas\n";
+            for(size_t i=0; i<nFuser; ++i){
+                dVec[i]=false;
+                proposalGen_.getProposal(bestArg_,pVec[i]);
+            }
+
+            #pragma omp parallel for
+            for(size_t i=0; i<nFuser; ++i){
+                 //#pragma omp critical(printstuff)
+                 //{
+                   //std::cout<<"fuse i"<<i<<"\n";
+                 //}
+                bool tmp = fusionMoverArray_[i]->fuse(bestArg_,pVec[i], rVec[i], 
+                                        bestValue_, gm_.evaluate(pVec[i]), vVec[i]);
+                if(bestValue_ < vVec[i]){
+                    dVec[i] = true;
+                }
+            }
+            bool done = false;
+            size_t total = nFuser;
+            size_t c = 0;
+            while(!done){
+                //std::cout<<"TOTAL "<<total<<"\n";
+                size_t left = 0;
+                for(size_t i=0; i<total; ++i){
+                    if(dVec[i]==false){
+                        pVec[left] = rVec[i];
+                        ++left;
+                    }
+                }
+                if(left == 0 && c == 0){
+                    break;
+                }
+                else if(left==0 || left == 1){
+                   fusedState = rVec[0];
+                   bestValue_ = vVec[0];
+                   break;
+                }
+                ++c;
+                // fuse all pairs
+                #pragma omp parallel for
+                for(size_t i=0; i<left; i+=2){
+                    if(i==left-1){
+                        continue;
+                    }
+                    //std::cout<<"fuse ii"<<i<<"\n";
+                    bool tmp = fusionMoverArray_[i]->fuse(
+                        pVec[i],pVec[i+1],rVec[i], 
+                        gm_.evaluate(pVec[i]),
+                        gm_.evaluate(pVec[i+1]),
+                        vVec[i]
+                    );
+                    dVec[i+1] = true;
+                    --left;
+                }
+                total = left;
+            }
+        }
+
+
+
+
+
+
         if(anyVar){
             if( !ACC::bop(bestValue_, valueBeforeRound)){
                 ++countRoundsWithNoImprovement;

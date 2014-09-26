@@ -25,12 +25,14 @@ public:
         const GenParameter & proposalParam,
         const FusionParameter & fusionParam,
         const size_t         numIt,
-        const size_t         numStopIt
+        const size_t         numStopIt,
+        const size_t parallelProposals
     ) {
         p.proposalParam_ = proposalParam;
         p.fusionParam_ = fusionParam;
         p.numIt_ = numIt;
         p.numStopIt_ = numStopIt;
+        p.parallelProposals_ = parallelProposals;
     } 
 
     void static exportInfParam(const std::string & className){
@@ -41,12 +43,14 @@ public:
         .def_readwrite("fusionParam",&Parameter::fusionParam_,"parameters of the fusion move solver")
         .def_readwrite("numIt",&Parameter::numIt_,"total number of iterations")
         .def_readwrite("numStopIt",&Parameter::numStopIt_,"stop after n not successful steps")
+        .def_readwrite("parallelProposals",&Parameter::parallelProposals_,"fuse parallel")
         .def ("set", &SelfType::set, 
             (
                 boost::python::arg("proposalParam")=GenParameter(),
                 boost::python::arg("fusionParam")=FusionParameter(),
                 boost::python::arg("numIt")=1000, 
-                boost::python::arg("numStopIt")=0
+                boost::python::arg("numStopIt")=0,
+                boost::python::arg("parallelProposals")=1
             ) 
         )
     ;
@@ -74,10 +78,12 @@ public:
     (
         Parameter & p,
         const typename FM::FusionSolver fusionSolver,
-        const bool planar
+        const bool planar,
+        const int nThreads
     ) {
         p.fusionSolver_ = fusionSolver;
         p.planar_ = planar;
+        p.nThreads_ = nThreads;
 
     } 
 
@@ -98,10 +104,12 @@ public:
         class_<Parameter > ( className.c_str() , init< > ())
             .def_readwrite("fusionSolver",&Parameter::fusionSolver_,"fusionSolver parameter")
             .def_readwrite("planar",&Parameter::planar_,"planar")
+            .def_readwrite("nThreads",&Parameter::nThreads_,"nThreads")
             .def ("set", &SelfType::set, 
                 (
                     boost::python::arg("fusionSolver")= typename FM::FusionSolver(),
-                    boost::python::arg("planar")=false
+                    boost::python::arg("planar")=false,
+                    boost::python::arg("nThreads")=-1
                 ) 
             )
         ;
@@ -188,10 +196,12 @@ public:
         Parameter & p,
         const float                    seedFraction,
         const bool                     ignoreNegativeWeights,
+        const bool                     seedFromNegativeEdges,
         const WRandParam &             randomizer
     ) {
         p.seedFraction_ = seedFraction;
         p.ignoreNegativeWeights_ = ignoreNegativeWeights;
+        p.seedFromNegativeEdges_ = seedFromNegativeEdges;
         p.randomizer_ = randomizer;
     } 
 
@@ -203,11 +213,13 @@ public:
     class_<Parameter > ( className.c_str() , init< > ())
         .def_readwrite("seedFraction",&Parameter::seedFraction_,"approximative relative size of seeds (or absolute seed number if >1")
         .def_readwrite("ignoreNegativeWeights",&Parameter::ignoreNegativeWeights_,"ignoreNegativeWeights")
+        .def_readwrite("seedFromNegativeEdges",&Parameter::seedFromNegativeEdges_,"seedFromNegativeEdges")
         .def_readwrite("randomizer",&Parameter::randomizer_,"weight randomizer")
         .def ("set", &SelfType::set, 
             (
                 boost::python::arg("seedFraction")=0.01,
                 boost::python::arg("ignoreNegativeWeights")=false,
+                boost::python::arg("seedFromNegativeEdges")=true,
                 boost::python::arg("randomizer")=WRandParam()
             ) 
         )

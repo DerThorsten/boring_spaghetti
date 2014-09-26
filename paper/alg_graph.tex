@@ -68,16 +68,29 @@
 
 \begin{figure}[H]
 
-\begin{tikzpicture}
-    \tikzstyle{pixel}=[regular polygon,regular polygon sides=4,inner sep=0pt,draw,solid,font=\sffamily\small]
+%\begin{tikzpicture}
+%    \tikzstyle{pixel}=[regular polygon,regular polygon sides=4,inner sep=0pt,draw,solid,font=\sffamily\small]
+%
+%    \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=.25\textwidth]{images/120093.jpg}};
+%    \begin{scope}[x={(image.south east)},y={(image.north west)}]
+%        \draw[red,ultra thick,rounded corners] (0.62,0.65) rectangle (0.78,0.75);
+%        \draw node[pixel ](100.5,100.5) {BLAAA};
+%    \end{scope}
+%\end{tikzpicture}
 
-    \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=.25\textwidth]{images/120093.jpg}};
-    \begin{scope}[x={(image.south east)},y={(image.north west)}]
-        \draw[red,ultra thick,rounded corners] (0.62,0.65) rectangle (0.78,0.75);
-        \draw node[pixel ](100.5,100.5) {BLAAA};
+% 481 / 321
+\begin{tikzpicture}[scale=1.0]
+
+
+    \node[anchor=south west,inner sep=0] (image) at (0,0) 
+        {\includegraphics[width=.25\textwidth]{images/120093.jpg}};
+    \begin{scope}[x={(image.south east)},y={(image.north west)},xscale=100/481,yscale=100/321]   
+        %   \draw (0,0) grid (481,321);
+        \draw[gray,xstep=3.21/15, ystep=3.21/15] (0,0) grid (4.81,3.21);
     \end{scope}
-\end{tikzpicture}
 
+
+\end{tikzpicture}
 
 
 \end{figure}
