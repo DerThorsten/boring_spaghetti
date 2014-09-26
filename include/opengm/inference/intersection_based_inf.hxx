@@ -170,20 +170,22 @@ namespace proposal_gen{
             Parameter(
                 const WeightRandomizationParam & randomizer  = WeightRandomizationParam(),
                 const float stopWeight = 0.0,
-                const float reduction = -1.0,
+                const float nodeNum = -1.0,
+                const float ignoreNegativeWeights = false,
                 const bool setCutToZero = true
             )
             :
                 randomizer_(randomizer),
                 stopWeight_(stopWeight),
-                reduction_(reduction),
+                nodeStopNum_(nodeNum),
                 setCutToZero_(setCutToZero)
             {
 
             }
             WeightRandomizationParam  randomizer_;
             float stopWeight_;
-            float reduction_;
+            float nodeStopNum_;
+            float ignoreNegativeWeights_;
             bool setCutToZero_;
         };
 
@@ -199,11 +201,17 @@ namespace proposal_gen{
             rWeights_(graph.edgeNum()),
             wRandomizer_(param_.randomizer_){
 
-            if(param_.reduction_>0.000001){
-                float keep = 1.0 - param_.reduction_;
+            if(param_.nodeStopNum_>0.000001 && param_.nodeStopNum_<=1.0 ){
+                float keep = param_.nodeStopNum_;
                 keep = std::max(0.0f, keep);
                 keep = std::min(1.0f, keep);
                 nodeStopNum_ = IndexType(float(graph_.nodeNum())*keep);
+            }
+            else if(param_.nodeStopNum_ >= 1.0){
+                nodeStopNum_ = param_.nodeStopNum_ ;
+            }
+            else{
+                nodeStopNum_ = 2;
             }
 
         }
@@ -319,11 +327,11 @@ namespace proposal_gen{
             Parameter(
                 const WeightRandomizationParam & randomizer = WeightRandomizationParam(),
                 const float stopWeight = 0.0,
-                const float reduction = -1.0,
+                const float nodeStopNum = -1.0,
                 const bool ignoreNegativeWeights = false,
                 const bool setCutToZero = true
             )
-            :  CopParam(randomizer, stopWeight, reduction,setCutToZero)
+            :  CopParam(randomizer, stopWeight, nodeStopNum,setCutToZero)
             {
 
             }
@@ -358,8 +366,10 @@ namespace proposal_gen{
                     ValueType val00  = gm_[i](lAA);
                     ValueType val01  = gm_[i](lAB);
                     ValueType weight = val01 - val00; 
-                    const GraphEdge gEdge = graph_.addEdge(gm_[i].variableIndex(0),gm_[i].variableIndex(1));
-                    weights_[gEdge.id()]+=weight;
+                    if(!param_.ignoreNegativeWeights_ || weight >= 0.0){
+                        const GraphEdge gEdge = graph_.addEdge(gm_[i].variableIndex(0),gm_[i].variableIndex(1));
+                        weights_[gEdge.id()]+=weight;
+                    }
                 }
             }
             

@@ -136,12 +136,14 @@ public:
         Parameter & p,
         const WRandParam &             randomizer,
         const float                    stopWeight,
-        const float                    reduction,
+        const float                    nodeStopNum,
+        const bool                     ignoreNegativeWeights,
         const bool                     setCutToZero
     ) {
         p.randomizer_ = randomizer;
         p.stopWeight_ = stopWeight;
-        p.reduction_ = reduction;
+        p.nodeStopNum_ = nodeStopNum;
+        p.ignoreNegativeWeights_ = ignoreNegativeWeights;
         p.setCutToZero_ = setCutToZero;
     } 
 
@@ -152,13 +154,15 @@ public:
     class_<Parameter > ( className.c_str() , init< > ())
         .def_readwrite("randomizer",&Parameter::randomizer_,"weight randomizer parameter")
         .def_readwrite("stopWeight",&Parameter::stopWeight_,"stopWeight")
-        .def_readwrite("reduction",&Parameter::reduction_,"reduction")
+        .def_readwrite("nodeStopNum",&Parameter::nodeStopNum_,"nodeStopNum")
+        .def_readwrite("ignoreNegativeWeights",&Parameter::ignoreNegativeWeights_,"ignore negative weights")
         .def_readwrite("setCutToZero",&Parameter::setCutToZero_,"set weights of cut edge to zero")
         .def ("set", &SelfType::set, 
             (
                 boost::python::arg("randomizer")=WRandParam(),
                 boost::python::arg("stopWeight")=0.0,
-                boost::python::arg("reduction")=-1.0,
+                boost::python::arg("nodeStopNum")=-1.0,
+                boost::python::arg("ignoreNegativeWeights")=false,
                 boost::python::arg("setCutToZero")=true
             ) 
         )

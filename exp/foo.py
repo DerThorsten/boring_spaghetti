@@ -15,7 +15,7 @@ grad = vigra.filters.gaussianGradientMagnitude(vigra.colors.transform_Lab2RGB(im
 
 
 attractive  = numpy.exp(-0.0005*grad)
-repulsive  = (1.0 - attractive)*5.0
+repulsive  = (1.0 - attractive)*4.5
 
 
 imgplot = plt.imshow(attractive.swapaxes(0,1))
@@ -33,13 +33,13 @@ plt.show()
 gm = opengm.adder.gridPatchAffinityGm(
     repulsive.astype(numpy.float64), 
     attractive.astype(numpy.float64), 
-    20, 5 ,5, 2.2, 2.2
+    20, 5 ,5, 1.5, 2.2
 )
 print gm
 
 verbose = True
-useQpbo = True
-useRC = True
+useQpbo = False
+useRC = False
 useCgc = True
 useWs = True
 
@@ -64,13 +64,13 @@ with opengm.Timer("with new method"):
     if useWs:
         print "ws"
         proposalParam = opengm.InfParam(
-            randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=1.100000001,ignoreSeed=False),
+            randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=10.100000001,ignoreSeed=False),
             ignoreNegativeWeights = True,
             seedFraction = 100.0
         )
         infParam = opengm.InfParam(
-            numStopIt=200,
-            numIt=4000,
+            numStopIt=400,
+            numIt=2000,
             generator='randomizedWatershed',
             proposalParam=proposalParam,
             fusionParam = fusionParam
@@ -90,9 +90,10 @@ with opengm.Timer("with new method"):
 
     if useRC:
         proposalParam = opengm.InfParam(
-            randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=3.700000001, ignoreSeed=False),
+            randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=1.700000001, ignoreSeed=False),
             stopWeight=-100.0,
-            reduction=0.9999,
+            nodeStopNum=200,
+            ignoreNegativeWeights=True,
             setCutToZero=False
         )
         

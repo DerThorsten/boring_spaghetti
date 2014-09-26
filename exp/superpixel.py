@@ -94,70 +94,27 @@ for vi0 in range(rag.maxNodeId):
 
 verbose = True
 useQpbo = False
+useRC = False
 useCgc = True
-useWs = False
+useWs = True
+
 
 with opengm.Timer("with new method"):
 
-    fusionParam = opengm.InfParam(fusionSolver = 'cgc', planar=False)
+    fusionParam = opengm.InfParam(fusionSolver = 'multicut', planar=False)
     arg = None
-    if useQpbo:
-        infParam = opengm.InfParam(
-            numStopIt=0,
-            numIt=200,
-            generator='qpboBased',
-            fusionParam = fusionParam
-        )
-        inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
-        # inf.setStartingPoint(arg)
-        # start inference (in this case verbose infernce)
-        visitor=inf.verboseVisitor(printNth=1,multiline=False)
-        if verbose:
-            inf.infer(visitor)
-        else:
-            inf.infer()
-        inf.infer()
-        arg = inf.arg()
 
-
-    proposalParam = opengm.InfParam(
-        randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=50.700000001, ignoreSeed=False),
-        stopWeight=0.0,
-        reduction=0.95,
-        setCutToZero=False
-    )
-    
-
-
-    infParam = opengm.InfParam(
-        numStopIt=5,
-        numIt=200,
-        generator='randomizedHierarchicalClustering',
-        proposalParam=proposalParam,
-        fusionParam = fusionParam
-    )
-
-
-    inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
-    if arg is not None:
-        inf.setStartingPoint(arg)
-    # start inference (in this case verbose infernce)
-    visitor=inf.verboseVisitor(printNth=1,multiline=False)
-    if verbose:
-        inf.infer(visitor)
-    else:
-        inf.infer()
-    arg = inf.arg()
 
     if useWs:
         print "ws"
         proposalParam = opengm.InfParam(
-            randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=1.100000001,ignoreSeed=False),
-            seedFraction = 0.005
+            randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=10.100000001,ignoreSeed=False),
+            ignoreNegativeWeights = True,
+            seedFraction = 5.0
         )
         infParam = opengm.InfParam(
-            numStopIt=20,
-            numIt=10,
+            numStopIt=400,
+            numIt=2000,
             generator='randomizedWatershed',
             proposalParam=proposalParam,
             fusionParam = fusionParam
@@ -175,7 +132,36 @@ with opengm.Timer("with new method"):
             inf.infer()
         arg = inf.arg()
 
+    if useRC:
+        proposalParam = opengm.InfParam(
+            randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=1.700000001, ignoreSeed=False),
+            stopWeight=-100.0,
+            nodeStopNum=200,
+            ignoreNegativeWeights=True,
+            setCutToZero=False
+        )
+        
 
+
+        infParam = opengm.InfParam(
+            numStopIt=20,
+            numIt=100,
+            generator='randomizedHierarchicalClustering',
+            proposalParam=proposalParam,
+            fusionParam = fusionParam
+        )
+
+
+        inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
+        if arg is not None:
+            inf.setStartingPoint(arg)
+        # start inference (in this case verbose infernce)
+        visitor=inf.verboseVisitor(printNth=1,multiline=False)
+        if verbose:
+            inf.infer(visitor)
+        else:
+            inf.infer()
+        arg = inf.arg()
 
     if useQpbo:
         infParam = opengm.InfParam(
@@ -195,7 +181,7 @@ with opengm.Timer("with new method"):
         infParam = opengm.InfParam(
             planar=False,
             startFromThreshold=False,
-            doCutMove = True,
+            doCutMove = False,
             doGlueCutMove = True,
             maxIterations = 1
         )
@@ -210,6 +196,7 @@ with opengm.Timer("with new method"):
             inf.infer()
 
         arg = inf.arg()
+
 
 
     print gm.evaluate(arg)
