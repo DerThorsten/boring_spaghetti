@@ -1,0 +1,134 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{eso-pic}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+
+% Include other packages here, before hyperref.
+\usepackage{my_macros}
+%\usepackage{framed}
+\usepackage{caption}
+\usepackage{subcaption}
+%for tikz
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning,automata,shadows,fit,shapes}
+\usetikzlibrary{arrows,petri,topaths}
+\usetikzlibrary{positioning,fit,calc}
+\usetikzlibrary{shapes.arrows,chains,decorations.pathreplacing,fadings}
+\usepackage{tkz-berge}
+
+\definecolor{shadecolor}{rgb}{0.01,0.199,0.1}
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+% \cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+%%%%%%%%% TITLE
+\include{my_macros.tex}
+\title{FancyMc Moves \\ Fusion Moves for Multicut Objectives}
+
+\author{First Author\\
+Institution1\\
+Institution1 address\\
+{\tt\small firstauthor@i1.org}
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+\and
+Second Author\\
+Institution2\\
+First line of institution2 address\\
+{\tt\small secondauthor@i2.org}
+}
+
+\maketitle
+%\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+\begin{abstract}
+   Multicuts rule.
+\end{abstract}
+\section{Introduction}
+
+The tale of the multicut
+
+%-------------------------------------------------------------------------
+
+\subsection{Related Work}
+
+\subsubsection{Multicut}
+   \begin{itemize}
+   \item Andres \etal~\cite{andres_2011_iccv}
+   \item Kappes \etal~\cite{kappes_2011_emmcvpr}
+   \item Bagon and Galun~\cite{bagon_2011_arxiv}
+   \item Yarkony \etal~\cite{yarkony_2012_eccv}
+   \item Beier \etal~\cite{beier_2014_cvpr}
+   \end{itemize}
+
+\subsubsection{Fusion Moves}
+Move making algorithms, in particular fusion moves, 
+have become increasingly popular for energy minimization~\cite{???,kappes_2014_ws}.
+For many large scale computer vision applications fusion moves lead to good approximations
+with state of the art any time performance~\cite{kappes_2014_ws}.
+
+
+
+
+
+
+
+
+%------------------------------------------------------------------------
+\section{Name of My Method (Union Fusion Cut)}
+
+Global optimal solvers for multicut do not scale beyond ??? \cite{???}.
+Good approximate solvers for planar graphs exist \cite{beier_2014_cvpr,yarkony_2012_eccv} 
+but have difficulties to find good solutions for non planar graphs \cite{beier_2014_cvpr}.
+
+
+
+\input{alg_graph.tex}
+
+\input{move_graph.tex}
+
+
+
+%-------------------------------------------------------------------------
+\subsection{Proposal Generators}
+
+
+
+%-------------------------------------------------------------------------
+\subsection{Fusion Move Solver}
+
+
+\section{Experiments}
+
+\section{Conclusion}
+
+    
+
+
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{egbib}
+}
+
+\end{document}

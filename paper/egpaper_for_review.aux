@@ -1,0 +1,62 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@input{my_macros.tex.aux}
+\citation{andres_2011_iccv}
+\citation{kappes_2011_emmcvpr}
+\citation{bagon_2011_arxiv}
+\citation{yarkony_2012_eccv}
+\citation{beier_2014_cvpr}
+\citation{???}
+\citation{kappes_2014_ws}
+\citation{kappes_2014_ws}
+\citation{???}
+\citation{beier_2014_cvpr}
+\citation{yarkony_2012_eccv}
+\citation{beier_2014_cvpr}
+\bibstyle{ieee}
+\bibdata{egbib}
+\bibcite{andres_2011_iccv}{1}
+\bibcite{bagon_2011_arxiv}{2}
+\bibcite{beier_2014_cvpr}{3}
+\bibcite{kappes_2014_ws}{4}
+\bibcite{kappes_2011_emmcvpr}{5}
+\bibcite{yarkony_2012_eccv}{6}
+\@writefile{toc}{\contentsline {section}{\numberline {1}\hskip -1em.\nobreakspace  {}Introduction}{1}{section.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}\hskip -1em.\nobreakspace  {}Related Work}{1}{subsection.1.1}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.1}Multicut}{1}{subsubsection.1.1.1}}
+\@writefile{brf}{\backcite{andres_2011_iccv}{{1}{1.1.1}{subsubsection.1.1.1}}}
+\@writefile{brf}{\backcite{kappes_2011_emmcvpr}{{1}{1.1.1}{subsubsection.1.1.1}}}
+\@writefile{brf}{\backcite{bagon_2011_arxiv}{{1}{1.1.1}{subsubsection.1.1.1}}}
+\@writefile{brf}{\backcite{yarkony_2012_eccv}{{1}{1.1.1}{subsubsection.1.1.1}}}
+\@writefile{brf}{\backcite{beier_2014_cvpr}{{1}{1.1.1}{subsubsection.1.1.1}}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2}Fusion Moves}{1}{subsubsection.1.1.2}}
+\@writefile{brf}{\backcite{???,kappes_2014_ws}{{1}{1.1.2}{subsubsection.1.1.2}}}
+\@writefile{brf}{\backcite{kappes_2014_ws}{{1}{1.1.2}{subsubsection.1.1.2}}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}\hskip -1em.\nobreakspace  {}Name of My Method (Union Fusion Cut)}{1}{section.2}}
+\@writefile{brf}{\backcite{???}{{1}{2}{section.2}}}
+\@writefile{brf}{\backcite{beier_2014_cvpr,yarkony_2012_eccv}{{1}{2}{section.2}}}
+\@writefile{brf}{\backcite{beier_2014_cvpr}{{1}{2}{section.2}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}\hskip -1em.\nobreakspace  {}Proposal Generators}{1}{subsection.2.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}\hskip -1em.\nobreakspace  {}Fusion Move Solver}{1}{subsection.2.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}\hskip -1em.\nobreakspace  {}Experiments}{1}{section.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}\hskip -1em.\nobreakspace  {}Conclusion}{1}{section.4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces  Describe Method here \relax }}{2}{figure.caption.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces  The proposed algorithm works in the following way: Given a graph $\mathcal  {G}$, edge weights $\mathcal  {W}$ and a proposal generator, the current best solution $P$ is iteratively improved. A proposal generator generates different versatile proposal partitions $\mathaccentV {bar}016{P}$. The proposal $\mathaccentV {bar}016{P}$ is intersected with $P$ which results in $\mathaccentV {tilde}07E{P}$. Contracting each each which is not cut in $\mathaccentV {tilde}07E{P}$ leads to a coarser graph $\mathaccentV {tilde}07E{\mathcal  {G}} = ( \mathaccentV {tilde}07E{\mathcal  {V}}, \mathaccentV {tilde}07E{\mathcal  {E}} )$ with new edge weights $\mathaccentV {tilde}07E{\mathcal  {W}}$. If $\mathaccentV {bar}016{P}$ and $P$ have a small fraction of cut edges, $\mathaccentV {tilde}07E{\mathcal  {G}}$ will be small ( $|\mathaccentV {tilde}07E{\mathcal  {V}}| << |\mathcal  {V}|$ and $|\mathaccentV {tilde}07E{\mathcal  {E}}| << |\mathcal  {E}|$). The multicut objective on the smaller graph $\mathaccentV {tilde}07E{\mathcal  {G}}$ can be optimized magnitudes faster than on $\mathaccentV {tilde}07E{\mathcal  {G}}$. It is guaranteed that the optimal multicut partitioning $\mathaccentV {bar}016{P}^{\mathaccentV {tilde}07E{\mathcal  {G}}}$ on $\mathaccentV {tilde}07E{\mathcal  {G}}$ projected back to $\mathcal  {G}$ as a lower or equal energy than any of the two input partitions $P$ and $\mathaccentV {bar}016{P}$, therefore we store the result of fusion as new best state $P$ and repeat the procedure. \relax }}{2}{figure.caption.1}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:algo_graph}{{1}{2}{The proposed algorithm works in the following way: Given a graph $\mathcal {G}$, edge weights $\mathcal {W}$ and a proposal generator, the current best solution $P$ is iteratively improved. A proposal generator generates different versatile proposal partitions $\bar {P}$. The proposal $\bar {P}$ is intersected with $P$ which results in $\tilde {P}$. Contracting each each which is not cut in $\tilde {P}$ leads to a coarser graph $\tilde {\mathcal {G}} = ( \tilde {\mathcal {V}}, \tilde {\mathcal {E}} )$ with new edge weights $\tilde {\mathcal {W}}$. If $\bar {P}$ and $P$ have a small fraction of cut edges, $\tilde {\mathcal {G}}$ will be small ( $|\tilde {\mathcal {V}}| << |\mathcal {V}|$ and $|\tilde {\mathcal {E}}| << |\mathcal {E}|$). The multicut objective on the smaller graph $\tilde {\mathcal {G}}$ can be optimized magnitudes faster than on $\tilde {\mathcal {G}}$. It is guaranteed that the optimal multicut partitioning $\bar {P}^{\tilde {\mathcal {G}}}$ on $\tilde {\mathcal {G}}$ projected back to $\mathcal {G}$ as a lower or equal energy than any of the two input partitions $P$ and $\bar {P}$, therefore we store the result of fusion as new best state $P$ and repeat the procedure. \relax }{figure.caption.1}{}}

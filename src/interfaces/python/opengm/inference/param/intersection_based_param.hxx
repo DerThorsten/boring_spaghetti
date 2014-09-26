@@ -183,9 +183,11 @@ public:
     (
         Parameter & p,
         const float                    seedFraction,
+        const bool                     ignoreNegativeWeights,
         const WRandParam &             randomizer
     ) {
         p.seedFraction_ = seedFraction;
+        p.ignoreNegativeWeights_ = ignoreNegativeWeights;
         p.randomizer_ = randomizer;
     } 
 
@@ -195,11 +197,13 @@ public:
 
 
     class_<Parameter > ( className.c_str() , init< > ())
-        .def_readwrite("seedFraction",&Parameter::seedFraction_,"approximative relative size of seeds")
+        .def_readwrite("seedFraction",&Parameter::seedFraction_,"approximative relative size of seeds (or absolute seed number if >1")
+        .def_readwrite("ignoreNegativeWeights",&Parameter::ignoreNegativeWeights_,"ignoreNegativeWeights")
         .def_readwrite("randomizer",&Parameter::randomizer_,"weight randomizer")
         .def ("set", &SelfType::set, 
             (
                 boost::python::arg("seedFraction")=0.01,
+                boost::python::arg("ignoreNegativeWeights")=false,
                 boost::python::arg("randomizer")=WRandParam()
             ) 
         )

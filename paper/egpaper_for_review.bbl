@@ -1,0 +1,38 @@
+\begin{thebibliography}{1}\itemsep=-1pt
+
+\bibitem{andres_2011_iccv}
+B.~Andres, J.~H. Kappes, T.~Beier, U.~K{\"o}the, and F.~A. Hamprecht.
+\newblock Probabilistic image segmentation with closedness constraints.
+\newblock In {\em ICCV}, pages 2611--2618. IEEE, 2011.
+
+\bibitem{bagon_2011_arxiv}
+S.~Bagon and M.~Galun.
+\newblock Large scale correlation clustering optimization.
+\newblock {\em CoRR}, abs/1112.2903, 2011.
+
+\bibitem{beier_2014_cvpr}
+T.~Beier, T.~Kroeger, J.~H. Kappes, U.~Koethe, and F.~Hamprecht.
+\newblock {Cut, Glue \& Cut: A Fast, Approximate Solver for Multicut
+  Partitioning}.
+\newblock In {\em IEEE Conference on Computer Vision and Pattern Recognition
+  2014}, 2014.
+
+\bibitem{kappes_2014_ws}
+J.~H. Kappes, T.~Beier, and C.~Schn\"orr.
+\newblock Map-inference on large scale higher-order discrete graphical models
+  by fusion moves.
+\newblock In {\em International Workshop on Graphical Models in Computer
+  Vision}, 2014.
+\newblock Oral.
+
+\bibitem{kappes_2011_emmcvpr}
+J.~H. Kappes, M.~Speth, B.~Andres, G.~Reinelt, and C.~Schn{\"o}rr.
+\newblock Globally optimal image partitioning by multicuts.
+\newblock In {\em EMMCVPR}, pages 31--44. Springer, 2011.
+
+\bibitem{yarkony_2012_eccv}
+J.~Yarkony, A.~Ihler, and C.~C. Fowlkes.
+\newblock Fast planar correlation clustering for image segmentation.
+\newblock In {\em ECCV}. Springer, 2012.
+
+\end{thebibliography}

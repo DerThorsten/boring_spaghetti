@@ -3,9 +3,10 @@ import opengm
 import numpy
 import matplotlib
 import matplotlib.pyplot as plt
+
 img = vigra.readImage('/home/tbeier/datasets/BSR/BSDS500/data/images/train/56028.jpg')
 img = vigra.readImage('/home/tbeier/datasets/BSR/BSDS500/data/images/train/118035.jpg')
-img = vigra.resize(img, (img.shape[0]/3, img.shape[1]/3))[::2,::2,:]
+#img = vigra.resize(img, (img.shape[0]/1, img.shape[1]/1))#[::1,::1,:]
 
 
 
@@ -13,8 +14,8 @@ grad = vigra.filters.gaussianGradientMagnitude(vigra.colors.transform_Lab2RGB(im
 
 
 
-attractive  = numpy.exp(-0.0005*grad)+0.5
-repulsive  = (1.0 - attractive)*10.0
+attractive  = numpy.exp(-0.0005*grad)
+repulsive  = (1.0 - attractive)*5.0
 
 
 imgplot = plt.imshow(attractive.swapaxes(0,1))
@@ -32,13 +33,14 @@ plt.show()
 gm = opengm.adder.gridPatchAffinityGm(
     repulsive.astype(numpy.float64), 
     attractive.astype(numpy.float64), 
-    12, 3 ,3, 0.0, 10000.40
+    20, 5 ,5, 2.2, 2.2
 )
 print gm
 
 verbose = True
 useQpbo = True
-useCgc = False
+useRC = True
+useCgc = True
 useWs = True
 
 #with opengm.Timer("with cgc"):
@@ -55,65 +57,20 @@ useWs = True
 #
 with opengm.Timer("with new method"):
 
-    fusionParam = opengm.InfParam(fusionSolver = 'cgc', planar=False)
+    fusionParam = opengm.InfParam(fusionSolver = 'multicut', planar=False)
     arg = None
-    if useQpbo:
-        infParam = opengm.InfParam(
-            numStopIt=0,
-            numIt=200,
-            generator='qpboBased',
-            fusionParam = fusionParam
-        )
-        inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
-        # inf.setStartingPoint(arg)
-        # start inference (in this case verbose infernce)
-        visitor=inf.verboseVisitor(printNth=1,multiline=False)
-        if verbose:
-            inf.infer(visitor)
-        else:
-            inf.infer()
-        inf.infer()
-        arg = inf.arg()
 
-
-    proposalParam = opengm.InfParam(
-        randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=10.700000001, ignoreSeed=False),
-        stopWeight=0.0,
-        reduction=0.90,
-        setCutToZero=False
-    )
-    
-
-
-    infParam = opengm.InfParam(
-        numStopIt=2,
-        numIt=10,
-        generator='randomizedHierarchicalClustering',
-        proposalParam=proposalParam,
-        fusionParam = fusionParam
-    )
-
-
-    inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
-    if arg is not None:
-        inf.setStartingPoint(arg)
-    # start inference (in this case verbose infernce)
-    visitor=inf.verboseVisitor(printNth=1,multiline=False)
-    if verbose:
-        inf.infer(visitor)
-    else:
-        inf.infer()
-    arg = inf.arg()
 
     if useWs:
         print "ws"
         proposalParam = opengm.InfParam(
             randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=1.100000001,ignoreSeed=False),
-            seedFraction = 0.010
+            ignoreNegativeWeights = True,
+            seedFraction = 100.0
         )
         infParam = opengm.InfParam(
-            numStopIt=20,
-            numIt=10,
+            numStopIt=200,
+            numIt=4000,
             generator='randomizedWatershed',
             proposalParam=proposalParam,
             fusionParam = fusionParam
@@ -131,7 +88,35 @@ with opengm.Timer("with new method"):
             inf.infer()
         arg = inf.arg()
 
+    if useRC:
+        proposalParam = opengm.InfParam(
+            randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=3.700000001, ignoreSeed=False),
+            stopWeight=-100.0,
+            reduction=0.9999,
+            setCutToZero=False
+        )
+        
 
+
+        infParam = opengm.InfParam(
+            numStopIt=20,
+            numIt=100,
+            generator='randomizedHierarchicalClustering',
+            proposalParam=proposalParam,
+            fusionParam = fusionParam
+        )
+
+
+        inf=opengm.inference.IntersectionBased(gm, parameter=infParam)
+        if arg is not None:
+            inf.setStartingPoint(arg)
+        # start inference (in this case verbose infernce)
+        visitor=inf.verboseVisitor(printNth=1,multiline=False)
+        if verbose:
+            inf.infer(visitor)
+        else:
+            inf.infer()
+        arg = inf.arg()
 
     if useQpbo:
         infParam = opengm.InfParam(
@@ -166,6 +151,7 @@ with opengm.Timer("with new method"):
             inf.infer()
 
         arg = inf.arg()
+
 
 
     print gm.evaluate(arg)

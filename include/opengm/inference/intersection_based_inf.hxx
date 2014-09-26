@@ -302,11 +302,16 @@ namespace proposal_gen{
         typedef WeightRandomization<ValueType> WeightRand;
         typedef typename  WeightRand::Parameter WeightRandomizationParam;
 
+        typedef RandMcClusterOp<GM, ACC > Cop;
+        typedef typename Cop::Parameter CopParam;
+        typedef vigra::HierarchicalClustering< Cop > HC;
+        typedef typename HC::Parameter HcParam;
+
 
 
         typedef typename  Graph::Edge GraphEdge;
 
-        struct Parameter
+        struct Parameter : public  CopParam
         {
 
 
@@ -315,26 +320,15 @@ namespace proposal_gen{
                 const WeightRandomizationParam & randomizer = WeightRandomizationParam(),
                 const float stopWeight = 0.0,
                 const float reduction = -1.0,
+                const bool ignoreNegativeWeights = false,
                 const bool setCutToZero = true
             )
-            :
-                randomizer_(randomizer),
-                stopWeight_(stopWeight),
-                reduction_(reduction),
-                setCutToZero_(setCutToZero)
+            :  CopParam(randomizer, stopWeight, reduction,setCutToZero)
             {
 
             }
-            WeightRandomizationParam  randomizer_;
-            float stopWeight_;
-            float reduction_;
-            bool setCutToZero_;
         };
 
-        typedef RandMcClusterOp<GM, ACC > Cop;
-        typedef typename Cop::Parameter CopParam;
-        typedef vigra::HierarchicalClustering< Cop > HC;
-        typedef typename HC::Parameter HcParam;
 
 
 
@@ -388,10 +382,8 @@ namespace proposal_gen{
 
 
             if(mgraph_ == NULL){
-                CopParam copParam(param_.randomizer_, param_.stopWeight_,
-                                  param_.reduction_, param_.setCutToZero_);
                 mgraph_ = new MGraph(graph_);
-                clusterOp_ = new Cop(graph_, *mgraph_ , copParam);
+                clusterOp_ = new Cop(graph_, *mgraph_ , param_);
             }
             else{
                 mgraph_->reset();
@@ -525,6 +517,7 @@ namespace proposal_gen{
             }
 
             float seedFraction_;
+            bool ignoreNegativeWeights_;
             WeightRandomizationParam randomizer_;
         };
 
@@ -550,16 +543,18 @@ namespace proposal_gen{
                 graph_.addNode(i);
             }
 
-            //std::cout<<"add edges\n";
             for(size_t i=0; i<gm_.numberOfFactors(); ++i){
                 if(gm_[i].numberOfVariables()==2){
                     ValueType val00  = gm_[i](lAA);
                     ValueType val01  = gm_[i](lAB);
                     ValueType weight = val01 - val00; 
-                    const GraphEdge gEdge = graph_.addEdge(gm_[i].variableIndex(0),gm_[i].variableIndex(1));
-                    weights_[gEdge.id()]+=weight;
+                    if(!param_.ignoreNegativeWeights_ || weight >= 0){
+                        const GraphEdge gEdge = graph_.addEdge(gm_[i].variableIndex(0),gm_[i].variableIndex(1));
+                        weights_[gEdge.id()]+=weight;
+                    }
                 }
             }
+
             weights_.resize(graph_.edgeNum());
             rWeights_.resize(graph_.edgeNum());
             seeds_.resize(graph_.maxNodeId()+1);
@@ -574,7 +569,9 @@ namespace proposal_gen{
         void getProposal(const std::vector<LabelType> &current , std::vector<LabelType> &proposal){
 
 
-            const size_t nSeeds = size_t(float(graph_.nodeNum())*param_.seedFraction_+0.5f);
+            const size_t nSeeds = param_.seedFraction_ <=1.0 ? 
+                size_t(float(graph_.nodeNum())*param_.seedFraction_+0.5f) :
+                size_t(param_.seedFraction_ + 0.5);
             std::fill(seeds_.begin(), seeds_.end(), 0);
 
 
