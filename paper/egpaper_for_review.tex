@@ -11,6 +11,7 @@
 
 % Include other packages here, before hyperref.
 \usepackage{my_macros}
+\usepackage{paralist}
 %\usepackage{framed}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -21,7 +22,7 @@
 \usetikzlibrary{positioning,fit,calc}
 \usetikzlibrary{shapes.arrows,chains,decorations.pathreplacing,fadings}
 \usepackage{tkz-berge}
-
+\DeclareMathOperator*{\argmin}{arg\,min}
 \definecolor{shadecolor}{rgb}{0.01,0.199,0.1}
 
 % If you comment hyperref and then uncomment it, you should delete
@@ -72,13 +73,55 @@ The tale of the multicut
 
 \subsection{Related Work}
 
-\subsubsection{Multicut}
+
+\subsubsection{Multicut Objective}
+
+The multicut / correlation clustering objective 
+can be formulated in different ways.
+
+
+
+\paragraph{Edge Indicator Variables:}
+\begin{center}
+    \begin{eqnarray}
+        y^* &=& \argmin_{y} \sum_{ e_{ij} \in E } w_{ij} \cdot y_{ij} \\
+        s.t.:& & y \in \textit{Multicut Polytope} \nonumber
+    \end{eqnarray}
+\end{center}
+
+\paragraph{Fully Connected Graph:}
+\begin{center}
+    \begin{eqnarray}
+        y^*   & = & \argmin_{y} \sum_{ i<j \in V } w_{ij} \cdot y_{ij} \\
+        s.t.: &  & x_{ij} + x_{jk} < x_{i,k} \quad \forall i, j, k   \nonumber
+    \end{eqnarray}
+\end{center}
+
+\paragraph{Node Coloring:}
+\begin{center}
+    \begin{eqnarray}
+        l^* &=& \argmin_{L} \sum_{ e_{ij} \in E } w_{ij} \cdot [l_{u} \neq l_{v}] \\
+        y_{ij}^* &=& [l_{u} \neq l_{v}]  
+    \end{eqnarray}
+\end{center}
+
+The multicut objective has been used for
+\begin{inparaenum}[(i)]
+    \item partitioning a superpixel region adjacency graph~\cite{andres_2011_iccv,kroeger_2012_eccv}
+    \item with optional long range repulsive edges~\cite{yarknoy???}.
+    \item Alush and Globerger showed how to average multiple segmentations with the multicut objective~\cite{alush_2012_pami}.
+    \item Multicuts can also be used for interactive segmentation~\cite{bagon_2011_arxiv}
+    \item and to cluster fully connected graphs~\cite{???}.
+\end{inparaenum}
+
+
+\subsubsection{Solver for the Multicut Objective}
    \begin{itemize}
-   \item Andres \etal~\cite{andres_2011_iccv}
-   \item Kappes \etal~\cite{kappes_2011_emmcvpr}
-   \item Bagon and Galun~\cite{bagon_2011_arxiv}
-   \item Yarkony \etal~\cite{yarkony_2012_eccv}
-   \item Beier \etal~\cite{beier_2014_cvpr}
+   \item Multicut~\cite{kappes_2011_emmcvpr}
+   \item Expand and Explorer~\cite{bagon_2011_arxiv}
+   \item Fast Planar CC~\cite{yarkony_2012_eccv}
+   \item Break and Conquer \cite{alush_2013_simbad}.
+   \item Cut Glue And Cut~\cite{beier_2014_cvpr}
    \end{itemize}
 
 \subsubsection{Fusion Moves}
@@ -98,20 +141,21 @@ with state of the art any time performance~\cite{kappes_2014_ws}.
 \section{Name of My Method (Union Fusion Cut)}
 
 Global optimal solvers for multicut do not scale beyond ??? \cite{???}.
-Good approximate solvers for planar graphs exist \cite{beier_2014_cvpr,yarkony_2012_eccv} 
+Good approximate solvers for planar graphs exist \cite{beifiger_2014_cvpr,yarkony_2012_eccv} 
 but have difficulties to find good solutions for non planar graphs \cite{beier_2014_cvpr}.
 
 
 
-\input{alg_graph.tex}
+\input{inputs/fig_alg_graph.tex}
 
-\input{move_graph.tex}
+\input{inputs/fig_move_graph.tex}
 
 
 
 %-------------------------------------------------------------------------
 \subsection{Proposal Generators}
 
+\input{inputs/fig_hc.tex}
 
 
 %-------------------------------------------------------------------------
@@ -119,6 +163,10 @@ but have difficulties to find good solutions for non planar graphs \cite{beier_2
 
 
 \section{Experiments}
+\subsection{Benchmark Models}
+\subsection{Pixel-wise Multicuts}
+\input{inputs/fig_pixel_mc.tex}
+
 
 \section{Conclusion}
 
