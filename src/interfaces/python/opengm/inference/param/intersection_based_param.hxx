@@ -227,10 +227,49 @@ public:
     }
 };
 
+#ifdef WITH_QPBO
+
+template<class GM, class ACC>
+class InfParamExporter<
+    opengm::proposal_gen::QpboBased<GM, ACC>
+>{
+
+public:
+    typedef opengm::proposal_gen::QpboBased<GM, ACC> GEN;
+    typedef typename GEN::ValueType ValueType;
+    typedef typename GEN::Parameter Parameter;
+    typedef InfParamExporter< GEN > SelfType;
+
+    typedef typename opengm:: proposal_gen::WeightRandomization<ValueType>::Parameter WRandParam;
+
+    inline static void set 
+    (
+        Parameter & p,
+        const WRandParam &             randomizer
+    ) {
+        p.randomizer_ = randomizer;
+    } 
+
+    void static exportInfParam(const std::string & className){
+
+
+
+
+    class_<Parameter > ( className.c_str() , init< > ())
+        .def_readwrite("randomizer",&Parameter::randomizer_,"weight randomizer")
+        .def ("set", &SelfType::set, 
+            (
+                boost::python::arg("randomizer")=WRandParam()
+            ) 
+        )
+    ;
+    }
+};
+
 #endif
 
 
-
+#endif
 
 
 template<class INFERENCE>
@@ -243,7 +282,7 @@ class InfParamExporter<          clsName <GM,ACC>     >       \
 : public  InfParamExporterEmpty< clsName < GM,ACC>    > {     \
 };
 #ifdef WITH_QPBO
-_EMPTY_PROPOSAL_PARAM(opengm::proposal_gen::QpboBased)
+//_EMPTY_PROPOSAL_PARAM(opengm::proposal_gen::QpboBased)
 #endif
 //_EMPTY_PROPOSAL_PARAM(opengm::proposal_gen::Random2Gen)
 #undef _EMPTY_PROPOSAL_PARAM

@@ -62,6 +62,56 @@ namespace opengm
 
 namespace proposal_gen{
 
+    template<class G, class VEC>
+    struct VectorViewEdgeMap{
+    public:
+        typedef typename G::Edge  Key;
+        typedef typename VEC::value_type Value;
+        typedef typename VEC::reference Reference;
+        typedef typename VEC::const_reference ConstReference;
+
+        VectorViewEdgeMap(const G & g, VEC & vec)
+        :
+            graph_(g),
+            vec_(vec){
+        }
+
+        Reference operator[](const Key & key){
+            return vec_[graph_.id(key)];
+        }
+        ConstReference operator[](const Key & key)const{
+            return vec_[graph_.id(key)];
+        }
+    private:
+        const G & graph_;
+        VEC & vec_;
+    };
+
+    template<class G, class VEC>
+    struct VectorViewNodeMap{
+    public:
+        typedef typename G::Node  Key;
+        typedef typename VEC::value_type Value;
+        typedef typename VEC::reference Reference;
+        typedef typename VEC::const_reference ConstReference;
+
+        VectorViewNodeMap(const G & g, VEC & vec)
+        :
+            graph_(g),
+            vec_(vec){
+        }
+
+        Reference operator[](const Key & key){
+            return vec_[graph_.id(key)];
+        }
+        ConstReference operator[](const Key & key)const{
+            return vec_[graph_.id(key)];
+        }
+    private:
+        const G & graph_;
+        VEC & vec_;
+    };
+
 
 
 
@@ -438,56 +488,6 @@ namespace proposal_gen{
     };
 
 
-    template<class G, class VEC>
-    struct VectorViewEdgeMap{
-    public:
-        typedef typename G::Edge  Key;
-        typedef typename VEC::value_type Value;
-        typedef typename VEC::reference Reference;
-        typedef typename VEC::const_reference ConstReference;
-
-        VectorViewEdgeMap(const G & g, VEC & vec)
-        :
-            graph_(g),
-            vec_(vec){
-        }
-
-        Reference operator[](const Key & key){
-            return vec_[graph_.id(key)];
-        }
-        ConstReference operator[](const Key & key)const{
-            return vec_[graph_.id(key)];
-        }
-    private:
-        const G & graph_;
-        VEC & vec_;
-    };
-
-    template<class G, class VEC>
-    struct VectorViewNodeMap{
-    public:
-        typedef typename G::Node  Key;
-        typedef typename VEC::value_type Value;
-        typedef typename VEC::reference Reference;
-        typedef typename VEC::const_reference ConstReference;
-
-        VectorViewNodeMap(const G & g, VEC & vec)
-        :
-            graph_(g),
-            vec_(vec){
-        }
-
-        Reference operator[](const Key & key){
-            return vec_[graph_.id(key)];
-        }
-        ConstReference operator[](const Key & key)const{
-            return vec_[graph_.id(key)];
-        }
-    private:
-        const G & graph_;
-        VEC & vec_;
-    };
-
 
 
 
@@ -649,14 +649,20 @@ namespace proposal_gen{
         typedef GM GraphicalModelType;
         OPENGM_GM_TYPE_TYPEDEFS;
 
-
+        typedef WeightRandomization<ValueType> WeightRand;
+        typedef typename  WeightRand::Parameter WeightRandomizationParam;
 
         class Parameter
         {
         public:
-            Parameter(){
+            Parameter(
+                const WeightRandomizationParam & randomizer = WeightRandomizationParam()
+            )
+            : randomizer_(randomizer)
+            {
 
             }
+            WeightRandomizationParam randomizer_;
         };
 
 
@@ -668,11 +674,28 @@ namespace proposal_gen{
             param_(param),
             qpbo_(NULL),
             //qpbo_(int(gm.numberOfVariables()), int(gm.numberOfFactors()), NULL),
-            iteration_(0)
+            iteration_(0),
+            weights_(gm.numberOfFactors()),
+            rweights_(gm.numberOfFactors()),
+            wRandomizer_(param_.randomizer_)
         {
             //srand(42);
             qpbo_ = new kolmogorov::qpbo::QPBO<ValueType>(int(gm.numberOfVariables()), 
                                                           int(gm.numberOfFactors()), NULL);
+
+            LabelType lAA[2]={0, 0};
+            LabelType lAB[2]={0, 1};
+
+
+            for(size_t i=0; i<gm_.numberOfFactors(); ++i){
+                if(gm_[i].numberOfVariables()==2){
+                    ValueType val00  = gm_[i](lAA);
+                    ValueType val01  = gm_[i](lAB);
+                    ValueType weight = val01 - val00; 
+                    weights_[i]=weight;
+                }
+            }
+
         }
 
         ~QpboBased(){
@@ -680,7 +703,7 @@ namespace proposal_gen{
         }
 
         size_t defaultNumStopIt() {
-            return 1;
+            return 0;
         }
 
         void reset(){
@@ -696,6 +719,10 @@ namespace proposal_gen{
                qpbo_->Reset();
             }
 
+            // randomize
+            // randomize weights
+            wRandomizer_.randomize(weights_, rweights_);
+
             // add nodes
             qpbo_->AddNode(gm_.numberOfVariables());
 
@@ -710,9 +737,7 @@ namespace proposal_gen{
                    const IndexType vi1 = gm_[i].variableIndex(1);
 
                    if(current[vi0] == current[vi1]){
-                       const ValueType val00  = gm_[i](lAA);
-                       const ValueType val01  = gm_[i](lAB);
-                       const ValueType weight = val01 - val00; 
+                       const ValueType weight = rweights_[i];
                        qpbo_->AddPairwiseTerm( vi0, vi1, 0.0, weight, weight, 0.0);
                    }
                    else{
@@ -742,6 +767,9 @@ namespace proposal_gen{
         Parameter param_;
         kolmogorov::qpbo::QPBO<ValueType> * qpbo_;
         size_t iteration_; 
+        std::vector<ValueType> weights_;
+        std::vector<ValueType> rweights_;
+        WeightRand wRandomizer_; 
     };
 
     #endif 
@@ -814,7 +842,7 @@ public:
     virtual ValueType value()const {return bestValue_;}
 private:
     typedef FusionMoverType * FusionMoverTypePtr;
-
+    typedef PROPOSAL_GEN *    ProposalGenTypePtr;
 
     const GraphicalModelType &gm_;
     Parameter param_;
@@ -824,7 +852,9 @@ private:
     FusionMoverTypePtr * fusionMoverArray_;
 
 
-    PROPOSAL_GEN proposalGen_;
+    PROPOSAL_GEN * proposalGen_;
+    ProposalGenTypePtr * proposalGenArray_; 
+
     ValueType bestValue_;
     std::vector<LabelType> bestArg_;
     size_t maxOrder_;
@@ -843,7 +873,9 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::IntersectionBasedInf
        param_(parameter),
        fusionMover_(NULL),
        fusionMoverArray_(NULL),
-       proposalGen_(gm_, parameter.proposalParam_),
+       proposalGen_(NULL),
+       proposalGenArray_(NULL),
+       //proposalGen_(gm_, parameter.proposalParam_),
        bestValue_(),
        bestArg_(gm_.numberOfVariables(), 0),
        maxOrder_(gm.factorOrder())
@@ -856,13 +888,15 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::IntersectionBasedInf
 
     size_t nFuser  = param_.parallelProposals_;
     fusionMoverArray_ = new FusionMoverTypePtr[nFuser];
+    proposalGenArray_ = new ProposalGenTypePtr[nFuser];
 
     for(size_t f=0; f<nFuser; ++f){
         fusionMoverArray_[f] = new FusionMoverType(gm_,parameter.fusionParam_);
+        proposalGenArray_[f] = new PROPOSAL_GEN(gm_, parameter.proposalParam_);
     }
 
     fusionMover_ = fusionMoverArray_[0];
-
+    proposalGen_ = proposalGenArray_[0];
 
     //set default starting point
     std::vector<LabelType> conf(gm_.numberOfVariables(),0);
@@ -890,9 +924,11 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::~IntersectionBasedInf()
 {
     for(size_t f=0; f<param_.parallelProposals_; ++f){
         delete fusionMoverArray_[f];// = new FusionMoverType(gm_,parameter.fusionParam_);
+        delete proposalGenArray_[f];
     }
 
     delete[] fusionMoverArray_;
+    delete[] proposalGenArray_;
 }
 
 
@@ -951,7 +987,7 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::infer
 
 
     if(param_.numStopIt_ == 0){
-        param_.numStopIt_ = proposalGen_.defaultNumStopIt();
+        param_.numStopIt_ = proposalGen_->defaultNumStopIt();
     }
 
     std::vector<LabelType> proposedState(gm_.numberOfVariables());
@@ -987,7 +1023,7 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::infer
         bool anyVar=true;
 
         if(nFuser == 1){
-            proposalGen_.getProposal(bestArg_,proposedState);
+            proposalGen_->getProposal(bestArg_,proposedState);
             ValueType proposalValue = gm_.evaluate(proposedState);
             anyVar = fusionMover_->fuse(bestArg_,proposedState, fusedState, 
                                         bestValue_, proposalValue, bestValue_);
@@ -996,10 +1032,10 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::infer
 
             // get proposals (so far not in parallel)
             //std::cout<<"generate proposas\n";
-            for(size_t i=0; i<nFuser; ++i){
-                dVec[i]=false;
-                proposalGen_.getProposal(bestArg_,pVec[i]);
-            }
+            //for(size_t i=0; i<nFuser; ++i){
+            //    dVec[i]=false;
+            //    proposalGen_.getProposal(bestArg_,pVec[i]);
+            //}
 
             #pragma omp parallel for
             for(size_t i=0; i<nFuser; ++i){
@@ -1007,6 +1043,7 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::infer
                  //{
                    //std::cout<<"fuse i"<<i<<"\n";
                  //}
+                proposalGenArray_[i]->getProposal(bestArg_,pVec[i]);
                 bool tmp = fusionMoverArray_[i]->fuse(bestArg_,pVec[i], rVec[i], 
                                         bestValue_, gm_.evaluate(pVec[i]), vVec[i]);
                 if(bestValue_ < vVec[i]){
