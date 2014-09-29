@@ -12,9 +12,14 @@
 % Include other packages here, before hyperref.
 \usepackage{my_macros}
 \usepackage{paralist}
+\usepackage{amsthm}
 %\usepackage{framed}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{algorithm}
+%\usepackage{algorithmic}
+\usepackage{algpseudocode}
+\usepackage{setspace}
 %for tikz
 \usepackage{tikz,pgfplots}
 \usetikzlibrary{arrows,positioning,automata,shadows,fit,shapes}
@@ -23,7 +28,10 @@
 \usetikzlibrary{shapes.arrows,chains,decorations.pathreplacing,fadings}
 \usepackage{tkz-berge}
 \DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
 \definecolor{shadecolor}{rgb}{0.01,0.199,0.1}
+
+\newtheorem{theorem}{Theorem}
 
 % If you comment hyperref and then uncomment it, you should delete
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
@@ -116,6 +124,10 @@ The multicut objective has been used for
 
 
 \subsubsection{Solver for the Multicut Objective}
+    
+    \input{inputs/tab_mc_overview.tex}
+
+
    \begin{itemize}
    \item Multicut~\cite{kappes_2011_emmcvpr}
    \item Expand and Explorer~\cite{bagon_2011_arxiv}
@@ -145,6 +157,40 @@ Good approximate solvers for planar graphs exist \cite{beifiger_2014_cvpr,yarkon
 but have difficulties to find good solutions for non planar graphs \cite{beier_2014_cvpr}.
 
 
+\begin{theorem}[NameMe]
+Solving ??? on the contracted graph is 
+equivalent to solving ??? on the 
+original graph with additional 
+must link constraints
+\end{theorem}
+
+\begin{proof}[Proof of theorem ]
+todo
+\end{proof}
+
+
+
+\begin{theorem}[NameMe]
+Solving ??? and ??? will never increase the best energy...
+\end{theorem}
+
+\begin{proof}[Proof of theorem ]
+todo
+\end{proof}
+
+
+
+\begin{theorem}[NameMe]
+If the all cut edges of the global optimal
+solution are included in the union of
+the cut edges of two proposals, solving
+??? will find the global optimal solution
+\end{theorem}
+
+\begin{proof}[Proof of of theorem]
+todo
+\end{proof}
+
 
 \input{inputs/fig_alg_graph.tex}
 
@@ -154,6 +200,150 @@ but have difficulties to find good solutions for non planar graphs \cite{beier_2
 
 %-------------------------------------------------------------------------
 \subsection{Proposal Generators}
+
+
+\begin{algorithm}
+\begin{scriptsize}
+\caption{Fusion Based Algorithms}\label{alg:fusion}
+\begin{algorithmic}[1]
+\Procedure{Intersection-Based-Inference}{GEN,$J$,$X$}
+\State $x^0 \gets \textrm{initial state form } X$
+\State $n \gets 0 $                                 \Comment{Number of moves}
+\State $m \gets 0 $                                 \Comment{Number of moves without progress}
+\While{$m < m_{\max}$ and $n < n_{\max}$ }
+\State $n \gets n+1$ 
+ \State $x'\gets GEN(x^{n-1},J,X)$                    \Comment{Generate proposal}
+ \If{$J(x^{n-1}) \leq J(x')$}                       
+   \State $x^{n} \gets Fuse(x^{n-1},x',J)$             
+ \Else
+   \State $x^{n} \gets Fuse(x',x^{n-1},J)$
+ \EndIf
+ \If{$J(x^{n}) \leq J(x^{n-1})$}
+   \State $m \gets 0$                                 \Comment{Reset counter}
+ \Else
+   \State $m \gets m+1$                               \Comment{Increment counter}
+ \EndIf
+\EndWhile
+\State \textbf{return} $x^n$
+\EndProcedure
+\end{algorithmic}
+\end{scriptsize}
+\end{algorithm}
+
+
+\begin{algorithm}
+\begin{scriptsize}
+\caption{Fusion Moves}\label{alg:fusion_moves}
+\scriptsize
+\begin{algorithmic}[1]
+\Require $J(x) \leq J(x')$
+\Ensure $J(\hat{x}) \leq J(x)$
+\vspace{0.2cm}
+\Procedure{Fuse}{$x,x',J$}
+\State $\bar{x} \gets \textbf{\scriptsize{Intersect}}(x,x')$  
+    \Comment{
+        \begin{minipage}{0.4\linewidth} 
+            \begin{tiny}
+            \begin{singlespace}
+                intersect
+                uncut edges in $x$ and $x'$,
+                return  
+                connected component labeling
+            \end{singlespace}
+            \end{tiny}
+        \end{minipage}
+    }
+\vspace{0.1cm}
+\State $ \tilde{G}=(\tilde{E},\tilde{V}),\tilde{W} 
+    \gets \textbf{\scriptsize{Contract}}(G,W,\bar{x})$  
+    \Comment{ 
+        \begin{minipage}{0.2\linewidth} 
+            \begin{tiny}
+            \begin{singlespace}
+                Contract all edges 
+                which are uncut in $\bar{x}$ 
+            \end{singlespace}
+            \end{tiny}
+        \end{minipage}
+    }
+\vspace{0.1cm}
+\State $\tilde{x}^*= \argmin\limits_{\tilde{x}} \sum\limits_{e_{ij} \in \tilde{E}} \tilde{w}_{ij}[\tilde{x}_i \neq \tilde{x}_j]$
+    \Comment{ 
+        \begin{minipage}{0.3\linewidth} 
+            \begin{tiny}
+            \begin{singlespace}
+                Solve the multicut objective
+                on smaller graph $\tilde{G}=(\tilde{V},\tilde{E})$
+            \end{singlespace}
+            \end{tiny}
+        \end{minipage}
+    }
+
+\State $\hat{x} \gets \textbf{\scriptsize{ProjectBack}}(\tilde{x}^*)$
+    \Comment{ 
+        \begin{minipage}[\textheight]{0.4\linewidth} 
+            \begin{tiny}
+            \begin{singlespace}
+                Translate the connected component
+                labeling $\tilde{x}^*$ of $\tilde{G}$ 
+                to a connected component labeling of $G$
+            \end{singlespace}
+            \end{tiny}
+        \end{minipage}
+    }
+\State \textbf{return} $\hat{x}$
+\EndProcedure
+\vspace{0.3cm}
+\Procedure{FUSE$_{\textrm{BASE}}$}{$x,x',J$}
+\State \textbf{return} ${\arg\min}_{\bar{x} \in \{x,x'\}}J(\bar{x})$
+\EndProcedure
+\end{algorithmic}
+\end{scriptsize}
+\end{algorithm}
+
+
+
+\begin{algorithm}
+    \begin{scriptsize}
+        \caption{Proposal Generators}\label{alg:proposal_gen}   
+        \begin{algorithmic}[1]
+            %\Require $J(x) \leq J(x')$
+            %\Ensure $J(\hat{x}) \leq J(x)$
+            %\vspace{0.3cm}
+            \Procedure{Rand2Coloring}{$x,G=(E,V),W$}
+            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
+            \State $x'= \argmin\limits_{\bar{x}} \sum\limits_{e_{ij} \in E } \tilde{w}_{ij}[\bar{x}_i \neq \bar{x}_j]  [x_i = x_j]   $
+
+            $ \quad\quad s.t.\quad x_i \in \{0, 1\} \forall i $
+            \State \textbf{return} $x'$
+            \EndProcedure
+            %
+            %
+            \vspace{0.3cm}
+            \Procedure{RandEdgeWeightedWatersheds}{$x,G=(E,V),W$}
+            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
+            \State $ getRandomSeeds$
+            \State $ runEdgeWeightedWs$
+            \EndProcedure   
+            %
+            %
+            \vspace{0.3cm}
+            \Procedure{RandHierarchicalClustering}{$x,G=(E,V),W$}
+            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
+            \State $\hat{G}=(\hat{E},\hat{V}) \gets G=(E,V)$
+            \State $\hat{W} \gets W$
+            \While{$|\hat{V}|>\gamma$ \textbf{and}  $\max(\hat{W})>\theta$ }
+                \State $\hat{G}=(\hat{E},\hat{V}),\hat{W} \gets 
+                    \textbf{\scriptsize{contract}}(\hat{G},\hat{W},  \argmax\limits_{\hat{E}}(\hat{W}) )$
+            \EndWhile
+            \State $x' \gets \textbf{\scriptsize{getClusterResults}}(???) $ 
+            \EndProcedure
+        \end{algorithmic}
+    \end{scriptsize}
+\end{algorithm}
+
+
+
 
 \input{inputs/fig_hc.tex}
 
