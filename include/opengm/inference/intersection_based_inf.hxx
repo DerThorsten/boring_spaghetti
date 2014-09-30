@@ -574,7 +574,7 @@ namespace proposal_gen{
                 }
             }
 
-            weights_.resize(graph_.edgeNum());
+            //weights_.resize(graph_.edgeNum());
             rWeights_.resize(graph_.edgeNum());
             seeds_.resize(graph_.maxNodeId()+1);
         }
@@ -610,15 +610,21 @@ namespace proposal_gen{
                 }
             }
             else{
+                std::cout<<"using n seeds = "<<nSeeds<<"\n";
+
+
                 for(size_t i=0; i<nSeeds/2; ++i){
                     const int randId = wRandomizer_.randGen().uniformInt(negativeFactors_.size());
                     const IndexType fi  = negativeFactors_[randId];
+
+                    std::cout<<" fi "<<fi<<" ";
                     const IndexType vi0 = gm_[fi].variableIndex(0);
                     const IndexType vi1 = gm_[fi].variableIndex(1);
 
                     seeds_[vi0] = (2*i)+1;
                     seeds_[vi1] = (2*i+1)+1;
                 }
+                std::cout<<"\n";
             }
 
             // negate

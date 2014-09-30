@@ -202,6 +202,16 @@ def modelViewFunction(factor):
       return self.factor[labeling]
   return PythonFunction( _ModelViewFunction(factor) ,factor.shape.__tuple__())
 
+
+
+def gridVisNh4(shape, numpyOrder=True):
+    hFactors=(shape[0]-1)*shape[1];
+    vFactors=(shape[1]-1)*shape[0];
+    nFac =  hFactors+vFactors;
+    vis = numpy.zeros(shape=[nFac,2],dtype=index_type)
+    secondOrderGridVisNew(shape[0], shape[1], numpyOrder, vis)
+    return vis
+
 #Model generators
 def grid2d2Order(unaries,regularizer,order='numpy',operator='adder'):
    """ 
