@@ -1,0 +1,52 @@
+%!TEX root = ../egpaper_for_review.tex
+\begin{table}
+\begin{center}
+    \begin{tiny}
+    \begin{tabular}{ p{1cm} p{1cm} p{1.5cm} p{2.5cm} }
+    \hline
+    \hline
+    Method &    & Limitations &   \\ \hline
+    Multicut \cite{andres_2011_iccv,kappes_2011_emmcvpr} & 
+        (I)LP & 
+        not scalable, slow &
+        Cutting plane method.
+        Global optimal but slow for huge problems. 
+        However, applicable for medium size superpixel RAG. 
+        \\ \hline
+    Expand And Explorer \cite{bagon_2011_arxiv} & 
+        movemaker & 
+        gets stuck early &
+        $\alpha$-Expansion modification. Applicable to
+        large scale problems but gets stuck in local minima(???).
+        \\ \hline
+    Fast Planar CC \cite{yarkony_2012_eccv} & 
+        dual-decompositon & 
+        planar graphs only, 
+        duality/integrality gab &
+        Dual decompositon in planar subgraphs??
+        Works on planar graphs only. Fast (is there a word for fast to medium fast) for
+        small to medium size graphs.
+        \\ \hline
+    Cut Glue and Cut \cite{beier_2014_cvpr} & 
+        move-making & 
+        gets stuck in poor minima for non planar graphs &
+        Greedy solver based on a series of 2 colorings.
+        State of the art any time performance. Very
+        fast for planar graphs. Gets stuck in local minima
+        for non planar graphs.
+        \\ \hline
+    THIS WORK & 
+        fusion move-making & 
+        no natural stopping condition &
+        Fusion of a proposal segmentation with
+        the current best segmentation.
+        State of the art any time performance for (???)
+        \\ \hline
+        \hline
+    \end{tabular}
+    \end{tiny}
+\end{center}
+\caption{
+    Overview of correlation clustering / multicut solvers
+}
+\end{table}
