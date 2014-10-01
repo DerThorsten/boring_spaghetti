@@ -98,6 +98,56 @@ secondOrderGridVis(
 }
 
 template<class INDEX>
+void
+secondOrderGridVisNew(
+   const size_t dx,
+   const size_t dy,
+   bool order,
+   opengm::python::NumpyView< INDEX, 2> vis
+){
+
+   // calculate the number of factors...
+   const size_t hFactors=(dx-1)*dy;
+   const size_t vFactors=(dy-1)*dx;
+   const size_t numFac=hFactors+vFactors;
+
+   OPENGM_CHECK_OP(numFac, == , int(vis.shape(0)),"shape not matching");
+   OPENGM_CHECK_OP(2, == , int(vis.shape(1)),"shape not matching");
+
+   size_t fi=0;
+   if(order){
+      for(size_t x=0;x<dx;++x)
+      for(size_t y=0;y<dy;++y){
+         if(x+1<dx){
+            vis(fi,0)=(y+x*dy);
+            vis(fi,1)=(y+(x+1)*dy);
+            ++fi;
+         }
+         if(y+1<dy){
+           vis(fi,0)=(y+x*dy);
+           vis(fi,1)=((y+1)+x*dy);
+            ++fi;
+         }
+      }
+   }
+   else{
+      for(size_t x=0;x<dx;++x)
+      for(size_t y=0;y<dy;++y){
+         if(y+1<dy){
+            vis(fi,0)=(x+y*dx);
+            vis(fi,1)=(x+(y+1)*dx);
+            ++fi;
+         }
+         if(x+1<dx){
+            vis(fi,0)=(x+y*dx);
+            vis(fi,1)=((x+1)+y*dx);
+            ++fi;
+         }
+      }
+   }
+}
+
+template<class INDEX>
 std::vector< std::vector < INDEX > > *
 secondOrderGridVis3D(
    const size_t dx,
@@ -609,7 +659,9 @@ BOOST_PYTHON_MODULE_INIT(_opengmcore) {
    def("secondOrderGridVis", &secondOrderGridVis<opengm::UInt64Type>,return_value_policy<manage_new_object>(),(arg("dimX"),arg("dimY"),arg("numpyOrder")=true),
 	"Todo.."
 	);
-
+   def("secondOrderGridVisNew", &secondOrderGridVisNew<opengm::UInt64Type>,(arg("dimX"),arg("dimY"),arg("numpyOrder"),arg("result")),
+  "Todo.."
+  );
    def("secondOrderGridVis3D", 
        &secondOrderGridVis3D<opengm::UInt64Type>,
        return_value_policy<manage_new_object>(),(arg("dimX"),
