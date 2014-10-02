@@ -16,6 +16,7 @@ using namespace std;
 
 
 #ifndef NOVIGRA
+#define WITH_BOOST_GRAPH
 #include <vigra/adjacency_list_graph.hxx>
 #include <vigra/merge_graph_adaptor.hxx>
 #include <vigra/hierarchical_clustering.hxx>

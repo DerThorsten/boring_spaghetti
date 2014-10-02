@@ -1,6 +1,6 @@
 #pragma once
-#ifndef OPENGM_FUSION_BASED_INF_HXX
-#define OPENGM_FUSION_BASED_INF_HXX
+#ifndef OPENGM_INTERSECTION_BASED_INF_HXX
+#define OPENGM_INTERSECTION_BASED_INF_HXX
 
 #include <vector>
 #include <string>
@@ -34,14 +34,14 @@
 
 
 
-
+/*
 #include <vigra/adjacency_list_graph.hxx>
 #include <vigra/merge_graph_adaptor.hxx>
 #include <vigra/hierarchical_clustering.hxx>
 #include <vigra/priority_queue.hxx>
 #include <vigra/random.hxx>
 #include <vigra/graph_algorithms.hxx>
-
+*/
 
 
 
@@ -134,7 +134,7 @@ namespace proposal_gen{
             Parameter(
                 const NoiseType noiseType = NormalAdd,
                 const float     noiseParam = 1.0,
-                const UInt32    seed = 42,
+                const vigra::UInt32    seed = 42,
                 const bool      ignoreSeed = true
             )
             : 
@@ -147,7 +147,7 @@ namespace proposal_gen{
 
             NoiseType noiseType_;
             float noiseParam_;
-            UInt32 seed_;
+            vigra::UInt32 seed_;
             bool ignoreSeed_;
         };
 
@@ -224,7 +224,7 @@ namespace proposal_gen{
                 const float stopWeight = 0.0,
                 const float nodeNum = -1.0,
                 const float ignoreNegativeWeights = false,
-                const bool setCutToZero = true
+                const bool setCutToZero = false
             )
             :
                 randomizer_(randomizer),
@@ -488,9 +488,6 @@ namespace proposal_gen{
     };
 
 
-
-
-
     template<class GM, class ACC>
     class RandomizedWatershed{
     public:
@@ -504,7 +501,7 @@ namespace proposal_gen{
         typedef typename  Graph::Edge GraphEdge;
 
         typedef typename  Graph:: template EdgeMap<ValueType> WeightMap;
-        typedef typename  Graph:: template EdgeMap<UInt32>    LabelMap;
+        typedef typename  Graph:: template EdgeMap<vigra::UInt32>    LabelMap;
 
         typedef WeightRandomization<ValueType> WeightRand;
         typedef typename  WeightRand::Parameter WeightRandomizationParam;
@@ -1154,4 +1151,4 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::arg
 
 } // namespace opengm
 
-#endif // #ifndef OPENGM_FUSION_BASED_INF_HXX
+#endif // #ifndef OPENGM_INTERSECTION_BASED_INF_HXX

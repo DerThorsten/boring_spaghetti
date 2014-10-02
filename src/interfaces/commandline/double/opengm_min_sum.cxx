@@ -112,6 +112,15 @@
 #include "../../common/caller/mplp_caller.hxx"
 #endif
 
+
+#ifndef NOVIGRA
+#ifdef WITH_CPLEX
+#include "../../common/caller/intersection_based_caller.hxx"
+#endif
+#endif
+
+
+
 using namespace opengm;
 
 int main(int argc, char** argv) {
@@ -218,6 +227,10 @@ int main(int argc, char** argv) {
 #ifdef WITH_BOOST
       interface::MultiCutCaller<InterfaceType, GmType, AccumulatorType>,
 #endif
+#ifndef NOVIGRA
+      interface::IntersectionBasedCaller<InterfaceType, GmType, AccumulatorType>,
+#endif
+
 #endif
 
 #ifdef WITH_GUROBI

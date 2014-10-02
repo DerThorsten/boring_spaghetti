@@ -171,7 +171,7 @@ public:
                 boost::python::arg("stopWeight")=0.0,
                 boost::python::arg("nodeStopNum")=-1.0,
                 boost::python::arg("ignoreNegativeWeights")=false,
-                boost::python::arg("setCutToZero")=true
+                boost::python::arg("setCutToZero")=false
             ) 
         )
     ;

@@ -100,6 +100,13 @@
     endif()
 
 
+    if(WITH_ISINF)
+      target_link_libraries(opengm_min_sum external-library-isinf-shared)
+    endif(WITH_ISINF)
+
+
+
+
     INSTALL_TARGETS(/bin opengm_max_prod) 
     INSTALL_TARGETS(/bin opengm_min_sum)
     INSTALL_TARGETS(/bin opengm_min_sum_small)

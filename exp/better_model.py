@@ -4,13 +4,11 @@ import numpy
 import matplotlib
 import matplotlib.pyplot as plt
 
-
 import numpy as np
 import pylab
 import matplotlib.cm as cm
 import Image
 from matplotlib.colors import LinearSegmentedColormap
-
 
 
 img = vigra.readImage('/home/tbeier/datasets/BSR/BSDS500/data/images/train/56028.jpg')
