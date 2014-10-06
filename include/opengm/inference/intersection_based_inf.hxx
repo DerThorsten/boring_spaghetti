@@ -134,7 +134,7 @@ namespace proposal_gen{
             Parameter(
                 const NoiseType noiseType = NormalAdd,
                 const float     noiseParam = 1.0,
-                const vigra::UInt32    seed = 42,
+                const size_t    seed = 42,
                 const bool      ignoreSeed = true
             )
             : 
@@ -147,14 +147,14 @@ namespace proposal_gen{
 
             NoiseType noiseType_;
             float noiseParam_;
-            vigra::UInt32 seed_;
+            size_t seed_;
             bool ignoreSeed_;
         };
 
         WeightRandomization(const Parameter & param = Parameter())
         : 
             param_(param),
-            randGen_(param.seed_, param.ignoreSeed_){
+            randGen_(vigra::UInt32(param.seed_), param.ignoreSeed_){
 
         }
 
