@@ -94,7 +94,7 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
 
    //addArgument(IntArgument<>(numberOfThreads_, "", "threads", "number of threads", static_cast<int>(1)));
    addArgument(Size_TArgument<>(numIt_, "", "numIt", "number of iterations", static_cast<size_t>(100))); 
-   addArgument(Size_TArgument<>(numStopIt_, "", "numStopIt", "number of iterations with no improvment that cause stopping (0=auto)", static_cast<size_t>(0))); 
+   addArgument(Size_TArgument<>(numStopIt_, "", "numStopIt", "number of iterations with no improvment that cause stopping (0=auto)", static_cast<size_t>(20))); 
    addArgument(Size_TArgument<>(parallelProposals_, "pp", "parallelProposals", "number of parallel proposals (1)", static_cast<size_t>(1))); 
 
    // parameter for weight randomizer_
