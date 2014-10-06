@@ -172,17 +172,20 @@ public:
         Parameter(
             const FusionSolver fusionSolver = SelfType::DefaultSolver,
             const bool planar = false,
+            const std::string  workflow = std::string(),
             const int nThreads = -1
         )
         : 
             fusionSolver_(fusionSolver),
             planar_(planar),
+            workflow_(workflow),
             nThreads_(nThreads)
         {
 
         }
         FusionSolver fusionSolver_;
         bool planar_;
+        std::string workflow_;
         int nThreads_;
 
     };
@@ -505,6 +508,7 @@ public:
             else{
                 p.numThreads_ = param_.nThreads_;
             }
+            p.workFlow_ = param_.workflow_;
 
             Inf inf(subGm,p);
             inf.infer();

@@ -33,6 +33,10 @@
 #include "opengm/inference/lazyflipper.hxx"
 
 
+// FIXME
+using namespace std;
+#define Isinf Isinf2
+#include <opengm/inference/cgc.hxx>
 
 /*
 #include <vigra/adjacency_list_graph.hxx>
@@ -813,13 +817,19 @@ public:
             const FusionParameter   & fusionParam = FusionParameter(),
             const size_t numIt=1000,
             const size_t numStopIt = 0,
-            const size_t parallelProposals = 1
+            const size_t parallelProposals = 1,
+            const bool cgcFinalization = true,
+            const bool planar = false,
+            const bool doCutMove = false
         )
             :   proposalParam_(proposalParam),
                 fusionParam_(fusionParam),
                 numIt_(numIt),
                 numStopIt_(numStopIt),
-                parallelProposals_(parallelProposals)
+                parallelProposals_(parallelProposals),
+                cgcFinalization_(cgcFinalization),
+                planar_(planar),
+                doCutMove_(doCutMove)
         {
 
         }
@@ -828,7 +838,9 @@ public:
         size_t numIt_;
         size_t numStopIt_;
         size_t parallelProposals_;
-
+        bool cgcFinalization_;
+        bool planar_;
+        bool doCutMove_;
     };
 
 
@@ -844,6 +856,11 @@ public:
     virtual InferenceTermination arg(std::vector<LabelType> &, const size_t = 1) const ;
     virtual ValueType value()const {return bestValue_;}
 private:
+
+    template<class VisitorType>
+    InferenceTermination inferIntersectionBased(VisitorType &);
+
+
     typedef FusionMoverType * FusionMoverTypePtr;
     typedef PROPOSAL_GEN *    ProposalGenTypePtr;
 
@@ -861,6 +878,11 @@ private:
     ValueType bestValue_;
     std::vector<LabelType> bestArg_;
     size_t maxOrder_;
+
+    typedef CGC<GM, ACC> CgcInf;
+    typedef  typename  CgcInf::Parameter CgcParam;
+
+    CgcInf * cgcInf_;
 };
 
 
@@ -881,7 +903,8 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::IntersectionBasedInf
        //proposalGen_(gm_, parameter.proposalParam_),
        bestValue_(),
        bestArg_(gm_.numberOfVariables(), 0),
-       maxOrder_(gm.factorOrder())
+       maxOrder_(gm.factorOrder()),
+       cgcInf_(NULL)
 {
     ACC::neutral(bestValue_);   
 
@@ -903,22 +926,29 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::IntersectionBasedInf
 
     //set default starting point
     std::vector<LabelType> conf(gm_.numberOfVariables(),0);
-    for (size_t i=0; i<gm_.numberOfVariables(); ++i){
-        for(typename GM::ConstFactorIterator it=gm_.factorsOfVariableBegin(i); it!=gm_.factorsOfVariableEnd(i);++it){
-            if(gm_[*it].numberOfVariables() == 1){
-                ValueType v;
-                ACC::neutral(v);
-                for(LabelType l=0; l<gm_.numberOfLabels(i); ++l){
-                    if(ACC::bop(gm_[*it](&l),v)){
-                        v=gm_[*it](&l);
-                        conf[i]=l;
-                    }
-                }
-                continue;
-            }
-        } 
-    }
+    //for (size_t i=0; i<gm_.numberOfVariables(); ++i){
+    //    for(typename GM::ConstFactorIterator it=gm_.factorsOfVariableBegin(i); it!=gm_.factorsOfVariableEnd(i);++it){
+    //        if(gm_[*it].numberOfVariables() == 1){
+    //            ValueType v;
+    //            ACC::neutral(v);
+    //            for(LabelType l=0; l<gm_.numberOfLabels(i); ++l){
+    //                if(ACC::bop(gm_[*it](&l),v)){
+    //                    v=gm_[*it](&l);
+    //                    conf[i]=l;
+    //                }
+    //            }
+    //            continue;
+    //        }
+    //    } 
+    //}
     setStartingPoint(conf.begin());
+
+    if(param_.cgcFinalization_){
+        CgcParam cgcParam;
+        cgcParam.planar_ = param_.planar_;
+        cgcParam.doCutMove_ = param_.doCutMove_;
+        cgcInf_ = new CgcInf(gm_, cgcParam);
+    }
 }
 
 
@@ -932,6 +962,10 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::~IntersectionBasedInf()
 
     delete[] fusionMoverArray_;
     delete[] proposalGenArray_;
+
+    if(param_.cgcFinalization_){
+        delete cgcInf_;
+    }
 }
 
 
@@ -974,11 +1008,28 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::infer()
     EmptyVisitorType v;
     return infer(v);
 }
+template<class GM, class PROPOSAL_GEN>
+template<class VisitorType>
+InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::infer
+(
+    VisitorType &visitor
+){
+    visitor.begin(*this);
+    InferenceTermination infTerm = this->inferIntersectionBased(visitor);
+    if(param_.cgcFinalization_){
+        cgcInf_->setStartingPoint(bestArg_.begin());
+        cgcInf_->infer();
+        cgcInf_->arg(bestArg_);
+        bestValue_ = gm_.evaluate(bestArg_);
+    }
+    visitor.end(*this);
+    return infTerm;
+}
 
 
 template<class GM, class PROPOSAL_GEN>
 template<class VisitorType>
-InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::infer
+InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBased
 (
     VisitorType &visitor
 )
@@ -986,7 +1037,7 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::infer
     // evaluate the current best state
     bestValue_ = gm_.evaluate(bestArg_.begin());
 
-    visitor.begin(*this);
+    
 
 
     if(param_.numStopIt_ == 0){
@@ -1119,7 +1170,6 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::infer
         if(countRoundsWithNoImprovement==param_.numStopIt_ && param_.numStopIt_ !=0 )
             break;
     }
-    visitor.end(*this);
     return NORMAL;
 }
 
