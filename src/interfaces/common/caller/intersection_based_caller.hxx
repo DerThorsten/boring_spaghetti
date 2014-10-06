@@ -21,6 +21,10 @@ protected:
    typedef opengm::proposal_gen::WeightRandomization<typename GM::ValueType> WRand;
    typedef typename  WRand::Parameter WRandParam;
 
+
+   typedef PermutableLabelFusionMove<GM, ACC>  FusionMoverType;
+   typedef typename FusionMoverType::Parameter FusionParameter;
+
    typedef typename BaseClass::OutputBase OutputBase;
    using BaseClass::addArgument;
    using BaseClass::io_;
@@ -43,8 +47,12 @@ protected:
 
    int numberOfThreads_;
    std::string selectedGenType_;
-   std::string selectedFusionType_;
 
+
+   // fusion param 
+   std::string selectedFusionType_;
+   FusionParameter fusionParam_;
+   bool planar_;
 
    // RHC SPECIFIC param
    float stopWeight_;
@@ -82,6 +90,8 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
 
    addArgument(StringArgument<>(selectedGenType_, "g", "gen", "Selected proposal generator", gen.front(), gen));
    addArgument(StringArgument<>(selectedFusionType_, "f", "fusion", "Select fusion method", fusion.front(), fusion));
+   addArgument(BoolArgument(fusionParam_.planar_,"pl","planar", "is problem planar"));
+
    //addArgument(IntArgument<>(numberOfThreads_, "", "threads", "number of threads", static_cast<int>(1)));
    addArgument(Size_TArgument<>(numIt_, "", "numIt", "number of iterations", static_cast<size_t>(100))); 
    addArgument(Size_TArgument<>(numStopIt_, "", "numStopIt", "number of iterations with no improvment that cause stopping (0=auto)", static_cast<size_t>(0))); 
@@ -93,7 +103,8 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
    addArgument(Size_TArgument<>(wRand_.seed_, "", "seed", "seed", size_t(42)));
    addArgument(BoolArgument(wRand_.ignoreSeed_,"is","ignoreSeed", "ignore seed and use auto generated seed (based on time )"));
 
-   // parameter for hc
+
+   // parameter for h
    addArgument(FloatArgument<>(stopWeight_, "stopW", "stopWeight", "stop hc merging when this weight is reached", 0.0f));
    addArgument(FloatArgument<>(nodeStopNum_, "stopNN", "stopNodeNum", "stop hc merging when this (maybe relativ) number of nodes is reached", 0.1f));
 
@@ -115,6 +126,7 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::setParam(
 
    param.numIt_ = numIt_;
    param.numStopIt_ = numStopIt_;  
+   param.fusionParam_ = fusionParam_;
    param.proposalParam_.randomizer_ = wRand_;
 }
 
@@ -128,7 +140,7 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::runImpl(GM& model, OutputBase&
    typedef opengm::proposal_gen::RandomizedWatershed<GM, opengm::Minimizer> RWS;
    typedef opengm::proposal_gen::QpboBased<GM, opengm::Minimizer> R2C;
 
-
+   // noise 
    if(selectedNoise_ == "NA"){
       wRand_.noiseType_ = WRandParam::NormalAdd;
    }
@@ -142,7 +154,20 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::runImpl(GM& model, OutputBase&
       wRand_.noiseType_ = WRandParam::None;
    }
 
+   // fusion solver
+   if(selectedFusionType_ == "MC"){
+      fusionParam_.fusionSolver_  = FusionMoverType::MulticutSolver;
+   }
+   else if(selectedFusionType_ == "CGC"){
+      fusionParam_.fusionSolver_  = FusionMoverType::CgcSolver;
+   }
+   else if(selectedFusionType_ == "HC"){
+      fusionParam_.fusionSolver_  = FusionMoverType::HierachicalClusteringSolver;
+   }
 
+
+
+   // proposal
    if(selectedGenType_=="RHC"){
       typedef RHC Gen;
       typedef opengm::IntersectionBasedInf<GM, Gen> INF;
