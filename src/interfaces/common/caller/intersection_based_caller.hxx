@@ -99,7 +99,7 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
 
    // parameter for weight randomizer_
    addArgument(StringArgument<>(selectedNoise_, "nt", "noiseType", "selected noise type", noise.front(), noise));
-   addArgument(FloatArgument<>(wRand_.noiseParam_, "temp", "temperature", "temperature for non uniform random proposal generator", 1.0f));
+   addArgument(FloatArgument<>(wRand_.noiseParam_, "np", "noiseParam", "parameter of noise type", 1.0f));
    addArgument(Size_TArgument<>(wRand_.seed_, "", "seed", "seed", size_t(42)));
    addArgument(BoolArgument(wRand_.ignoreSeed_,"is","ignoreSeed", "ignore seed and use auto generated seed (based on time )"));
 
