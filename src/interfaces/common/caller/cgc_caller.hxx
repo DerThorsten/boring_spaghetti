@@ -1,6 +1,6 @@
 
-#ifndef CGC_CALLER_HXX_
-#define CGC_CALLER_HXX_
+#ifndef CGC_CALLER2_HXX_
+#define CGC_CALLER2_HXX_
 
 #include <opengm/opengm.hxx>
 #include <opengm/inference/cgc.hxx>
@@ -80,4 +80,4 @@ const std::string CgcCaller<IO, GM, ACC>::name_ = "GCG";
 
 } // namespace opengm
 
-#endif /* CGC_CALLER_HXX_ */
+#endif /* CGC_CALLER2_HXX_ */
