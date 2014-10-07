@@ -57,7 +57,49 @@ namespace opengm
 
 
 
+template<class INFERENCE, class INTERSECTION_BASED, class INTERSECTION_BASED_VISITOR>
+class CgcRedirectingVisitor{
 
+public:
+
+    CgcRedirectingVisitor(INTERSECTION_BASED & intersectionBased, INTERSECTION_BASED_VISITOR & otherVisitor)
+    :   intersectionBased_(intersectionBased),
+        otherVisitor_(otherVisitor){
+
+    }
+
+
+    void begin(INFERENCE & inf){
+
+    }
+
+    size_t operator()(INFERENCE & inf){
+        inf.arg(intersectionBased_._getArgRef());
+        intersectionBased_._setBestVal(inf.value());
+        return otherVisitor_(intersectionBased_);
+    }
+
+    void end(INFERENCE & inf){
+
+
+    }
+
+    void addLog(const std::string & logName){
+
+
+
+    }
+
+    void log(const std::string & logName,const double logValue){
+
+
+
+    }
+
+private:
+    INTERSECTION_BASED & intersectionBased_;
+    INTERSECTION_BASED_VISITOR & otherVisitor_;
+};
 
 
 
@@ -780,11 +822,6 @@ namespace proposal_gen{
     };
 
     #endif 
-
-
-
-
-
 }
 
 
@@ -792,6 +829,9 @@ template<class GM, class PROPOSAL_GEN>
 class IntersectionBasedInf : public Inference<GM, typename  PROPOSAL_GEN::AccumulationType>
 {
 public:
+
+
+
     typedef PROPOSAL_GEN ProposalGen;
     typedef typename ProposalGen::AccumulationType AccumulationType;
     typedef AccumulationType ACC;
@@ -855,6 +895,15 @@ public:
     void setStartingPoint(typename std::vector<LabelType>::const_iterator);
     virtual InferenceTermination arg(std::vector<LabelType> &, const size_t = 1) const ;
     virtual ValueType value()const {return bestValue_;}
+
+
+    std::vector<LabelType> & _getArgRef(){
+        return bestArg_;
+    }
+
+    void _setBestVal(const ValueType value){
+        bestValue_ = value;
+    }
 private:
 
     template<class VisitorType>
@@ -926,21 +975,6 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::IntersectionBasedInf
 
     //set default starting point
     std::vector<LabelType> conf(gm_.numberOfVariables(),0);
-    //for (size_t i=0; i<gm_.numberOfVariables(); ++i){
-    //    for(typename GM::ConstFactorIterator it=gm_.factorsOfVariableBegin(i); it!=gm_.factorsOfVariableEnd(i);++it){
-    //        if(gm_[*it].numberOfVariables() == 1){
-    //            ValueType v;
-    //            ACC::neutral(v);
-    //            for(LabelType l=0; l<gm_.numberOfLabels(i); ++l){
-    //                if(ACC::bop(gm_[*it](&l),v)){
-    //                    v=gm_[*it](&l);
-    //                    conf[i]=l;
-    //                }
-    //            }
-    //            continue;
-    //        }
-    //    } 
-    //}
     setStartingPoint(conf.begin());
 
     if(param_.cgcFinalization_){
@@ -1017,8 +1051,12 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::infer
     visitor.begin(*this);
     InferenceTermination infTerm = this->inferIntersectionBased(visitor);
     if(param_.cgcFinalization_){
+
+
+        CgcRedirectingVisitor<CgcInf, IntersectionBasedInf<GM, PROPOSAL_GEN> , VisitorType>  redirectingVisitor(*this, visitor);
+
         cgcInf_->setStartingPoint(bestArg_.begin());
-        cgcInf_->infer();
+        cgcInf_->infer(redirectingVisitor);
         cgcInf_->arg(bestArg_);
         bestValue_ = gm_.evaluate(bestArg_);
     }
