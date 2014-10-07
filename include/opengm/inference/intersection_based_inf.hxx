@@ -818,7 +818,7 @@ public:
             const size_t numIt=1000,
             const size_t numStopIt = 0,
             const size_t parallelProposals = 1,
-            const bool cgcFinalization = true,
+            const bool cgcFinalization = false,
             const bool planar = false,
             const bool doCutMove = false
         )

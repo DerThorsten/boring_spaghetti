@@ -62,6 +62,9 @@ protected:
    float seedFraction_;
    bool ingoreNegativeWeights_;
    bool seedFromNegativeEdges_;
+
+   bool cgcFinalization_;
+   bool doCutMove_;
    
 public:
    const static std::string name_;
@@ -91,11 +94,16 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
    addArgument(StringArgument<>(selectedGenType_, "g", "gen", "Selected proposal generator", gen.front(), gen));
    addArgument(StringArgument<>(selectedFusionType_, "f", "fusion", "Select fusion method", fusion.front(), fusion));
    addArgument(BoolArgument(fusionParam_.planar_,"pl","planar", "is problem planar"));
+   addArgument(StringArgument<>(fusionParam_.workflow_, "", "workflow", "workflow of cutting-plane procedure", false));
 
    //addArgument(IntArgument<>(numberOfThreads_, "", "threads", "number of threads", static_cast<int>(1)));
    addArgument(Size_TArgument<>(numIt_, "", "numIt", "number of iterations", static_cast<size_t>(100))); 
    addArgument(Size_TArgument<>(numStopIt_, "", "numStopIt", "number of iterations with no improvment that cause stopping (0=auto)", static_cast<size_t>(20))); 
    addArgument(Size_TArgument<>(parallelProposals_, "pp", "parallelProposals", "number of parallel proposals (1)", static_cast<size_t>(1))); 
+
+   addArgument(BoolArgument(cgcFinalization_,"cgcf","cgcFinalization", "use cgc in the end"));
+   addArgument(BoolArgument(doCutMove_,"dcm","coCutMove", "do the cut phase within cgc (better not, should be faster)"));
+
 
    // parameter for weight randomizer_
    addArgument(StringArgument<>(selectedNoise_, "nt", "noiseType", "selected noise type", noise.front(), noise));
@@ -124,8 +132,12 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::setParam(
    typename INF::Parameter & param
 ){
 
+   param.planar_ = fusionParam_.planar_;
    param.numIt_ = numIt_;
    param.numStopIt_ = numStopIt_;  
+   param.cgcFinalization_ = cgcFinalization_;
+   param.doCutMove_ = doCutMove_;
+
    param.fusionParam_ = fusionParam_;
    param.proposalParam_.randomizer_ = wRand_;
 }
