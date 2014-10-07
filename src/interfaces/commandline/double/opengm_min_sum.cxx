@@ -119,6 +119,11 @@
 #endif
 #endif
 
+#ifndef WITH_ISINF
+#include "../../common/caller/cgc_caller.hxx"
+#endif
+
+
 
 
 using namespace opengm;
@@ -230,7 +235,10 @@ int main(int argc, char** argv) {
 #ifndef NOVIGRA
       interface::IntersectionBasedCaller<InterfaceType, GmType, AccumulatorType>,
 #endif
+#endif
 
+#ifdef WITH_ISINF
+      interface::CgcCaller<InterfaceType, GmType, AccumulatorType>,
 #endif
 
 #ifdef WITH_GUROBI
