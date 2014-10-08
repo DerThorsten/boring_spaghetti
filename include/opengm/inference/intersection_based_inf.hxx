@@ -181,13 +181,15 @@ namespace proposal_gen{
                 const NoiseType noiseType = NormalAdd,
                 const float     noiseParam = 1.0,
                 const size_t    seed = 42,
-                const bool      ignoreSeed = true
+                const bool      ignoreSeed = true,
+                const bool      autoScale = true
             )
             : 
             noiseType_(noiseType),
             noiseParam_(noiseParam_),
             seed_(seed),
-            ignoreSeed_(ignoreSeed){
+            ignoreSeed_(ignoreSeed),
+            autoScale_(autoScale){
 
             }
 
@@ -195,20 +197,38 @@ namespace proposal_gen{
             float noiseParam_;
             size_t seed_;
             bool ignoreSeed_;
+            bool autoScale_;
         };
 
         WeightRandomization(const Parameter & param = Parameter())
         : 
             param_(param),
-            randGen_(vigra::UInt32(param.seed_), param.ignoreSeed_){
+            randGen_(vigra::UInt32(param.seed_), param.ignoreSeed_),
+            calclulatedMinMax_(false){
 
         }
 
         void randomize(const std::vector<ValueType> & weights, std::vector<ValueType> & rweights){
             // PERTUBATION 
+            if(param_.autoScale_ && !calclulatedMinMax_){
+                // find the min max 
+                ValueType wmin = std::numeric_limits<ValueType>::infinity();
+                ValueType wmax = static_cast<ValueType>(-1.0)*std::numeric_limits<ValueType>::infinity();
+                for(size_t i=0; i<rweights.size(); ++i){
+                    wmin = std::min(weights[i], wmin);
+                    wmax = std::max(weights[i], wmax);
+                }
+                ValueType range = wmax - wmin;
+                calclulatedMinMax_ = true;
+                param_.noiseParam_  *= range;
+            }
+
+
 
 
             if (param_.noiseType_ == Parameter::NormalAdd){
+
+
                 for(size_t i=0; i<rweights.size(); ++i){
                     rweights[i] = weights[i] + randGen_.normal()*param_.noiseParam_;
                 }
@@ -239,6 +259,7 @@ namespace proposal_gen{
         Parameter param_;
         vigra::RandomNumberGenerator< > randGen_;
 
+        bool calclulatedMinMax_;
     };
 
 
