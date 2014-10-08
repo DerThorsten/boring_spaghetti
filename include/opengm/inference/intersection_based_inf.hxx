@@ -981,6 +981,7 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::IntersectionBasedInf
         CgcParam cgcParam;
         cgcParam.planar_ = param_.planar_;
         cgcParam.doCutMove_ = param_.doCutMove_;
+        cgcParam.startFromThreshold_ = false;
         cgcInf_ = new CgcInf(gm_, cgcParam);
     }
 }

@@ -119,7 +119,7 @@
 #endif
 #endif
 
-#ifndef WITH_ISINF
+#ifdef WITH_ISINF
 #include "../../common/caller/cgc_caller.hxx"
 #endif
 
@@ -238,7 +238,7 @@ int main(int argc, char** argv) {
 #endif
 
 #ifdef WITH_ISINF
-      //interface::CgcCaller<InterfaceType, GmType, AccumulatorType>,
+      interface::CgcCaller<InterfaceType, GmType, AccumulatorType>,
 #endif
 
 #ifdef WITH_GUROBI

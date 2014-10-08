@@ -102,7 +102,7 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
    addArgument(Size_TArgument<>(parallelProposals_, "pp", "parallelProposals", "number of parallel proposals (1)", static_cast<size_t>(1))); 
 
    addArgument(BoolArgument(cgcFinalization_,"cgcf","cgcFinalization", "use cgc in the end"));
-   addArgument(BoolArgument(doCutMove_,"dcm","coCutMove", "do the cut phase within cgc (better not, should be faster)"));
+   addArgument(BoolArgument(doCutMove_,"dcm","doCutMove", "do the cut phase within cgc (better not, should be faster)"));
 
 
    // parameter for weight randomizer_
@@ -113,8 +113,8 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
 
 
    // parameter for h
-   addArgument(FloatArgument<>(stopWeight_, "stopW", "stopWeight", "stop hc merging when this weight is reached", 0.0f));
-   addArgument(FloatArgument<>(nodeStopNum_, "stopNN", "stopNodeNum", "stop hc merging when this (maybe relativ) number of nodes is reached", 0.1f));
+   addArgument(FloatArgument<>(stopWeight_, "sw", "stopWeight", "stop hc merging when this weight is reached", 0.0f));
+   addArgument(FloatArgument<>(nodeStopNum_, "snn", "stopNodeNum", "stop hc merging when this (maybe relativ) number of nodes is reached", 0.1f));
 
    // param for ws
    addArgument(FloatArgument<>(seedFraction_, "", "nSeeds", "(maybe relative) number of seeds ", 20.0f));

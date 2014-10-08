@@ -74,7 +74,7 @@ inline void CgcCaller<IO, GM, ACC>::runImpl(GM& model, OutputBase& output, const
 }
 
 template <class IO, class GM, class ACC>
-const std::string CgcCaller<IO, GM, ACC>::name_ = "GCG";
+const std::string CgcCaller<IO, GM, ACC>::name_ = "CGC";
 
 } // namespace interface
 
