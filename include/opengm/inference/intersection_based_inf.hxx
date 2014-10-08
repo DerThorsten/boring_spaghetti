@@ -1109,6 +1109,18 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
     }
 
     for(size_t iteration=0; iteration<param_.numIt_; ++iteration){
+
+
+        if(iteration == 0 && bestValue_ ){
+            proposalGen_->getProposal(bestArg_,proposedState);
+            std::copy(proposedState.begin(),  proposedState.end(), bestArg_.begin());
+            bestValue_ = gm_.evaluate(bestArg_);
+            if(visitor(*this)!=0){
+                break;
+            }
+            continue;
+        }
+
         // store initial value before one proposal  round
         const ValueType valueBeforeRound = bestValue_;
 
@@ -1203,11 +1215,15 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
             }
         }
         else{
+            if(visitor(*this)!=0){
+                break;
+            }
             ++countRoundsWithNoImprovement;
         }
         // check if converged or done
-        if(countRoundsWithNoImprovement==param_.numStopIt_ && param_.numStopIt_ !=0 )
+        if(countRoundsWithNoImprovement==param_.numStopIt_ && param_.numStopIt_ !=0 ){
             break;
+        }
     }
     return NORMAL;
 }

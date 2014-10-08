@@ -617,7 +617,7 @@ public:
         return true;
         #else   
             throw RuntimeError("needs VIGRA");
-            return fals
+            return false;
         #endif
     }
 

@@ -137,7 +137,7 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::setParam(
    param.numStopIt_ = numStopIt_;  
    param.cgcFinalization_ = cgcFinalization_;
    param.doCutMove_ = doCutMove_;
-
+   param.parallelProposals_ = parallelProposals_;
    param.fusionParam_ = fusionParam_;
    param.proposalParam_.randomizer_ = wRand_;
 }
@@ -209,7 +209,7 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::runImpl(GM& model, OutputBase&
 }
 
 template <class IO, class GM, class ACC>
-const std::string  IntersectionBasedCaller<IO, GM, ACC>::name_ = "IntersectionBased";
+const std::string  IntersectionBasedCaller<IO, GM, ACC>::name_ = "IBMC";
 
 } // namespace interface
 
