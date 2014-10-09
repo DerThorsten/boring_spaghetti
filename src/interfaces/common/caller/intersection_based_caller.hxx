@@ -111,6 +111,8 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
    addArgument(Size_TArgument<>(wRand_.seed_, "", "seed", "seed", size_t(42)));
    addArgument(BoolArgument(wRand_.ignoreSeed_,"is","ignoreSeed", "ignore seed and use auto generated seed (based on time )"));
    addArgument(BoolArgument(wRand_.autoScale_,"as","autoScale", "use the noise parameter in relation to weights min max range"));
+   addArgument(FloatArgument<>(wRand_.permuteN_,"pn","permuteN", "permute relative or absolute number of weights",-1.0f));
+
 
    // parameter for h
    addArgument(FloatArgument<>(stopWeight_, "sw", "stopWeight", "stop hc merging when this weight is reached", 0.0f));

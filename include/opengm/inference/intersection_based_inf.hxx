@@ -182,14 +182,17 @@ namespace proposal_gen{
                 const float     noiseParam = 1.0,
                 const size_t    seed = 42,
                 const bool      ignoreSeed = true,
-                const bool      autoScale = true
+                const bool      autoScale = true,
+                const float     permuteN = -1.0
             )
             : 
             noiseType_(noiseType),
             noiseParam_(noiseParam_),
             seed_(seed),
             ignoreSeed_(ignoreSeed),
-            autoScale_(autoScale){
+            autoScale_(autoScale),
+            permuteN_(permuteN)
+            {
 
             }
 
@@ -198,6 +201,7 @@ namespace proposal_gen{
             size_t seed_;
             bool ignoreSeed_;
             bool autoScale_;
+            float permuteN_;
         };
 
         WeightRandomization(const Parameter & param = Parameter())
@@ -209,7 +213,7 @@ namespace proposal_gen{
         }
 
         void randomize(const std::vector<ValueType> & weights, std::vector<ValueType> & rweights){
-            // PERTUBATION 
+ 
             if(param_.autoScale_ && !calclulatedMinMax_){
                 // find the min max 
                 ValueType wmin = std::numeric_limits<ValueType>::infinity();
@@ -222,8 +226,6 @@ namespace proposal_gen{
                 calclulatedMinMax_ = true;
                 param_.noiseParam_  *= range;
             }
-
-
 
 
             if (param_.noiseType_ == Parameter::NormalAdd){
@@ -244,10 +246,27 @@ namespace proposal_gen{
                 }
             }
             else if(param_.noiseType_ == Parameter::None){
-                rweights = weights;
+                std::copy(weights.begin(), weights.end(), rweights.begin());
             }
             else{
                 throw RuntimeError("wrong noise type");
+            }
+
+
+
+            // DO PERMUTATION
+            if(param_.permuteN_ > 0.0){
+                size_t nP = param_.permuteN_ > 1.0 ? 
+                    size_t(param_.permuteN_) : 
+                    size_t(param_.permuteN_ * float(rweights.size()));
+
+                for(size_t p=0; p< nP; ++p){
+                    size_t fi0 = randGen_.uniformInt(rweights.size());
+                    size_t fi1 = randGen_.uniformInt(rweights.size());
+                    if(fi0!=fi1){
+                        std::swap(rweights[fi0], rweights[fi1]);
+                    }
+                }
             }
 
         }

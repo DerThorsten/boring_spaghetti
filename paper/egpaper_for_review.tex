@@ -49,7 +49,7 @@
 \begin{document}
 %%%%%%%%% TITLE
 \include{my_macros.tex}
-\title{Intersection Fusion Moves \\ Fusion Moves for Multicut Objectives}
+\title{Correlation Clustering with Dynamic Super-Nodes (DySNCC)}
 
 \author{First Author\\
 Institution1\\
@@ -159,12 +159,34 @@ On the smaller graph, more expensive solvers are used.
 
 
 %------------------------------------------------------------------------
-\section{Name of My Method (Union Fusion Cut)}
+\section{Intersection Fusion Cut}
 
 Global optimal solvers for multicut do not scale beyond ??? \cite{???}.
-Good approximate solvers for planar graphs exist \cite{beifiger_2014_cvpr,yarkony_2012_eccv} 
+Good approximate solvers for planar graphs exist \cite{beier_2014_cvpr,yarkony_2012_eccv} 
 but have difficulties to find good solutions for non planar graphs \cite{beier_2014_cvpr}.
-
+%
+To make multicuts scalable, it is desirable to replace the graph $G$
+with a graph $\hat{G}$, which is smaller in the number of nodes and edges. 
+If $\hat{G}$ is small enough, it is feasible to use global optimal solvers.
+%
+A trivial way to reduce the size of the graph  is edge contraction.
+Until a desirable size is reached, one might contract the edge with
+the highest weight. A cut on the contracted graph  $\hat{G}$ is always
+a valid cut on $\hat{G}$.
+%
+On the other hand, if an edge $e$ is contracted, it will never be cut.
+If $e$ is part of the cut in a global optimal solution, we cannot find
+this cut.
+%
+To overcome this problem  we can randomize the edge contraction,
+and repeat this multiple times and remember the best solution.
+%
+But this would throw away all the ``not the best'' solutions (rewrite me).
+Within this work we propose the following nifty trick.
+Instead of throwing away solutions, we intersect them with the 
+best solution, and solve the multicut on the resulting
+graph.
+Therefore we fuse multiple solutions,
 
 \begin{theorem}[NameMe]
 Solving ??? on the contracted graph is 
