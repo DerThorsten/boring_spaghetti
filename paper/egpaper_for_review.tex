@@ -31,13 +31,22 @@
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \definecolor{shadecolor}{rgb}{0.01,0.199,0.1}
-
+\usepackage{xargs} 
 \newtheorem{theorem}{Theorem}
 
 % If you comment hyperref and then uncomment it, you should delete
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
 % run, let it finish, and you should be clear).
 \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+
 
 % \cvprfinalcopy % *** Uncomment this line for the final submission
 
@@ -70,16 +79,63 @@ First line of institution2 address\\
 \maketitle
 %\thispagestyle{empty}
 
+
+\listoftodos[Notes]
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-   Multicuts rule.
+   We address the problem of partitioning a  graph
+   into a previously unknown number of clusters.
+   Among all partitions, the one with the minimal 
+   sum of of cut edge weights is chosen. 
+   This problem is known as correlation clustering 
+   or multicut.
+   We propose a general framework to find
+   high quality approximate solutions for 
+   this NP-hard problem based on a move making algorithm:
+   We use candidate solutions from a proposal generator
+   to iteratively improve the best observed solution similar
+   to fusion moves.
+   The proposed solver outperforms any other solver
+   w.r.t. to any time performance.
+   The solutions found by this solver are close
+   to global optimal solutions w.r.t. energy
+   and problem specific measurements as VI for
+   image segmentation problems.
+
 \end{abstract}
 \section{Introduction}
-    
-  Nunez-Iglesias \etal describe the multicut as
-  \say{one-shot agglomeration of supervoxels} whose 
-  main drawback is the scalability \cite{nunez_iglesias_2013}.
-  Within this work we will overcome the scalability issues.
+
+\todo[inline]{should there be a general introduction to multicuts?}
+
+Nunez-Iglesias \etal describe the multicut as
+\say{one-shot agglomeration of supervoxels} whose 
+main drawback is the scalability \cite{nunez_iglesias_2013}.
+To address scalability, supernodes can be useful.
+To create supernodes, some edges will be contracted
+and their nodes are merged into super-nodes.
+Doing so, we can reduce  the graph 
+to a reasonable size, such that we can find
+global optimal multicut solutions within reasonable time.
+%
+Any edge which is contracted is lost.
+If such an edge is cut in the global optimal solution, we cannot 
+find this global optimal solutions.
+Therefore we avoid fixed decisions and use a
+dynamic energy aware contraction scheme.
+%
+Different edge contractions lead to different super-node graphs.
+A trivial approach is the following.
+Create different super-node graphs, optimize them with multicuts,
+and take the result which leads to the lowest energy
+on the unmodified initial graph.
+% 
+Doing so, we throw away all results which do not have the lowest energy.
+Within this work we propose a framework which 
+combine multiple \emph{proposal} super-node graphs
+without any premature irreversible decisions.
+Furthermore, multiple super-node graphs are combined such
+that the information form all of them is used.
+\todo[inline]{\emph{proposal} super-node graphs sounds shitty}
 
 
 %-------------------------------------------------------------------------
@@ -188,54 +244,6 @@ best solution, and solve the multicut on the resulting
 graph.
 Therefore we fuse multiple solutions,
 
-\begin{theorem}[NameMe]
-Solving ??? on the contracted graph is 
-equivalent to solving ??? on the 
-original graph with additional 
-must link constraints
-\end{theorem}
-
-\begin{proof}[Proof of theorem ]
-todo
-\end{proof}
-
-
-
-\begin{theorem}[NameMe]
-Let $x_{a}$ and $x_{b}$ be two proposal solutions and  $x_{new}$ the solution of \ref{???}.
-$x_{new}$  will never decrease the energy:
-$x_{new} \cdot w \leq  \min( x_{a}\cdot w,  x_{b}\cdot w) $ 
-\end{theorem}
-
-\begin{proof}[Proof of theorem ]
-todo
-\end{proof}
-
-
-
-\begin{theorem}[NameMe]
-
-Let $x_{a}$ and $x_{b}$ be two proposal solutions and  $x_{opt}$ the global solution,
-$X_{a}^c, X_{b}^c$ and $ X_{opt}^c$ the set of cut edges in  $x_{a}, x_{b}$  and $ x_{opt}$
-optimal solution.
-Iff  $ X_{opt}^c \subseteq  (X_{a}^c \cup X_{b}^c)$,  the solution of \ref{???} will be $x_{opt}$.
-\end{theorem}
-
-\begin{proof}[Proof of of theorem]
-todo
-\end{proof}
-
-
-\input{inputs/fig_alg_graph.tex}
-
-\input{inputs/fig_move_graph.tex}
-
-
-
-%-------------------------------------------------------------------------
-\subsection{Proposal Generators}
-
-
 
 
 \begin{algorithm}
@@ -265,6 +273,8 @@ todo
 \end{algorithmic}
 \end{scriptsize}
 \end{algorithm}
+
+
 
 
 \begin{algorithm}
@@ -336,6 +346,61 @@ todo
 \end{algorithmic}
 \end{scriptsize}
 \end{algorithm}
+
+
+
+
+
+
+\begin{theorem}[NameMe]
+Solving ??? on the contracted graph is 
+equivalent to solving ??? on the 
+original graph with additional 
+must link constraints
+\end{theorem}
+
+\begin{proof}[Proof of theorem ]
+todo
+\end{proof}
+
+
+
+\begin{theorem}[NameMe]
+Let $x_{a}$ and $x_{b}$ be two proposal solutions and  $x_{new}$ the solution of \ref{???}.
+$x_{new}$  will never decrease the energy:
+$x_{new} \cdot w \leq  \min( x_{a}\cdot w,  x_{b}\cdot w) $ 
+\end{theorem}
+
+\begin{proof}[Proof of theorem ]
+todo
+\end{proof}
+
+
+
+\begin{theorem}[NameMe]
+
+Let $x_{a}$ and $x_{b}$ be two proposal solutions and  $x_{opt}$ the global solution,
+$X_{a}^c, X_{b}^c$ and $ X_{opt}^c$ the set of cut edges in  $x_{a}, x_{b}$  and $ x_{opt}$
+optimal solution.
+Iff  $ X_{opt}^c \subseteq  (X_{a}^c \cup X_{b}^c)$,  the solution of \ref{???} will be $x_{opt}$.
+\end{theorem}
+
+\begin{proof}[Proof of of theorem]
+todo
+\end{proof}
+
+
+\input{inputs/fig_alg_graph.tex}
+
+\input{inputs/fig_move_graph.tex}
+
+
+
+%-------------------------------------------------------------------------
+\subsection{Proposal Generators}
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-#ifndef RINF_CALLER_HXX_
+h#ifndef RINF_CALLER_HXX_
 #define RINF_CALLER_HXX_
 
 #include <opengm/opengm.hxx>
