@@ -236,6 +236,8 @@ todo
 \subsection{Proposal Generators}
 
 
+
+
 \begin{algorithm}
 \begin{scriptsize}
 \caption{Fusion Based Algorithms}\label{alg:fusion}
@@ -375,6 +377,41 @@ todo
         \end{algorithmic}
     \end{scriptsize}
 \end{algorithm}
+
+
+
+\subsubsection{Randomized HierarchicalClustering (RHC)}
+
+To generate proposals cut we can use bottom up hierarchical clustering.
+In each step we contract the edge with the highest weight.
+Parallel edges are merged into single edges by summing their weights.
+We stop when a certain number of nodes is reached, or the
+largest edge weight is smaller then a certain threshold.
+To get versatile proposals we either add noise 
+to the edge weighs or permute a certain number of weights.
+
+
+\subsubsection{Randomized MaxCut  (RMC)}
+
+To get energy aware proposals we can use max cuts.
+The max cut objective is the same as
+the multicut objective, but only two 
+node colors are allowed.
+Therefore solutions of the max cut objective
+might be useful proposals.
+To create different proposals we set 
+the weight of edges which are cut 
+in the best solution to zero.
+In this way we favor solutions 
+different form the current best. 
+In addition we either add noise permute a certain number of weights.
+
+
+\subsubsection{Randomized Watersheds (RWS)}
+
+The edge weighted watershed algorithm
+with random seeds can be used to get 
+cheap proposals.
 
 
 
