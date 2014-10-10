@@ -165,7 +165,8 @@ public:
         DefaultSolver,
         MulticutSolver,
         CgcSolver,
-        HierachicalClusteringSolver
+        HierachicalClusteringSolver,
+        BaseSolver
     };
 
     struct Parameter{
@@ -383,6 +384,9 @@ public:
         else if(param_.fusionSolver_ == HierachicalClusteringSolver){
             return doMoveHierachicalClustering(accWeights,ab,numNewVar, a, b, res, valA, valB, valRes);
         }
+        else if(param_.fusionSolver_ == BaseSolver){
+            return doMoveBase(accWeights,ab,numNewVar, a, b, res, valA, valB, valRes);
+        }
         else{
             throw RuntimeError("unknown fusionSolver");
             return false;
@@ -460,6 +464,25 @@ public:
         }
         return true;
 
+    }
+
+    bool doMoveBase(
+        const MapType & accWeights,
+        const std::vector<LabelType> & ab,
+        const IndexType numNewVar,
+        const std::vector<LabelType> & a,
+        const std::vector<LabelType> & b,
+        std::vector<LabelType> & res,
+        const ValueType valA,
+        const ValueType valB,
+        ValueType & valRes
+    ){
+        const std::vector<LabelType> & bestArg = valA < valB ? a : b;
+        const ValueType bestProposalVal  =  valA < valB ? valA : valB;
+        for(IndexType vi=0; vi<gm_.numberOfVariables(); ++vi){
+            res[vi] = bestArg[vi];
+        }
+        return true;
     }
 
     bool doMoveMulticut(

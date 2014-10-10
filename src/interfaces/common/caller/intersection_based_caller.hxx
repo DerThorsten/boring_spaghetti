@@ -80,6 +80,8 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
    fusion.push_back("MC");
    fusion.push_back("CGC");
    fusion.push_back("HC");
+   fusion.push_back("BASE");
+
    std::vector<std::string> gen;  
    gen.push_back("RHC");
    gen.push_back("R2C");
@@ -178,7 +180,9 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::runImpl(GM& model, OutputBase&
    else if(selectedFusionType_ == "HC"){
       fusionParam_.fusionSolver_  = FusionMoverType::HierachicalClusteringSolver;
    }
-
+   else if(selectedFusionType_ == "BASE"){
+      fusionParam_.fusionSolver_  = FusionMoverType::BaseSolver;
+   }
 
 
    // proposal
