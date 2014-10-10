@@ -862,6 +862,149 @@ namespace proposal_gen{
     };
 
     #endif 
+
+    /*
+    template<class GM, class ACC>
+    class BlockGen{
+    public:
+        typedef ACC AccumulationType;
+        typedef GM GraphicalModelType;
+        OPENGM_GM_TYPE_TYPEDEFS;
+
+        typedef WeightRandomization<ValueType> WeightRand;
+        typedef typename  WeightRand::Parameter WeightRandomizationParam;
+
+        class Parameter
+        {
+        public:
+            Parameter(
+                const double numVar = 0.1,
+                const bool seedFromNegativeEdges = true,
+                const WeightRandomizationParam & randomizer = WeightRandomizationParam()
+            )
+            :   
+            numVar_(numVar),
+            randomizer_(randomizer)
+            {
+
+            }
+            WeightRandomizationParam randomizer_;
+            double numVar_;
+        };
+
+
+
+
+        BlockGen(const GM & gm, const Parameter & param = Parameter())
+        : 
+            gm_(gm),
+            param_(param),
+            wRandomizer_(param_.randomizer_),
+            viAdjacency_(gm.numberOfVariables()),
+            vis_(gm.numberOfVariables()),
+            usedVi_(gm.numberOfVariables(), 0)
+        {
+
+            // compute variable adjacency
+            gm.variableAdjacencyList(viAdjacency_);
+
+            LabelType lAA[2]={0, 0};
+            LabelType lAB[2]={0, 1};
+
+            if(param_.seedFromNegativeEdges_){
+                for(size_t i=0; i<gm_.numberOfFactors(); ++i){
+                    if(gm_[i].numberOfVariables()==2){
+                        ValueType val00  = gm_[i](lAA);
+                        ValueType val01  = gm_[i](lAB);
+                        ValueType weight = val01 - val00; 
+                        if(weight < 0.0){
+                            negativeFactors_.push_back(i);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        ~BlockGen(){
+   
+        }
+
+        size_t defaultNumStopIt() {
+            return 0;
+        }
+
+        void reset(){
+
+        }
+        void getProposal(const std::vector<LabelType> &current , std::vector<LabelType> &proposal){
+
+            std::fill(proposal.begin(), proposal.end(), LabelType(0));
+
+            // how many variable should the subgraph contain
+            size_t sgSize  = size_t( param_.numVar_ > 1.0f ? 
+                                    param_.numVar_ :  
+                                    float(gm_.numberOfVariables())*param_.numVar_);
+
+            size_t rVar;
+            // get a random negative edge factor 
+            if(param_.seedFromNegativeEdges_){
+                const size_t rFactor = wRandomizer_.uniformInt(negativeFactors_.size());
+                rVar = gm_[rFactor].variableIndex(wRandomizer_.uniformInt(2));
+            }
+            else{
+                rVar = wRandomizer_.uniformInt(gm_.numberOfVariables());
+            }
+
+
+            // grow subgraph SG until |SG| == param_.numVar_;
+            std::fill(usedVi_.begin(),usedVi_.end(),false);
+            vis.clear();
+            vis.push_back(startVi);
+            usedVi_[startVi]=true;
+            std::queue<size_t> viQueue;
+            viQueue.push(startVi);
+
+            std::fill(distance_.begin(),distance_.begin()+gm_.numberOfVariables(),0);
+
+            const size_t maxSgSize = (param_.maxBlockSize_==0? gm_.numberOfVariables() :param_.maxBlockSize_);
+            while(viQueue.size()!=0  &&  vis.size()<=maxSgSize) {
+                size_t cvi=viQueue.front();
+                viQueue.pop();
+                // for each neigbour of cvi
+                for(size_t vni=0;vni<viAdjacency_[cvi].size();++vni) {
+                    // if neighbour has not been visited
+                    const size_t vn=viAdjacency_[cvi][vni];
+                    if(usedVi_[vn]==false) {
+                        // set as visited
+                        usedVi_[vn]=true;
+                        // insert into the subgraph vis
+                        distance_[vn]=distance_[cvi]+1;
+                        if(distance_[vn]<=radius){
+                            if(vis.size()<maxSgSize){
+                                vis.push_back(vn);
+                                viQueue.push(vn);
+                            }
+                            else{
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    private:
+        const GM & gm_;
+        Parameter param_;
+        WeightRand wRandomizer_; 
+        std::vector<IndexType> negativeFactors_;
+        std::vector< RandomAccessSet<IndexType> > viAdjacency_;
+        std::vector<IndexType>  sgVis_;
+        std::vector<unsigned char> usedVi_;
+    };
+    */
+
 }
 
 

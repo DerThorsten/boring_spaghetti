@@ -107,9 +107,44 @@ First line of institution2 address\\
 
 \todo[inline]{should there be a general introduction to multicuts?}
 
+
+Given an edge weighted graph, positive weights (\emph{attractive})
+encourage the adjacent nodes to be in the same 
+connected component, while negative weights (\emph{repulsive}) encourage
+the nodes to stay in different connect components.
+Therefore the sign of the weights encodes if two
+nodes should be merged or not and the magnitude of the weights encodes
+the certainty of this desire.
+The objective of correlation clustering / multicuts
+is finding the cut with a minimal sum of cut edge weights.
+The number of connected components / clusters is discovered
+from the weights ( rewrite?!?).
+Correlation clustering / the multicut is NP-hard \cite{???}.
+%
+Despite the NP-hardness, correlation clustering has been 
+successfully used for
+\begin{inparaenum}[(i)]
+    \item partitioning a superpixel region adjacency graph~\cite{andres_2011_iccv,kroeger_2012_eccv}
+    \item with optional long range repulsive edges~\cite{andres_2013_emmcvpr}.
+    \item Alush and Globerger showed how to average multiple segmentations with the multicut objective~\cite{alush_2012_pami}.
+    \item Multicuts can also be used for interactive segmentation~\cite{bagon_2011_arxiv},
+    \item for co-segmentation~\cite{glassner_2011_cvpr}
+    \item and to cluster fully connected graphs~\cite{???}.
+\end{inparaenum}
+
+
+
+
+
+\todo[inline]{WHY WE NEED THIS NEW SOLVER?}
+
+
 Nunez-Iglesias \etal describe the multicut as
 \say{one-shot agglomeration of supervoxels} whose 
 main drawback is the scalability \cite{nunez_iglesias_2013}.
+
+\todo[inline]{BETTER MOTIVATE SUPERNODES}
+
 To address scalability, supernodes can be useful.
 To create supernodes, some edges will be contracted
 and their nodes are merged into super-nodes.
@@ -136,7 +171,12 @@ without any premature irreversible decisions.
 Furthermore, multiple super-node graphs are combined such
 that the information form all of them is used.
 \todo[inline]{\emph{proposal} super-node graphs sounds shitty}
-
+%
+The proposed algorithm can be interpreted as a fusion moves
+algorithm for correlation clustering / multicut objective.
+We generate cheap and versatile proposals
+and \emph{fuse} them with the current best solution with the
+guarantee that this cannot increase the energy.
 
 %-------------------------------------------------------------------------
 
@@ -162,7 +202,7 @@ can be formulated in different ways.
 \begin{center}
     \begin{eqnarray}
         y^*   & = & \argmin_{y} \sum_{ i<j \in V } w_{ij} \cdot y_{ij} \\
-        s.t.: &  & x_{ij} + x_{jk} < x_{i,k} \quad \forall i, j, k   \nonumber
+        s.t.: &  & y_{ij} + y_{jk} < y_{i,k} \quad \forall i, j, k   \nonumber
     \end{eqnarray}
 \end{center}
 
@@ -174,15 +214,6 @@ can be formulated in different ways.
     \end{eqnarray}
 \end{center}
 
-The multicut objective has been used for
-\begin{inparaenum}[(i)]
-    \item partitioning a superpixel region adjacency graph~\cite{andres_2011_iccv,kroeger_2012_eccv}
-    \item with optional long range repulsive edges~\cite{andres_2013_emmcvpr}.
-    \item Alush and Globerger showed how to average multiple segmentations with the multicut objective~\cite{alush_2012_pami}.
-    \item Multicuts can also be used for interactive segmentation~\cite{bagon_2011_arxiv},
-    \item for co-segmentation~\cite{glassner_2011_cvpr}
-    \item and to cluster fully connected graphs~\cite{???}.
-\end{inparaenum}
 
 
 \subsubsection{Solver for the Multicut Objective}
