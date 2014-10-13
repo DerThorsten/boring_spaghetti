@@ -1294,7 +1294,7 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
     for(size_t iteration=0; iteration<param_.numIt_; ++iteration){
 
 
-        if(iteration == 0 && bestValue_ ){
+        if(iteration == 0 && bestValue_>=-0.0000000001 ){
             proposalGen_->getProposal(bestArg_,proposedState);
             std::copy(proposedState.begin(),  proposedState.end(), bestArg_.begin());
             bestValue_ = gm_.evaluate(bestArg_);
@@ -1313,6 +1313,9 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
         if(nFuser == 1){
             proposalGen_->getProposal(bestArg_,proposedState);
             ValueType proposalValue = gm_.evaluate(proposedState);
+
+            //std::cout<<"best val "<<bestValue_<<" pval "<<proposalValue<<"\n";
+
             anyVar = fusionMover_->fuse(bestArg_,proposedState, fusedState, 
                                         bestValue_, proposalValue, bestValue_);
         }

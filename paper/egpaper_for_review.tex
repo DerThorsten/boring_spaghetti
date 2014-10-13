@@ -505,10 +505,16 @@ In addition we either add noise permute a certain number of weights.
 
 \subsubsection{Randomized Watersheds (RWS)}
 
-The edge weighted watershed algorithm
+The edge weighted watershed algorithm \cite{meyer_2013}
 with random seeds can be used to get 
-cheap proposals.
-
+cheap proposals. Instead of $n$ seeds distributed uniformly
+over all nodes we use the following.
+Draw $n/k$ random edges only the negative edges, 
+and give the two nodes of each random edge different seeds.
+Doing so, a random subset of negative edges is forced
+to be cut within each proposal.
+For additional randomness, noise can be added to
+the edge weighs.
 
 
 

@@ -152,7 +152,6 @@ public:
 
     typedef GM GraphicalModelType;
     typedef ACC AccumulationType;
-
     typedef std::map<UInt64Type, float> MapType;
     typedef typename MapType::iterator MapIter;
     typedef typename MapType::const_iterator MapCIter;
@@ -478,7 +477,7 @@ public:
         ValueType & valRes
     ){
         const std::vector<LabelType> & bestArg = valA < valB ? a : b;
-        const ValueType bestProposalVal  =  valA < valB ? valA : valB;
+        valRes =  valA < valB ? valA : valB;
         for(IndexType vi=0; vi<gm_.numberOfVariables(); ++vi){
             res[vi] = bestArg[vi];
         }
