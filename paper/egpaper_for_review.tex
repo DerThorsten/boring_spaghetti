@@ -7,6 +7,8 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{xspace}
+\usepackage{booktabs}
 
 
 % Include other packages here, before hyperref.
@@ -39,6 +41,8 @@
 % run, let it finish, and you should be clear).
 \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
 
+\def\arraystretch{0.8}
+\renewcommand{\tabcolsep}{2pt}
 
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 \newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
@@ -521,6 +525,15 @@ cheap proposals.
 
 \section{Experiments}
 \subsection{Benchmark Models}
+\input{tables/image-seg.tex}
+\input{tables/knott-3d-150.tex}
+\input{tables/knott-3d-300.tex}
+\input{tables/knott-3d-450.tex}
+\input{tables/knott-3d-550.tex}
+\input{tables/seg-3d.tex}
+\input{tables/modularity-clustering.tex}
+
+
 \subsection{Pixel-wise Multicuts}
 \input{inputs/fig_pixel_mc.tex}
 

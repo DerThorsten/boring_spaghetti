@@ -1,0 +1,36 @@
+\begin{table}[H]
+\scriptsize
+\centering
+\caption{knott-3d-300 (8 instances)}
+\label{tab:smalltable-knott-3d-300}
+\begin{tabular}{lrrrrrr}
+\toprule
+           algorithm &       runtime     &         value &         bound &           mem &     best &      opt   \\ \midrule 
+             ogm-ICM & $        84.37$ sec & $    -25196.51$ & $-\infty$ & $         0.01$ GB & $       0$ & $       0$ \\ 
+              ogm-KL & $        13.16$ sec & $    -25556.93$ & $-\infty$ & $         0.01$ GB & $       0$ & $       0$ \\ 
+            ogm-LF-1 & $        29.08$ sec & $    -25243.76$ & $-\infty$ & $         0.02$ GB & $       0$ & $       0$ \\ 
+\cmidrule{1-1} 
+              MCR-CC & $      3423.65$ sec & $    -26161.81$ & $    -27434.30$ & $         0.57$ GB & $       1$ & $       1$ \\ 
+           MCR-CCFDB & $      1338.99$ sec & $    -27276.12$ & $    -27307.22$ & $         0.15$ GB & $       1$ & $       1$ \\ 
+       MCR-CCFDB-OWC & $      1367.03$ sec & $    -27287.23$ & $    -27309.62$ & $         0.15$ GB & $       6$ & $       6$ \\ 
+\cmidrule{1-1} 
+     MCI-CCFDB-CCIFD & $      1261.99$ sec & $    -26826.57$ & $    -27308.19$ & $         0.37$ GB & $       6$ & $       6$ \\ 
+             MCI-CCI & $       220.30$ sec & $    -27302.78$ & $    -27305.02$ & $         0.28$ GB & $       8$ & $       7$ \\ 
+           MCI-CCIFD & $       104.55$ sec & $    -27302.78$ & $    -27302.78$ & $         0.16$ GB & $       8$ & $       8$ \\ 
+\cmidrule{1-1} 
+            ogm-CGC* & $         4.53$ sec & $    -27251.42$ & $    -28901.58$ & $         0.02$ GB & $       0$ & $       0$ \\ 
+ogm-mcfusion-HC-BASE* & $         1.19$ sec & $         0.00$ & $-\infty$ & $         0.02$ GB & $       0$ & $       0$ \\ 
+ogm-mcfusion-HC-BASE-CGCF* & $         2.38$ sec & $    -24707.81$ & $-\infty$ & $         0.04$ GB & $       0$ & $       0$ \\ 
+ogm-mcfusion-HC-CGC* & $         5.60$ sec & $    -27282.58$ & $-\infty$ & $         0.03$ GB & $       2$ & $       0$ \\ 
+ogm-mcfusion-HC-CGC-CGCF* & $         5.61$ sec & $    -27283.82$ & $-\infty$ & $         0.04$ GB & $       3$ & $       0$ \\ 
+ ogm-mcfusion-HC-MC* & $         8.87$ sec & $    -27283.36$ & $-\infty$ & $         0.05$ GB & $       3$ & $       0$ \\ 
+ogm-mcfusion-HC-MC-CGCF* & $         8.92$ sec & $    -27284.60$ & $-\infty$ & $         0.06$ GB & $       4$ & $       0$ \\ 
+ogm-mcfusion-WS-BASE* & $         0.24$ sec & $         0.00$ & $-\infty$ & $         0.01$ GB & $       0$ & $       0$ \\ 
+ogm-mcfusion-WS-BASE-CGCF* & $         4.91$ sec & $    -27253.30$ & $-\infty$ & $         0.03$ GB & $       0$ & $       0$ \\ 
+ogm-mcfusion-WS-CGC* & $        22.99$ sec & $    -27273.39$ & $-\infty$ & $         0.01$ GB & $       1$ & $       0$ \\ 
+ogm-mcfusion-WS-CGC-CGCF* & $        23.91$ sec & $    -27286.88$ & $-\infty$ & $         0.03$ GB & $       4$ & $       0$ \\ 
+ ogm-mcfusion-WS-MC* & $        36.85$ sec & $    -27280.59$ & $-\infty$ & $         0.05$ GB & $       2$ & $       0$ \\ 
+ogm-mcfusion-WS-MC-CGCF* & $        37.77$ sec & $    -27293.33$ & $-\infty$ & $         0.06$ GB & $       6$ & $       0$ \\ 
+\bottomrule
+\end{tabular}
+\end{table}
