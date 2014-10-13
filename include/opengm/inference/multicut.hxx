@@ -120,6 +120,9 @@ public:
 
    virtual ~Multicut();
    Multicut(const GraphicalModelType&, Parameter para=Parameter());
+   Multicut(const size_t, const std::map<UInt64Type, ValueType> & accWeights, const Parameter & para=Parameter());
+
+
    virtual std::string name() const {return "Multicut";}
    const GraphicalModelType& graphicalModel() const;
    virtual InferenceTermination infer();
@@ -150,7 +153,6 @@ private:
    double constant_;
    double bound_;
    const double infinity_;
-
    LabelType   numberOfTerminals_;
    IndexType   numberOfNodes_;
    LPIndexType numberOfTerminalEdges_;
@@ -235,6 +237,81 @@ private:
    std::vector<std::vector<size_t> > protocolateConstraints_;
  
 };
+
+
+
+template<class GM, class ACC>
+Multicut<GM, ACC>::Multicut
+(
+   const size_t numNodes, 
+   const std::map<UInt64Type, ValueType> & accWeights,
+   const Parameter & para
+   ) : gm_(GM()), parameter_(para) , bound_(-std::numeric_limits<double>::infinity()), infinity_(1e8), integerMode_(false),
+       EPS_(1e-8)
+{
+   if(typeid(ACC) != typeid(opengm::Minimizer) || typeid(OperatorType) != typeid(opengm::Adder)) {
+      throw RuntimeError("This implementation does only supports Min-Plus-Semiring.");
+   } 
+   if(parameter_.reductionMode_<0 ||parameter_.reductionMode_>3) {
+      throw RuntimeError("Reduction Mode has to be 1, 2 or 3!");
+   } 
+
+   //Set Problem Type
+   problemType_ = MC;
+   numberOfTerminalEdges_ = 0;
+   numberOfTerminals_     = 0;
+   numberOfInterTerminalEdges_ = 0; 
+   numberOfHigherOrderValues_ = 0;
+   numberOfNodes_         = numNodes;  
+   size_t numEdges = accWeights.size();
+   //Calculate Neighbourhood
+   neighbours.resize(numberOfNodes_);
+   numberOfInternalEdges_=0;
+   LPIndexType numberOfAdditionalInternalEdges=0;
+
+
+   typedef std::map<IndexType, ValueType> MapType;
+   typedef typename  MapType::const_iterator MapIter;
+
+   // cplex stuff
+   IloInt N = numEdges;
+   model_ = IloModel(env_);
+   x_     = IloNumVarArray(env_);
+   c_     = IloRangeArray(env_);
+   obj_   = IloMinimize(env_);
+   sol_   = IloNumArray(env_,N);
+   // set variables and objective
+   x_.add(IloNumVarArray(env_, N, 0, 1, ILOFLOAT));
+
+   IloNumArray    obj(env_,N);
+   // add edges
+
+
+   for(MapIter i = accWeights.begin(); i!=accWeights.end(); ++i){
+      const UInt64Type key    = i->first;
+      const ValueType weight = i->second;
+      const UInt64Type u = key/numberOfNodes_;
+      const UInt64Type v = key - u*numberOfNodes_;
+      if(neighbours[u].find(v)==neighbours[u].end()) {
+         neighbours[u][v] = numberOfInternalEdges_;
+         neighbours[v][u] = numberOfInternalEdges_;
+         edgeNodes_.push_back(std::pair<IndexType,IndexType>(v,u));     
+         obj[numberOfInternalEdges_] = weight;
+         ++numberOfInternalEdges_;
+
+      }
+      else{
+         OPENGM_CHECK_OP(true,==,false,"");
+      }
+   }
+
+   obj_.setLinearCoefs(x_,obj);
+   model_.add(obj_);
+   // initialize solver
+   cplex_ = IloCplex(model_);
+}
+
+
  
 template<class GM, class ACC>
 typename Multicut<GM, ACC>::LPIndexType Multicut<GM, ACC>::getNeighborhood

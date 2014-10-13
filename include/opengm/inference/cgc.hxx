@@ -269,6 +269,8 @@ public:
    std::vector<unsigned char> dirtyFactors_;
 
    std::string log_;
+
+   bool timeout_;
 };
 
 
@@ -294,7 +296,8 @@ CGC<GM, ACC>::CGC
    toSplit_(),
    inRecursive2Coloring_(false),
    inGreedy2Coloring_(false),
-   energyOffset_(0)
+   energyOffset_(0),
+   timeout_(false)
    //dirtyFactors_(gm_.numberOfFactors(),1))
 {
    //////////////////////////////////////
@@ -378,6 +381,7 @@ InferenceTermination CGC<GM,ACC>::infer
    VisitorType& visitor
 )
 {
+   timeout_ = false;
    //std::cout << boost::format("CGC: infer for %d primary, %d dual variables\n") % gm_.numberOfVariables() % gm_.numberOfFactors();
    visitor.begin(*this);
    if(param_.startFromThreshold_)
@@ -396,16 +400,18 @@ InferenceTermination CGC<GM,ACC>::infer
    ValueType valA = 0.0;
    ValueType valB = 0.0;
    for(size_t i=0;i<param_.maxIterations_;++i){
-      if(param_.doCutMove_ && ( value_<valA || i==0)){
+      if(!timeout_ && param_.doCutMove_ && ( value_<valA || i==0)){
          //std::cout<<"rec 2 coloring\n";
          this->recursive2Coloring(visitor);
          valA=value_;
       }
-      if(param_.doGlueCutMove_ && (value_<valB || i==0)){
+      if(!timeout_ && param_.doGlueCutMove_ && (value_<valB || i==0)){
          //std::cout<<"greedy 2 coloring\n";
          this->greedy2ColoringPlanar(visitor);
          valB=value_;
       }
+      if(timeout_)
+         break;
    }
    visitor.end(*this);
    return NORMAL;
@@ -459,8 +465,11 @@ CGC<GM, ACC>::recursive2Coloring(VISITOR & visitor){
             }
             f << std::endl;
          }
-         
-         visitor(*this);
+
+         if(visitor(*this)!=0){
+            timeout_ = true;
+            break;
+         }
       }
    }   
 
@@ -497,7 +506,7 @@ CGC<GM, ACC>::greedy2ColoringPlanar(VISITOR & visitor){
    }
 
 
-   while(changes){
+   while(changes && timeout_==false){
       changes=false;
 
       // set starting point will set up all invariants
@@ -590,7 +599,10 @@ CGC<GM, ACC>::greedy2ColoringPlanar(VISITOR & visitor){
                      f << std::endl;
                   }
                   
-                  visitor(*this);
+                  if(visitor(*this)!=0){
+                     timeout_ = true;
+                     break;
+                  }
                }
                submodel_->cleanInsideAndBorder();
             } // if still active

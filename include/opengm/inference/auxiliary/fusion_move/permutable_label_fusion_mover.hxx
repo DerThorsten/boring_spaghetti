@@ -152,17 +152,18 @@ public:
 
     typedef GM GraphicalModelType;
     typedef ACC AccumulationType;
-    typedef std::map<UInt64Type, float> MapType;
+    OPENGM_GM_TYPE_TYPEDEFS;
+    typedef std::map<UInt64Type, ValueType> MapType;
     typedef typename MapType::iterator MapIter;
     typedef typename MapType::const_iterator MapCIter;
 
-    OPENGM_GM_TYPE_TYPEDEFS;
 
     typedef PermutableLabelFusionMove<GM, ACC> SelfType;
 
     enum FusionSolver{
         DefaultSolver,
         MulticutSolver,
+        MulticutNativeSolver,
         CgcSolver,
         HierachicalClusteringSolver,
         BaseSolver
@@ -380,6 +381,9 @@ public:
         else if(param_.fusionSolver_ == MulticutSolver){
             return doMoveMulticut(accWeights,ab,numNewVar, a, b, res, valA, valB, valRes);
         }
+        else if(param_.fusionSolver_ == MulticutNativeSolver){
+            return doMoveMulticutNative(accWeights,ab,numNewVar, a, b, res, valA, valB, valRes);
+        }
         else if(param_.fusionSolver_ == HierachicalClusteringSolver){
             return doMoveHierachicalClustering(accWeights,ab,numNewVar, a, b, res, valA, valB, valRes);
         }
@@ -563,6 +567,60 @@ public:
     }
 
 
+    bool doMoveMulticutNative(
+        const MapType & accWeights,
+        const std::vector<LabelType> & ab,
+        const IndexType numNewVar,
+        const std::vector<LabelType> & a,
+        const std::vector<LabelType> & b,
+        std::vector<LabelType> & res,
+        const ValueType valA,
+        const ValueType valB,
+        ValueType & valRes
+    ){
+
+        std::vector<LabelType> subArg;
+
+        //::cout<<"WITH MC\n";
+        typedef Multicut<SubModel, Minimizer> Inf;
+        typedef  typename  Inf::Parameter Param;
+        Param p(0,0.0);
+
+        if(param_.nThreads_ <= 0){
+            p.numThreads_ = 0;
+        }
+        else{
+            p.numThreads_ = param_.nThreads_;
+        }
+        p.workFlow_ = param_.workflow_;
+
+        Inf inf(numNewVar, accWeights, p);
+        inf.infer();
+        inf.arg(subArg);
+        
+
+
+        for(IndexType vi=0; vi<gm_.numberOfVariables(); ++vi){
+            res[vi] = subArg[ab[vi]];
+        }
+
+        const ValueType projectedResultVal = gm_.evaluate(res);
+        const std::vector<LabelType> & bestArg = valA < valB ? a : b;
+        const ValueType bestProposalVal  =  valA < valB ? valA : valB;
+
+        valRes = bestProposalVal < projectedResultVal ? bestProposalVal : projectedResultVal;
+        if(projectedResultVal < bestProposalVal){
+            //for(IndexType vi=0; vi<gm_.numberOfVariables(); ++vi){
+            //    res[vi] = subArg[ab[vi]];
+            //}
+        }
+        else{
+            for(IndexType vi=0; vi<gm_.numberOfVariables(); ++vi){
+                res[vi] = bestArg[vi];
+            }
+        }
+        return true;
+    }
 
     bool doMoveHierachicalClustering(
         const MapType & accWeights,

@@ -78,6 +78,7 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
 
    std::vector<std::string> fusion;
    fusion.push_back("MC");
+   fusion.push_back("MCN");
    fusion.push_back("CGC");
    fusion.push_back("HC");
    fusion.push_back("BASE");
@@ -173,6 +174,9 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::runImpl(GM& model, OutputBase&
    // fusion solver
    if(selectedFusionType_ == "MC"){
       fusionParam_.fusionSolver_  = FusionMoverType::MulticutSolver;
+   }
+   else if(selectedFusionType_ == "MCN"){
+      fusionParam_.fusionSolver_  = FusionMoverType::MulticutNativeSolver;
    }
    else if(selectedFusionType_ == "CGC"){
       fusionParam_.fusionSolver_  = FusionMoverType::CgcSolver;
