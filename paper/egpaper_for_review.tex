@@ -43,6 +43,8 @@
 
 \def\arraystretch{0.8}
 \renewcommand{\tabcolsep}{2pt}
+\newcommand{\thickline}{2pt}
+\newcommand{\scatterplotpath}{./scatterplots/}
 
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 \newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
@@ -543,7 +545,9 @@ the edge weighs.
 
 
 \input{tables/knott-3d-450.tex}
-
+\begin{figure*}
+\input{scatterplots/knott-3d-450.tex}
+\end{figure*}
 
 \input{tables/knott-3d-550.tex}
 
