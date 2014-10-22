@@ -65,6 +65,8 @@ protected:
 
    bool cgcFinalization_;
    bool doCutMove_;
+
+   std::string storagePrefix_;
    
 public:
    const static std::string name_;
@@ -124,6 +126,8 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
    // param for ws
    addArgument(FloatArgument<>(seedFraction_, "", "nSeeds", "(maybe relative) number of seeds ", 20.0f));
    addArgument(BoolArgument(seedFromNegativeEdges_, "sfn", "seedFromNegative", "use only nodes of negative edges as random seed"));
+
+   addArgument(StringArgument<>(storagePrefix_, "sp", "storagePrefix", "storage prefix", std::string("")));
 }
 
 template <class IO, class GM, class ACC>
@@ -145,6 +149,7 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::setParam(
    param.parallelProposals_ = parallelProposals_;
    param.fusionParam_ = fusionParam_;
    param.proposalParam_.randomizer_ = wRand_;
+   param.storagePrefix_ = storagePrefix_;
 }
 
 template <class IO, class GM, class ACC>

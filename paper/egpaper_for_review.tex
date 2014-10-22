@@ -486,7 +486,7 @@ To generate proposals cut we can use bottom up hierarchical clustering.
 In each step we contract the edge with the highest weight.
 Parallel edges are merged into single edges by summing their weights.
 We stop when a certain number of nodes is reached, or the
-largest edge weight is smaller then a certain threshold.
+largest edge weight among the not yet contracted edges is smaller then a certain threshold.
 To get versatile proposals we either add noise 
 to the edge weighs or permute a certain number of weights.
 
