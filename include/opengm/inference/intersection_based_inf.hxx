@@ -187,7 +187,7 @@ namespace proposal_gen{
                 const float     noiseParam = 1.0,
                 const size_t    seed = 42,
                 const bool      ignoreSeed = true,
-                const bool      autoScale = true,
+                const bool      autoScale = false,
                 const float     permuteN = -1.0
             )
             : 
@@ -251,7 +251,7 @@ namespace proposal_gen{
                 }
             }
             else if(param_.noiseType_ == Parameter::None){
-                std::copy(weights.begin(), weights.end(), rweights.begin());
+                std::copy(weights.begin(), weights.begin()+rweights.size(), rweights.begin());
             }
             else{
                 throw RuntimeError("wrong noise type");
@@ -342,7 +342,7 @@ namespace proposal_gen{
             param_(param),
             nodeStopNum_(0),
             rWeights_(graph.edgeNum()),
-            wRandomizer_(param_.randomizer_){
+            wRandomizer_(param.randomizer_){
 
             if(param_.nodeStopNum_>0.000001 && param_.nodeStopNum_<=1.0 ){
                 float keep = param_.nodeStopNum_;
