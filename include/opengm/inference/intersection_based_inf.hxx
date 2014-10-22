@@ -33,6 +33,11 @@
 #include "opengm/inference/lazyflipper.hxx"
 
 
+#include <fstream>
+#include <iterator>
+#include <string>
+#include <vector>
+
 // FIXME
 using namespace std;
 #define Isinf Isinf2
@@ -187,7 +192,7 @@ namespace proposal_gen{
             )
             : 
             noiseType_(noiseType),
-            noiseParam_(noiseParam_),
+            noiseParam_(noiseParam),
             seed_(seed),
             ignoreSeed_(ignoreSeed),
             autoScale_(autoScale),
@@ -1054,7 +1059,7 @@ public:
                 planar_(planar),
                 doCutMove_(doCutMove)
         {
-
+            storagePrefix_ = std::string("");
         }
         ProposalParameter proposalParam_;
         FusionParameter fusionParam_;
@@ -1064,6 +1069,7 @@ public:
         bool cgcFinalization_;
         bool planar_;
         bool doCutMove_;
+        std::string storagePrefix_;
     };
 
 
@@ -1318,6 +1324,35 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
 
             anyVar = fusionMover_->fuse(bestArg_,proposedState, fusedState, 
                                         bestValue_, proposalValue, bestValue_);
+
+
+            if(!param_.storagePrefix_.empty()){
+
+                {
+                    std::stringstream ss;
+                    ss<<param_.storagePrefix_<<iteration<<"proposal.txt";
+                    std::ofstream f(ss.str().c_str());
+                    for(size_t i=0; i<gm_.numberOfVariables(); ++i) {
+                        f << proposedState[i] << '\n';
+                    }
+                }
+                {
+                    std::stringstream ss;
+                    ss<<param_.storagePrefix_<<iteration<<"cbest.txt";
+                    std::ofstream f(ss.str().c_str());
+                    for(size_t i=0; i<gm_.numberOfVariables(); ++i) {
+                        f << bestArg_[i] << '\n';
+                    }
+                }
+                {
+                    std::stringstream ss;
+                    ss<<param_.storagePrefix_<<iteration<<"nbest.txt";
+                    std::ofstream f(ss.str().c_str());
+                    for(size_t i=0; i<gm_.numberOfVariables(); ++i) {
+                        f << fusedState[i] << '\n';
+                    }
+                }
+            }
         }
         else{
 
