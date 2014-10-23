@@ -1343,7 +1343,7 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
                 anyVar = fusionMover_->fuseMmwc(bestArg_,proposedState, fusedState, 
                                             bestValue_, proposalValue, bestValue_);
 
-                std::cout<<"bV "<<bestValue_<<" pV "<<proposalValue<<"\n";
+                //std::cout<<"bV "<<bestValue_<<" pV "<<proposalValue<<"\n";
             }
 
 

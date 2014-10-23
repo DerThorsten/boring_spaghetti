@@ -581,11 +581,14 @@ public:
         // add the weight from the cuts within
         const LabelType lAB[] = {0,1};
         for(size_t f=0; f<subGm.numberOfFactors(); ++f){
-            IndexType vi0 = subGm[f].variableIndex(0);
-            IndexType vi1 = subGm[f].variableIndex(1);
 
-            if(subArg[vi0] == subArg[vi1] && oarg[vi0] != oarg[vi1]){
-                resultVal+=gm_[f](lAB);
+            if(gm_.numberOfFactors()==1){
+                IndexType vi0 = subGm[f].variableIndex(0);
+                IndexType vi1 = subGm[f].variableIndex(1);
+
+                if(subArg[vi0] == subArg[vi1] && oarg[vi0] != oarg[vi1]){
+                    resultVal+=gm_[f](lAB);
+                }
             }
         }
         //std::cout<<"mmcw val inf "<<resultVal<<"\n";

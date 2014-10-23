@@ -7,7 +7,7 @@ numpy.random.seed(42)
 
 #gm=opengm.loadGm("/home/tbeier/datasets/image-seg/3096.bmp.h5","gm")
 #gm=opengm.loadGm("/home/tbeier/datasets/image-seg/175032.bmp.h5","gm")
-gm=opengm.loadGm("/media/tbeier/TOSHIBA EXT/small_mmwc_gm","gm")
+gm=opengm.loadGm("/media/tbeier/TOSHIBA EXT/bigger_mmwc_gm","gm")
 #gm=opengm.loadGm("/home/tbeier/datasets/image-seg/148026.bmp.h5","gm")
 #gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-450/gm_knott_3d_102.h5","gm")#(ROTTEN)
 #gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-450/gm_knott_3d_096.h5","gm")
@@ -43,8 +43,8 @@ with opengm.Timer("with new method"):
     if useRC:
         proposalParam = opengm.InfParam(
             randomizer = randomizer,
-            stopWeight=-0.0,
-            nodeStopNum=0.1,
+            stopWeight=-1000000.0,
+            nodeStopNum=0.01,
             ignoreNegativeWeights=False,
             setCutToZero=False
         )
@@ -52,7 +52,7 @@ with opengm.Timer("with new method"):
         bv =  opengm.BoolVector()
         bv.append(True)
         bv.append(True)
-
+        bv.append(False)
         infParam = opengm.InfParam(
             numStopIt=50,
             numIt=50,
