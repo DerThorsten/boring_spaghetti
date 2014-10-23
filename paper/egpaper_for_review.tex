@@ -551,7 +551,22 @@ the edge weighs.
 
 
 \section{Experiments}
+
+\subsection{Parameter Choice}
+\begin{figure}
+\centering
+\fbox{\includegraphics[width=0.45\columnwidth,trim=3.5cm 8cm 4.5cm 8cm,clip]{images/grid-time.pdf}}
+\fbox{\includegraphics[width=0.45\columnwidth,trim=3.5cm 8cm 4.5cm 8cm,clip]{images/grid-value.pdf}}
+\caption{Empirical evaluation of the impact of noise used for proposal generation and proposal size.
+  Proposals with many segments causes longer runtime. Noise seemed not to be a critical parameter but should be selected large enough.
+}
+\end{figure}
+
 \subsection{Benchmark Models}
+
+
+
+
 
 
 \input{tables/anytime/image-seg.tex}
