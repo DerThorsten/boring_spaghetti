@@ -187,7 +187,7 @@ namespace proposal_gen{
                 const float     noiseParam = 1.0,
                 const size_t    seed = 42,
                 const bool      ignoreSeed = true,
-                const bool      autoScale = true,
+                const bool      autoScale = false,
                 const float     permuteN = -1.0
             )
             : 
@@ -251,7 +251,7 @@ namespace proposal_gen{
                 }
             }
             else if(param_.noiseType_ == Parameter::None){
-                std::copy(weights.begin(), weights.end(), rweights.begin());
+                std::copy(weights.begin(), weights.begin()+rweights.size(), rweights.begin());
             }
             else{
                 throw RuntimeError("wrong noise type");
@@ -342,7 +342,7 @@ namespace proposal_gen{
             param_(param),
             nodeStopNum_(0),
             rWeights_(graph.edgeNum()),
-            wRandomizer_(param_.randomizer_){
+            wRandomizer_(param.randomizer_){
 
             if(param_.nodeStopNum_>0.000001 && param_.nodeStopNum_<=1.0 ){
                 float keep = param_.nodeStopNum_;
@@ -1048,7 +1048,8 @@ public:
             const size_t parallelProposals = 1,
             const bool cgcFinalization = false,
             const bool planar = false,
-            const bool doCutMove = false
+            const bool doCutMove = false,
+            const std::vector<bool> & allowCutsWithin = std::vector<bool> ()
         )
             :   proposalParam_(proposalParam),
                 fusionParam_(fusionParam),
@@ -1057,7 +1058,8 @@ public:
                 parallelProposals_(parallelProposals),
                 cgcFinalization_(cgcFinalization),
                 planar_(planar),
-                doCutMove_(doCutMove)
+                doCutMove_(doCutMove),
+                allowCutsWithin_(allowCutsWithin)
         {
             storagePrefix_ = std::string("");
         }
@@ -1069,7 +1071,9 @@ public:
         bool cgcFinalization_;
         bool planar_;
         bool doCutMove_;
+        std::vector<bool> allowCutsWithin_;
         std::string storagePrefix_;
+
     };
 
 
@@ -1297,6 +1301,8 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
         }
     }
 
+    const bool mmcv  = param_.allowCutsWithin_.size()>0;
+
     for(size_t iteration=0; iteration<param_.numIt_; ++iteration){
 
 
@@ -1322,8 +1328,15 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
 
             //std::cout<<"best val "<<bestValue_<<" pval "<<proposalValue<<"\n";
 
-            anyVar = fusionMover_->fuse(bestArg_,proposedState, fusedState, 
-                                        bestValue_, proposalValue, bestValue_);
+
+            if(!mmcv){
+                anyVar = fusionMover_->fuse(bestArg_,proposedState, fusedState, 
+                                            bestValue_, proposalValue, bestValue_);
+            }
+            else{
+                anyVar = fusionMover_->fuseMmwc(bestArg_,proposedState, fusedState, 
+                                            bestValue_, proposalValue, bestValue_);
+            }
 
 
             if(!param_.storagePrefix_.empty()){
