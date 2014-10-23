@@ -25,10 +25,29 @@
 \usepackage{setspace}
 %for tikz
 \usepackage{tikz,pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{filecontents}
 \usetikzlibrary{arrows,positioning,automata,shadows,fit,shapes}
 \usetikzlibrary{arrows,petri,topaths}
 \usetikzlibrary{positioning,fit,calc}
 \usetikzlibrary{shapes.arrows,chains,decorations.pathreplacing,fadings}
+\usetikzlibrary{calc, matrix, backgrounds}
+
+\pgfplotsset{every axis/.append style={
+  every axis y label/.style = {at={(ticklabel cs:0.5)}, rotate=90, anchor=south},
+  axis x line = {bottom},
+  axis y line = {left},
+  tick align = outside,
+  ymajorgrids = true,
+%  legend style = {draw=none, at={(1.05, 0.5)}, anchor=west, font=\small},
+  legend style = {font=\tiny},
+  legend columns = 1,
+  every axis plot/.append style = {line width=1pt},
+  label style = {font=\small},
+  tick label style={font=\small},
+  scaled ticks = false,
+}}
+
 \usepackage{tkz-berge}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
@@ -543,6 +562,192 @@ the edge weighs.
 
 \input{tables/knott-3d-300.tex}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+restrict y to domain=-6000:-4500,
+xlabel = {runtime},
+xmin = 0,
+xmax = 4100,
+%ymin =  75282844.25,
+%ymax =  81774642.015,
+%xtick       = { 1 , 60 , 3600 },
+%xticklabels = { 1 sec. , 1 min.  , 1 hour },
+%ytick       = {75661636, 78718140, 81774643 },
+%yticklabels = {$75661636$, $78718140$, $81774643$ },
+width = 0.9\columnwidth,
+scaled ticks = false
+]
+%\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-150.data};
+%\addlegendentry{HC-CGC}
+
+\addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-150.data};
+\addlegendentry{CGC} 
+
+\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-150.data};
+\addlegendentry{MCI-CCIFD} 
+
+\addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-150.data};
+\addlegendentry{MC-Fusion (HC-MC-CGC)}
+
+\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-150.data};
+\addlegendentry{MC-Fusion (HC-CGC-CGC)}
+
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{knott-3d-150}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+restrict y to domain=-40000:-24000,
+xlabel = {runtime},
+xmin = 0,
+xmax = 4100,
+%ymin =  75282844.25,
+%ymax =  81774642.015,
+%xtick       = { 1 , 60 , 3600 },
+%xticklabels = { 1 sec. , 1 min.  , 1 hour },
+%ytick       = {75661636, 78718140, 81774643 },
+%yticklabels = {$75661636$, $78718140$, $81774643$ },
+width = 0.9\columnwidth,
+scaled ticks = false
+]
+\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-300.data};
+\addlegendentry{HC-CGC}
+
+\addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-300.data};
+\addlegendentry{CGC} 
+
+\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-300.data};
+\addlegendentry{MCI-CCIFD} 
+
+\addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-300.data};
+\addlegendentry{MC-Fusion (HC-MC-CGC)}
+
+\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-300.data};
+\addlegendentry{MC-Fusion (HC-CGC-CGC)}
+
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{knott-3d-300}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+restrict y to domain=-80000:-60000,
+xlabel = {runtime},
+xmin = 0,
+xmax = 4100,
+%ymin =  75282844.25,
+%ymax =  81774642.015,
+%xtick       = { 1 , 60 , 3600 },
+%xticklabels = { 1 sec. , 1 min.  , 1 hour },
+%ytick       = {75661636, 78718140, 81774643 },
+%yticklabels = {$75661636$, $78718140$, $81774643$ },
+width = 0.9\columnwidth,
+scaled ticks = false
+]
+\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-450.data};
+\addlegendentry{HC-CGC}
+
+\addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-450.data};
+\addlegendentry{CGC} 
+
+\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-450.data};
+\addlegendentry{MCI-CCIFD} 
+
+\addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-450.data};
+\addlegendentry{MC-Fusion (HC-MC-CGC)}
+
+\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-450.data};
+\addlegendentry{MC-Fusion (HC-CGC-CGC)}
+
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{knott-3d-450}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+restrict y to domain=-10000000:-100000,
+xlabel = {runtime},
+xmin = 0,
+xmax = 4100,
+%ymin =  75282844.25,
+%ymax =  81774642.015,
+%xtick       = { 1 , 60 , 3600 },
+%xticklabels = { 1 sec. , 1 min.  , 1 hour },
+%ytick       = {75661636, 78718140, 81774643 },
+%yticklabels = {$75661636$, $78718140$, $81774643$ },
+width = 0.9\columnwidth,
+scaled ticks = false
+]
+\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-550.data};
+\addlegendentry{HC-CGC}
+
+\addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-550.data};
+\addlegendentry{CGC} 
+
+\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-550.data};
+\addlegendentry{MCI-CCIFD} 
+
+\addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-550.data};
+\addlegendentry{MC-Fusion (HC-MC-CGC)}
+
+\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-550.data};
+\addlegendentry{MC-Fusion (HC-CGC-CGC)}
+
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{knott-3d-550}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\begin{figure}[H]
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+%restrict y to domain=-10000000:-100000,
+xlabel = {runtime},
+xmin = 0,
+xmax = 4100,
+%ymin =  75282844.25,
+%ymax =  81774642.015,
+%xtick       = { 1 , 60 , 3600 },
+%xticklabels = { 1 sec. , 1 min.  , 1 hour },
+%ytick       = {75661636, 78718140, 81774643 },
+%yticklabels = {$75661636$, $78718140$, $81774643$ },
+width = 0.9\columnwidth,
+scaled ticks = false
+]
+\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/seg-3d.data};
+\addlegendentry{HC-CGC}
+
+\addplot[color=red,mark=x] table[x=time,y=CGC]{data/seg-3d.data};
+\addlegendentry{CGC} 
+
+\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/seg-3d.data};
+\addlegendentry{MCI-CCIFD} 
+
+\addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC-CGC]{data/seg-3d.data};
+\addlegendentry{MC-Fusion (HC-MC-CGC)}
+
+\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/seg-3d.data};
+\addlegendentry{MC-Fusion (HC-CGC-CGC)}
+
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{seg-3d}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \input{tables/anytime/knott-3d-450.tex}
 \begin{figure*}
