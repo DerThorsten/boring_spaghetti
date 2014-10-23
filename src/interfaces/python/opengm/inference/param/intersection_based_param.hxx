@@ -26,13 +26,15 @@ public:
         const FusionParameter & fusionParam,
         const size_t         numIt,
         const size_t         numStopIt,
-        const size_t parallelProposals
+        const size_t parallelProposals,
+        const std::vector<bool> allowCutsWithin
     ) {
         p.proposalParam_ = proposalParam;
         p.fusionParam_ = fusionParam;
         p.numIt_ = numIt;
         p.numStopIt_ = numStopIt;
         p.parallelProposals_ = parallelProposals;
+        p.allowCutsWithin_ = allowCutsWithin;
     } 
 
     void static exportInfParam(const std::string & className){
@@ -44,13 +46,16 @@ public:
         .def_readwrite("numIt",&Parameter::numIt_,"total number of iterations")
         .def_readwrite("numStopIt",&Parameter::numStopIt_,"stop after n not successful steps")
         .def_readwrite("parallelProposals",&Parameter::parallelProposals_,"fuse parallel")
+        .def_readwrite("allowCutsWithin",&Parameter::parallelProposals_,"fuse parallel")
+        .def_readwrite("allowCutsWithin",&Parameter::allowCutsWithin_,"allowCutsWithin")
         .def ("set", &SelfType::set, 
             (
                 boost::python::arg("proposalParam")=GenParameter(),
                 boost::python::arg("fusionParam")=FusionParameter(),
                 boost::python::arg("numIt")=1000, 
                 boost::python::arg("numStopIt")=0,
-                boost::python::arg("parallelProposals")=1
+                boost::python::arg("parallelProposals")=1,
+                boost::python::arg("allowCutsWithin")=std::vector<bool>()
             ) 
         )
     ;

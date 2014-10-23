@@ -174,13 +174,15 @@ public:
             const FusionSolver fusionSolver = SelfType::DefaultSolver,
             const bool planar = false,
             const std::string  workflow = std::string(),
-            const int nThreads = -1
+            const int nThreads = -1,
+            const std::vector<bool> & allowCutsWithin  = std::vector<bool>()
         )
         : 
             fusionSolver_(fusionSolver),
             planar_(planar),
             workflow_(workflow),
-            nThreads_(nThreads)
+            nThreads_(nThreads),
+            allowCutsWithin_(allowCutsWithin)
         {
 
         }
@@ -188,12 +190,14 @@ public:
         bool planar_;
         std::string workflow_;
         int nThreads_;
+        std::vector<bool> allowCutsWithin_;
 
     };
 
     typedef SimpleDiscreteSpace<IndexType, LabelType>       SubSpace;
     typedef PottsFunction<ValueType, IndexType, LabelType>  PFunction;
-    typedef GraphicalModel<ValueType, Adder, PFunction , SubSpace> SubModel;
+    typedef ExplicitFunction<ValueType, IndexType, LabelType>  EFunction;
+    typedef GraphicalModel<ValueType, Adder, OPENGM_TYPELIST_2(EFunction,PFunction) , SubSpace> SubModel;
 
 
     PermutableLabelFusionMove(const GraphicalModelType & gm, const Parameter & param = Parameter())
@@ -397,8 +401,194 @@ public:
            
     }
 
+    bool fuseMmwc(
+        const std::vector<LabelType> & a,
+        const std::vector<LabelType> & b,
+        std::vector<LabelType> & res,
+        const ValueType valA,
+        const ValueType valB,
+        ValueType & valRes
+    ){
+
+        std::vector<LabelType> ab(gm_.numberOfVariables());
+        IndexType numNewVar = this->intersect(a, b, ab);
+
+        if(numNewVar==1){
+            return false;
+        }
+
+        const ValueType intersectedVal = gm_.evaluate(ab);
 
 
+
+        // get the new smaller graph
+
+
+        MapType accWeights;
+        size_t erasedEdges = 0;
+        size_t notErasedEdges = 0;
+
+
+        LabelType lAA[2]={0, 0};
+        LabelType lAB[2]={0, 1};
+
+        size_t ushape[] = { size_t(numNewVar), size_t(gm_.maxNumberOfLabels()) };
+
+        marray::Marray<ValueType> accUnaries(ushape, ushape+2,0.0);
+
+        for(size_t fi=0; fi< gm_.numberOfFactors(); ++fi){
+            if(gm_[fi].numberOfVariables()==2){
+                const size_t vi0 = gm_[fi].variableIndex(0);
+                const size_t vi1 = gm_[fi].variableIndex(1);
+
+                const size_t cVi0 = ab[vi0] < ab[vi1] ? ab[vi0] : ab[vi1];
+                const size_t cVi1 = ab[vi0] < ab[vi1] ? ab[vi1] : ab[vi0];
+
+                OPENGM_CHECK_OP(cVi0,<,gm_.numberOfVariables(),"");
+                OPENGM_CHECK_OP(cVi1,<,gm_.numberOfVariables(),"");
+
+
+                if(cVi0 == cVi1){
+                    ++erasedEdges;
+                }
+                else{
+                    ++notErasedEdges;
+
+                    // get the weight
+                    ValueType val00  = gm_[fi](lAA);
+                    ValueType val01  = gm_[fi](lAB);
+                    ValueType weight = val01 - val00; 
+
+                    //std::cout<<"vAA"<<val00<<" vAB "<<val01<<" w "<<weight<<"\n";
+
+                    // compute key
+                    const UInt64Type key = cVi0 + numNewVar*cVi1;
+
+                    // check if key is in map
+                    MapIter iter = accWeights.find(key);
+
+                    // key not yet in map
+                    if(iter == accWeights.end()){
+                        accWeights[key] = weight;
+                    }
+                    // key is in map 
+                    else{
+                        iter->second += weight;
+                    }
+
+                }
+
+            }
+            if(gm_[fi].numberOfVariables()==1){
+                const IndexType cVi = ab[gm_[fi].numberOfVariables()];
+                for(LabelType l=0 ; l<ushape[1]; ++l){
+                    accUnaries(cVi,l)+=gm_[fi](&l);
+                }
+            }
+        }
+
+
+
+        OPENGM_CHECK_OP(erasedEdges+notErasedEdges, == , gm_.numberOfFactors(),"something wrong");
+  
+
+
+    
+        return doMoveMmcw(accWeights,accUnaries,ab,numNewVar, a, b, res, valA, valB, valRes);
+   
+           
+    }
+    bool doMoveMmcw(
+        const MapType & accWeights,
+        const marray::Marray<ValueType> & accUnaries,
+        const std::vector<LabelType> & ab,
+        const IndexType numNewVar,
+        const std::vector<LabelType> & a,
+        const std::vector<LabelType> & b,
+        std::vector<LabelType> & res,
+        const ValueType valA,
+        const ValueType valB,
+        ValueType & valRes
+    ){
+        // make the actual sub graphical model
+        SubSpace subSpace(numNewVar, numNewVar);
+        SubModel subGm(subSpace);
+
+        // reserve space
+        subGm. template reserveFunctions<PFunction>(accWeights.size());
+        subGm. template reserveFunctions<EFunction>(numNewVar);
+
+        subGm.reserveFactors(accWeights.size()+numNewVar);
+        subGm.reserveFactorsVarialbeIndices(accWeights.size()*2+numNewVar);
+        size_t efshape[] = {accUnaries.shape(1)};
+        EFunction ef(efshape,efshape+1);
+
+        // unaries
+        for(IndexType vi=0; vi<numNewVar; ++vi){
+            for(LabelType l=0; l<accUnaries.shape(1); ++l){
+                ef(&l) = accUnaries(vi, l);
+            }
+            subGm.addFactor(subGm.addFunction(ef), &vi, &vi+1);
+        }
+
+        // higher order
+        for(MapCIter i = accWeights.begin(); i!=accWeights.end(); ++i){
+            const UInt64Type key    = i->first;
+            const ValueType weight = i->second;
+
+            const UInt64Type cVi1 = key/numNewVar;
+            const UInt64Type cVi0 = key - cVi1*numNewVar;
+            const UInt64Type vis[2] = {cVi0, cVi1};
+
+            PFunction pf(numNewVar, numNewVar, 0.0, weight);
+            subGm.addFactor(subGm.addFunction(pf), vis, vis+2);
+        }
+
+        std::vector<LabelType> subArg;
+
+
+        //::cout<<"WITH MC\n";
+        typedef Multicut<SubModel, Minimizer> Inf;
+        typedef  typename  Inf::Parameter Param;
+        Param p(0,0.0);
+
+        if(param_.nThreads_ <= 0){
+            p.numThreads_ = 0;
+        }
+        else{
+            p.numThreads_ = param_.nThreads_;
+        }
+        p.workFlow_ = param_.workflow_;
+        p.allowCutsWithin_ = param_.allowCutsWithin_;
+
+
+        Inf inf(subGm,p);
+        inf.infer();
+
+        // special arg
+        std::vector<size_t> oarg = inf.getSegmentation();
+        // usual arg
+        inf.arg(subArg);
+
+        for(IndexType vi=0; vi<gm_.numberOfVariables(); ++vi){
+            res[vi] = oarg[ab[vi]];
+        }
+
+        ValueType resultVal = subGm.evaluate(subArg);
+      
+        // add the weight from the cuts within
+        const LabelType lAB[] = {0,1};
+        for(size_t f=0; f<subGm.numberOfFactors(); ++f){
+            IndexType vi0 = subGm[f].variableIndex(0);
+            IndexType vi1 = subGm[f].variableIndex(1);
+
+            if(subArg[vi0] == subArg[vi1] && oarg[vi0] != oarg[vi1]){
+                resultVal+=gm_[f](lAB);
+            }
+        }
+
+        return true;
+    }
     bool doMoveCgc(
         const MapType & accWeights,
         const std::vector<LabelType> & ab,
