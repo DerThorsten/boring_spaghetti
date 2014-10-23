@@ -24,6 +24,7 @@
 #include "opengm/inference/inference.hxx"
 #include "opengm/inference/visitors/visitors.hxx"
 #include "opengm/utilities/timer.hxx"
+#include "opengm/utilities/queues.hxx"
 
 #include <ilcplex/ilocplex.h>
 //ILOSTLBEGIN
@@ -104,6 +105,8 @@ public:
       MWCRounding MWCRounding_;
       size_t reductionMode_;
       std::vector<bool> allowCutsWithin_;
+      bool useOldPriorityQueue_;
+      bool useChordalSearch_;
 
       /// \param numThreads number of threads that should be used (default = 0 [automatic])
       /// \param cutUp value which the optima at least has (helps to cut search-tree)
@@ -114,7 +117,7 @@ public:
          )
          : numThreads_(numThreads), verbose_(false),verboseCPLEX_(false), cutUp_(cutUp),
            timeOut_(36000000), maximalNumberOfConstraintsPerRound_(1000000),
-           edgeRoundingValue_(0.00000001),MWCRounding_(NEAREST), reductionMode_(3)
+           edgeRoundingValue_(0.00000001),MWCRounding_(NEAREST), reductionMode_(3),useOldPriorityQueue_(false), useChordalSearch_(false)
          {};
    };
 
@@ -198,7 +201,11 @@ private:
    LPIndexType getNeighborhood(const LPIndexType, std::vector<EdgeMapType >&,std::vector<std::pair<IndexType,IndexType> >&, std::vector<HigherOrderTerm>&);
 
    template <class DOUBLEVECTOR>
-   double shortestPath(const IndexType, const IndexType, const std::vector<EdgeMapType >&, const DOUBLEVECTOR&, std::vector<IndexType>&, const double = std::numeric_limits<double>::infinity(), bool = true) const;
+   double shortestPath(const IndexType, const IndexType, const std::vector<EdgeMapType >&, const DOUBLEVECTOR&, std::vector<IndexType>&, const double = std::numeric_limits<double>::infinity(), bool = true) const; 
+   template <class DOUBLEVECTOR>
+   double shortestPath2(const IndexType, const IndexType, const std::vector<EdgeMapType >&, const DOUBLEVECTOR&, std::vector<IndexType>&, 
+                        std::vector<IndexType>&, opengm::ChangeablePriorityQueue<double>&,
+                        const double = std::numeric_limits<double>::infinity(), bool = true) const;
 
    InferenceTermination derandomizedRounding(std::vector<LabelType>&) const;
    InferenceTermination pseudoDerandomizedRounding(std::vector<LabelType>&, size_t = 1000) const;
@@ -1178,34 +1185,92 @@ size_t Multicut<GM, ACC>::findCycleConstraints(
    }
   
    std::map<std::pair<IndexType,IndexType>,size_t> counter;
-   for(size_t i=0; i<numberOfInternalEdges_;++i) {
-      
-      IndexType u = edgeNodes_[i].first;//[0];
-      IndexType v = edgeNodes_[i].second;//[1]; 
-      
-      if(usePreBounding && partit[u] != partit[v])
-         continue;
 
-      OPENGM_ASSERT(i+numberOfTerminalEdges_ == neighbours[u][v]);
-      OPENGM_ASSERT(i+numberOfTerminalEdges_ == neighbours[v][u]);
+   if(!parameter_.useOldPriorityQueue_){
+      std::vector<IndexType>                  prev(neighbours.size());
+      opengm::ChangeablePriorityQueue<double> openNodes(neighbours.size());
+      std::vector<IndexType> path;
+      path.reserve(neighbours.size());
+      for(size_t i=0; i<numberOfInternalEdges_;++i) {
       
-      if(sol_[numberOfTerminalEdges_+i]>EPS_){
-         //search for cycle
-         std::vector<IndexType> path;
-         const double pathLength = shortestPath(u,v,neighbours,sol_,path,sol_[numberOfTerminalEdges_+i],addOnlyFacetDefiningConstraints);
-         if(sol_[numberOfTerminalEdges_+i]-EPS_>pathLength){
-            OPENGM_ASSERT(path.size()>2);
-            constraint.add(IloRange(env_, 0  , 1000000000)); 
-            //negative zero seemed to be required for numerical reasons, even CPlex handel this by its own, too.
-            constraint[constraintCounter_].setLinearCoef(x_[numberOfTerminalEdges_+i],-1);
-            for(size_t n=0;n<path.size()-1;++n){
-               constraint[constraintCounter_].setLinearCoef(x_[neighbours[path[n]][path[n+1]]],1);
+         IndexType u = edgeNodes_[i].first;//[0];
+         IndexType v = edgeNodes_[i].second;//[1]; 
+      
+         if(usePreBounding && partit[u] != partit[v])
+            continue;
+
+         OPENGM_ASSERT(i+numberOfTerminalEdges_ == neighbours[u][v]);
+         OPENGM_ASSERT(i+numberOfTerminalEdges_ == neighbours[v][u]);
+      
+         if(sol_[numberOfTerminalEdges_+i]>EPS_){
+            //search for cycle
+            double pathLength;
+            pathLength = shortestPath2(u,v,neighbours,sol_,path,prev,openNodes,sol_[numberOfTerminalEdges_+i],addOnlyFacetDefiningConstraints && parameter_.useChordalSearch_);
+            //   pathLength = shortestPath(u,v,neighbours,sol_,path,sol_[numberOfTerminalEdges_+i],addOnlyFacetDefiningConstraints);
+
+            if(sol_[numberOfTerminalEdges_+i]-EPS_>pathLength){
+               bool postChordlessCheck = addOnlyFacetDefiningConstraints && !parameter_.useChordalSearch_; 
+               bool chordless = true;
+               if(postChordlessCheck){
+                  for(size_t n1=0;n1<path.size();++n1){
+                     for(size_t n2=n1+2;n2<path.size();++n2){ 
+                        if(path[n1]==v && path[n2]==u) continue;
+                        if(neighbours[path[n2]].find(path[n1])!=neighbours[path[n2]].end()) {
+                           chordless = false; // do not update node if path is chordal
+                           break;
+                        } 
+                     } 
+                     if(!chordless)
+                        break;
+                  } 
+               }
+               if(chordless){
+                  OPENGM_ASSERT(path.size()>2);
+                  constraint.add(IloRange(env_, 0  , 1000000000)); 
+                  //negative zero seemed to be required for numerical reasons, even CPlex handel this by its own, too.
+                  constraint[constraintCounter_].setLinearCoef(x_[numberOfTerminalEdges_+i],-1);
+                  for(size_t n=0;n<path.size()-1;++n){
+                     constraint[constraintCounter_].setLinearCoef(x_[neighbours[path[n]][path[n+1]]],1);
+                  }
+                  ++constraintCounter_;
+               } 
             }
-            ++constraintCounter_; 
-         }
-      } 
-      if(constraintCounter_-tempConstrainCounter >= parameter_.maximalNumberOfConstraintsPerRound_)
-         break;
+         } 
+         if(constraintCounter_-tempConstrainCounter >= parameter_.maximalNumberOfConstraintsPerRound_)
+            break;
+      }
+   }
+   else{
+      for(size_t i=0; i<numberOfInternalEdges_;++i) {
+      
+         IndexType u = edgeNodes_[i].first;//[0];
+         IndexType v = edgeNodes_[i].second;//[1]; 
+      
+         if(usePreBounding && partit[u] != partit[v])
+            continue;
+
+         OPENGM_ASSERT(i+numberOfTerminalEdges_ == neighbours[u][v]);
+         OPENGM_ASSERT(i+numberOfTerminalEdges_ == neighbours[v][u]);
+      
+         if(sol_[numberOfTerminalEdges_+i]>EPS_){
+            //search for cycle
+            std::vector<IndexType> path;
+            double pathLength;
+            pathLength = shortestPath(u,v,neighbours,sol_,path,sol_[numberOfTerminalEdges_+i],addOnlyFacetDefiningConstraints);
+            if(sol_[numberOfTerminalEdges_+i]-EPS_>pathLength){
+               OPENGM_ASSERT(path.size()>2);
+               constraint.add(IloRange(env_, 0  , 1000000000)); 
+               //negative zero seemed to be required for numerical reasons, even CPlex handel this by its own, too.
+               constraint[constraintCounter_].setLinearCoef(x_[numberOfTerminalEdges_+i],-1);
+               for(size_t n=0;n<path.size()-1;++n){
+                  constraint[constraintCounter_].setLinearCoef(x_[neighbours[path[n]][path[n+1]]],1);
+               }
+               ++constraintCounter_; 
+            }
+         } 
+         if(constraintCounter_-tempConstrainCounter >= parameter_.maximalNumberOfConstraintsPerRound_)
+            break;
+      }
    }
    return constraintCounter_-tempConstrainCounter;
 }
@@ -1254,7 +1319,14 @@ size_t Multicut<GM, ACC>::findOddWheelConstraints(IloRangeArray& constraints){
       //Search for odd wheels
       for(size_t n=0; n<N;++n) {
          std::vector<IndexType> path;
-         const double pathLength = shortestPath(2*n,2*n+1,E,w,path,1e22,false);
+         double pathLength;
+         if(!parameter_.useOldPriorityQueue_){
+            std::vector<IndexType>                  prev(2*N);
+            opengm::ChangeablePriorityQueue<double> openNodes(2*N);
+            pathLength = shortestPath2(2*n,2*n+1,E,w,path,prev,openNodes,1e22,false);
+         }else{
+            pathLength = shortestPath(2*n,2*n+1,E,w,path,1e22,false);
+         }
          if(pathLength<0.5-EPS_*path.size()){// && (path.size())>3){
             OPENGM_ASSERT((path.size())>3);
             OPENGM_ASSERT(((path.size())/2)*2 == path.size() );
@@ -1302,34 +1374,40 @@ size_t Multicut<GM, ACC>::findIntegerCycleConstraints(
    size_t tempConstrainCounter = constraintCounter_;
   
    //Find Violated Cycles inside a Partition
-   size_t u,v;
+   size_t u,v; 
+   opengm::FiFoQueue<size_t> nodeList(numberOfNodes_);
+   std::vector<size_t> path(numberOfNodes_,std::numeric_limits<size_t>::max());
    for(size_t i=0; i<numberOfInternalEdges_;++i) {
       u = edgeNodes_[i].first;//[0];
       v = edgeNodes_[i].second;//[1];
       OPENGM_ASSERT(partit[u] >= 0);
       if(sol_[numberOfTerminalEdges_+i]>=EPS_ && partit[u] == partit[v]) {
          //find shortest path from u to v by BFS
-         std::queue<size_t> nodeList;
-         std::vector<size_t> path(numberOfNodes_,std::numeric_limits<size_t>::max());
+         //std::queue<size_t> nodeList; 
+         //opengm::FiFoQueue<size_t> nodeList(numberOfNodes_);
+         //std::vector<size_t> path(numberOfNodes_,std::numeric_limits<size_t>::max());
+         nodeList.clear();
+         std::fill(path.begin(),path.end(),std::numeric_limits<size_t>::max());
          size_t n = u;
+         const bool preChordalcheck =addFacetDefiningConstraintsOnly && parameter_.useChordalSearch_;
          while(n!=v) {
             std::list<size_t>::iterator it;
             for(it=neighbours0[n].begin() ; it != neighbours0[n].end(); ++it) {
                if(path[*it]==std::numeric_limits<size_t>::max()) {
                   //Check if this path is chordless 
-                  if(addFacetDefiningConstraintsOnly) {
-                     bool isCordless = true;
+                  if(preChordalcheck) {
+                     bool isChordless = true;
                      size_t s = n;
                      const size_t c = *it;
                      while(s!=u){
                         s = path[s];
                         if(s==u && c==v) continue;
                         if(neighbours[c].find(s)!=neighbours[c].end()) {
-                           isCordless = false;
+                           isChordless = false;
                            break;
                         } 
                      }
-                     if(isCordless){
+                     if(isChordless){
                         path[*it]=n;
                         nodeList.push(*it);
                      }
@@ -1340,7 +1418,8 @@ size_t Multicut<GM, ACC>::findIntegerCycleConstraints(
                   }
                }
             }
-            if(nodeList.size()==0)
+            //if(nodeList.size()==0)
+            if(nodeList.empty())
                break;
             n = nodeList.front(); nodeList.pop();
          }
@@ -1354,15 +1433,38 @@ size_t Multicut<GM, ACC>::findIntegerCycleConstraints(
                if(sol_[neighbours[u][v]]-EPS_<w)//constraint is not violated
                   continue;
             }
-
-            constraint.add(IloRange(env_, 0 , 1000000000));
-            constraint[constraintCounter_].setLinearCoef(x_[neighbours[u][v]],-1);
-            while(n!=u) {
-               constraint[constraintCounter_].setLinearCoef(x_[neighbours[n][path[n]]],1);
-               n=path[n];
+            const bool postChordlessCheck = addFacetDefiningConstraintsOnly && !parameter_.useChordalSearch_; 
+            bool chordless = true;
+            if(postChordlessCheck){
+               size_t s = v;
+               while(s!=u){
+                  if(path[s]==u)
+                     break;
+                  size_t t = path[path[s]];
+                  while(true){
+                     if(s==v && t==u) break;
+                     if(neighbours[t].find(s)!=neighbours[t].end()) {
+                        chordless = false;
+                        break;
+                     } 
+                     if(t==u) break;
+                     t=path[t];
+                  }
+                  if(!chordless)
+                     break; 
+                  s=path[s];
+               } 
             }
-            ++constraintCounter_;
-         } 
+            if(chordless){
+               constraint.add(IloRange(env_, 0 , 1000000000));
+               constraint[constraintCounter_].setLinearCoef(x_[neighbours[u][v]],-1);
+               while(n!=u) {
+                  constraint[constraintCounter_].setLinearCoef(x_[neighbours[n][path[n]]],1);
+                  n=path[n];
+               }
+               ++constraintCounter_;
+            } 
+         }
          if(constraintCounter_-tempConstrainCounter >= parameter_.maximalNumberOfConstraintsPerRound_)
             break;
       }
@@ -2017,7 +2119,7 @@ bool Multicut<GM, ACC>::readWorkFlow(std::string s)
 ///
 /// computed sigle shortest path by the Dijkstra algorithm with following modifications:
 /// * stop when target node (endNode) is reached
-/// * optional avoid chordal paths (cordless = true)
+/// * optional avoid chordal paths (chordless = true)
 /// * avoid paths that are longer than a threshold (maxLength)
 template<class GM, class ACC>
 template<class DOUBLEVECTOR>
@@ -2028,7 +2130,7 @@ inline double Multicut<GM, ACC>::shortestPath(
    const DOUBLEVECTOR& w,
    std::vector<IndexType>& shortestPath,
    const double maxLength,
-   bool cordless
+   bool chordless
 ) const
 { 
    
@@ -2074,7 +2176,7 @@ inline double Multicut<GM, ACC>::shortestPath(
             if(dist[node2] > weight2 && weight2 < maxLength){
                //check chordality
                bool updateNode = true;
-               if(cordless) {
+               if(chordless) {
                   IndexType s = node;
                   while(s!=startNode){
                      s= prev[s];
@@ -2105,8 +2207,100 @@ inline double Multicut<GM, ACC>::shortestPath(
       }while(n!=startNode);
       OPENGM_ASSERT(shortestPath.back() == startNode);
    }
-   
+   else{
+      //  std::cout <<"ERROR" <<std::flush;
+   }
+//   std::cout <<"*"<< shortestPath.size()<<"-"<<dist[endNode]<<std::flush;
    return dist[endNode];
+}
+
+
+template<class GM, class ACC>
+template<class DOUBLEVECTOR>
+inline double Multicut<GM, ACC>::shortestPath2(
+   const IndexType startNode, 
+   const IndexType endNode, 
+   const std::vector<EdgeMapType >& E, //E[n][i].first/.second are the i-th neighbored node and weight-index (for w), respectively. 
+   const DOUBLEVECTOR& w,
+   std::vector<IndexType>& shortestPath,
+   std::vector<IndexType>& prev,
+   opengm::ChangeablePriorityQueue<double>& openNodes,
+   const double maxLength,
+   bool chordless
+) const
+{ 
+   
+   const IndexType numberOfNodes = E.size();
+   const IndexType nonePrev      = endNode;
+
+//   std::vector<IndexType>                  prev(numberOfNodes,nonePrev);
+//   opengm::ChangeablePriorityQueue<double> openNodes(numberOfNodes);
+   openNodes.reset();
+   openNodes.setPriorities(10000);
+   openNodes.push(startNode,0.0);
+   prev[endNode] = nonePrev;
+  
+   IndexType node;
+   double priority;
+   //  std::cout <<"1"<<std::flush; 
+   while(!openNodes.empty()){ 
+      //Find smallest open node 
+      node     = openNodes.top();
+      priority = openNodes.topPriority();
+      openNodes.pop();
+      // std::cout << node << "("<< priority << ") "<<std::flush;
+
+      // Check if target is reached
+      if(node == endNode)
+         break;
+      // Update all neigbors of node
+      {
+         typename EdgeMapType::const_iterator it;
+         for(it=E[node].begin() ; it != E[node].end(); ++it) {
+            const IndexType node2      = (*it).first;  //second edge-node
+            const LPIndexType weighId  = (*it).second; //index in weigh-vector w
+            double cuttedWeight        = std::max(0.0,w[weighId]); //cut up negative edge-weights
+            const double weight2       = priority+cuttedWeight;
+           
+
+            //if((!openNodes.contains(node2) || openNodes.priority(node2) > weight2) && weight2 < maxLength ){
+            if(openNodes.priority(node2) > weight2 && weight2 < maxLength ){
+              //check chordality
+               bool updateNode = true;
+               if(chordless) {
+                  IndexType s = node;
+                  while(s!=startNode){
+                     s= prev[s];
+                     if(s==startNode && node2==endNode) continue;
+                     if(neighbours[node2].find(s)!=neighbours[node2].end()) {
+                        updateNode = false; // do not update node if path is chordal
+                        break;
+                     } 
+                  }
+               } 
+               if(updateNode){
+                  openNodes.push(node2,weight2);
+                  prev[node2] = node;
+               } 
+            }
+         }
+      }
+   } 
+// std::cout <<"2"<<std::flush;
+   if(prev[endNode] != nonePrev){//find path?
+      shortestPath.resize(0);
+      shortestPath.push_back(endNode);
+      IndexType n = endNode;
+      do{
+         n=prev[n];
+         shortestPath.push_back(n);
+      }while(n!=startNode);
+      OPENGM_ASSERT(shortestPath.back() == startNode);
+   }
+   else{
+   }
+//   std::cout <<"*"<< shortestPath.size()<<"-"<<priority<<std::flush;
+   return openNodes.priority(endNode);
 }
 
 
