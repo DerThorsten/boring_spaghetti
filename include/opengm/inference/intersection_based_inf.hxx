@@ -1151,6 +1151,7 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::IntersectionBasedInf
     ACC::neutral(bestValue_);   
 
 
+    param_.fusionParam_.allowCutsWithin_ = param_.allowCutsWithin_;
     //fusionMover_ = 
 
 
@@ -1159,8 +1160,8 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::IntersectionBasedInf
     proposalGenArray_ = new ProposalGenTypePtr[nFuser];
 
     for(size_t f=0; f<nFuser; ++f){
-        fusionMoverArray_[f] = new FusionMoverType(gm_,parameter.fusionParam_);
-        proposalGenArray_[f] = new PROPOSAL_GEN(gm_, parameter.proposalParam_);
+        fusionMoverArray_[f] = new FusionMoverType(gm_,param_.fusionParam_);
+        proposalGenArray_[f] = new PROPOSAL_GEN(gm_, param_.proposalParam_);
     }
 
     fusionMover_ = fusionMoverArray_[0];
@@ -1305,8 +1306,11 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
 
     for(size_t iteration=0; iteration<param_.numIt_; ++iteration){
 
-
-        if(iteration == 0 && bestValue_>=-0.0000000001 ){
+        if(mmcv && iteration == 0){
+            ACC::neutral(bestValue_);
+            continue;
+        }
+        else if(!mmcv && iteration == 0 && bestValue_>=-0.0000000001 ){
             proposalGen_->getProposal(bestArg_,proposedState);
             std::copy(proposedState.begin(),  proposedState.end(), bestArg_.begin());
             bestValue_ = gm_.evaluate(bestArg_);
@@ -1325,7 +1329,8 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
         if(nFuser == 1){
             proposalGen_->getProposal(bestArg_,proposedState);
             ValueType proposalValue = gm_.evaluate(proposedState);
-
+            if(mmcv)
+                ACC::neutral(proposalValue);
             //std::cout<<"best val "<<bestValue_<<" pval "<<proposalValue<<"\n";
 
 
@@ -1334,8 +1339,11 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
                                             bestValue_, proposalValue, bestValue_);
             }
             else{
+                //std::cout<<"do cuts within\n";
                 anyVar = fusionMover_->fuseMmwc(bestArg_,proposedState, fusedState, 
                                             bestValue_, proposalValue, bestValue_);
+
+                //std::cout<<"bV "<<bestValue_<<" pV "<<proposalValue<<"\n";
             }
 
 

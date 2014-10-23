@@ -273,7 +273,10 @@ public:
                 if(a[vi0] == a[vi1] && b[vi0] == b[vi1]){
                     ufd.merge(vi0, vi1);
                 }
-            }   
+            }
+            else if(gm_[fi].numberOfVariables()==1){
+
+            }
             else{
                 throw RuntimeError("only implemented for second order");
             }
@@ -409,7 +412,6 @@ public:
         const ValueType valB,
         ValueType & valRes
     ){
-
         std::vector<LabelType> ab(gm_.numberOfVariables());
         IndexType numNewVar = this->intersect(a, b, ab);
 
@@ -511,7 +513,7 @@ public:
         ValueType & valRes
     ){
         // make the actual sub graphical model
-        SubSpace subSpace(numNewVar, numNewVar);
+        SubSpace subSpace(numNewVar, 2);
         SubModel subGm(subSpace);
 
         // reserve space
@@ -575,18 +577,22 @@ public:
         }
 
         ValueType resultVal = subGm.evaluate(subArg);
-      
+        //std::cout<<"gm   val inf "<<resultVal<<"\n";
         // add the weight from the cuts within
         const LabelType lAB[] = {0,1};
         for(size_t f=0; f<subGm.numberOfFactors(); ++f){
-            IndexType vi0 = subGm[f].variableIndex(0);
-            IndexType vi1 = subGm[f].variableIndex(1);
 
-            if(subArg[vi0] == subArg[vi1] && oarg[vi0] != oarg[vi1]){
-                resultVal+=gm_[f](lAB);
+            if(gm_.numberOfFactors()==1){
+                IndexType vi0 = subGm[f].variableIndex(0);
+                IndexType vi1 = subGm[f].variableIndex(1);
+
+                if(subArg[vi0] == subArg[vi1] && oarg[vi0] != oarg[vi1]){
+                    resultVal+=gm_[f](lAB);
+                }
             }
         }
-
+        //std::cout<<"mmcw val inf "<<resultVal<<"\n";
+        valRes = resultVal;
         return true;
     }
     bool doMoveCgc(
