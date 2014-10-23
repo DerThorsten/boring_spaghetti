@@ -1,0 +1,58 @@
+\begin{tikzpicture}
+  \begin{loglogaxis}[
+    xlabel = {runtime},
+    ylabel = {distance to optimum/best},
+    xlabel style={name=xlabel},
+    mark size=1pt,
+    every axis/.append style={font=\tiny}, 
+    width = 0.95\textwidth, 
+    height= 0.95\textwidth, 
+    legend style = { at={(xlabel.south)}, yshift=-1ex, anchor=north,legend cell align=left, font=\tiny},  
+    legend columns = 4 
+   ]
+  \addplot[only marks, mark=*,red, line width=\thickline,opacity=0.8] table[x=Togm_CGC, y=Vogm_CGC]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{CGC};   
+  \addplot[only marks, mark=*,green, line width=\thickline,opacity=0.8] table[x=Togm_icm, y=Vogm_icm]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{ogm-ICM};   
+  \addplot[only marks, mark=*,orange!50, line width=\thickline,opacity=0.8] table[x=Togm_kl, y=Vogm_kl]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{ogm-KL};   
+  \addplot[only marks, mark=*,cyan, line width=\thickline,opacity=0.8] table[x=Togm_lf1, y=Vogm_lf1]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{ogm-LF-1};   
+  \addplot[only marks, mark=*,magenta, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_HC_BASE, y=Vogm_mcfusion_HC_BASE]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-HC-B};   
+  \addplot[only marks, mark=*,black, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_HC_BASE_CGCF, y=Vogm_mcfusion_HC_BASE_CGCF]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-HC-B-CGC};   
+  \addplot[only marks, mark=*,brown, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_HC_CGC, y=Vogm_mcfusion_HC_CGC]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-HC-CGC};   
+  \addplot[only marks, mark=*,yellow!70!black, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_HC_CGC_CGCF, y=Vogm_mcfusion_HC_CGC_CGCF]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-HC-CGC-CGC};   
+  \addplot[only marks, mark=*,blue!40, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_HC_MC, y=Vogm_mcfusion_HC_MC]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-HC-MC};   
+  \addplot[only marks, mark=*,blue, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_HC_MC_CGCF, y=Vogm_mcfusion_HC_MC_CGCF]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-HC-MC-CGC};   
+  \addplot[only marks, mark=x,red, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_WS_BASE, y=Vogm_mcfusion_WS_BASE]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-WS-B};   
+  \addplot[only marks, mark=x,green, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_WS_BASE_CGCF, y=Vogm_mcfusion_WS_BASE_CGCF]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-WS-B-CGC};   
+  \addplot[only marks, mark=x,orange!50, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_WS_CGC, y=Vogm_mcfusion_WS_CGC]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-WS-CGC};   
+  \addplot[only marks, mark=x,cyan, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_WS_CGC_CGCF, y=Vogm_mcfusion_WS_CGC_CGCF]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-WS-CGC-CGC};   
+  \addplot[only marks, mark=x,magenta, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_WS_MC, y=Vogm_mcfusion_WS_MC]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-WS-MC};   
+  \addplot[only marks, mark=x,black, line width=\thickline,opacity=0.8] table[x=Togm_mcfusion_WS_MC_CGCF, y=Vogm_mcfusion_WS_MC_CGCF]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{DYNCC-WS-MC-CGC};   
+  \addplot[only marks, mark=x,brown, line width=\thickline,opacity=0.8] table[x=TMC_CC, y=VMC_CC]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{MCR-CC};   
+  \addplot[only marks, mark=x,yellow!70!black, line width=\thickline,opacity=0.8] table[x=TMC_CCFDB, y=VMC_CCFDB]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{MCR-CCFDB};   
+  \addplot[only marks, mark=x,blue!40, line width=\thickline,opacity=0.8] table[x=TMC_CCFDB_OWC, y=VMC_CCFDB_OWC]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{MCR-CCFDB-OWC};   
+  \addplot[only marks, mark=x,blue, line width=\thickline,opacity=0.8] table[x=TMC_CCFDB_CCIFD, y=VMC_CCFDB_CCIFD]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{MCI-CCFDB-CCIFD};   
+  \addplot[only marks, mark=square*,red, line width=\thickline,opacity=0.8] table[x=TMC_CCI, y=VMC_CCI]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{MCI-CCI};   
+  \addplot[only marks, mark=square*,green, line width=\thickline,opacity=0.8] table[x=TMC_CCIFD, y=VMC_CCIFD]{\scatterplotpath knott-3d-150.data}; 
+  \addlegendentry{MCI-CCIFD};   
+  \end{loglogaxis} 
+\end{tikzpicture} 
