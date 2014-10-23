@@ -765,9 +765,13 @@ scaled ticks = false
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \input{tables/anytime/knott-3d-450.tex}
-\begin{figure*}
+\begin{figure}
 \input{scatterplots/knott-3d-450.tex}
-\end{figure*}
+\caption{Values and runtime for the 8 knott-3d-450 instances. Note that we use for DYNCC a defensive stopping condition.
+A more aggressive one would lead to much faster runtime with only a bit worse values.
+DYNCC find solutions with less than distance 100 to the optimum a magnitude faster than the state of the art, which produce poor results on hard instances with a 1 hour time limit.
+}
+\end{figure}
 
 \input{tables/knott-3d-550.tex}
 
