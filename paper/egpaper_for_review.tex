@@ -83,7 +83,8 @@
 \begin{document}
 %%%%%%%%% TITLE
 \include{my_macros.tex}
-\title{Correlation Clustering with Dynamic Super-Nodes (DySNCC)}
+%\title{Correlation Clustering with Dynamic Super-Nodes (DySNCC)}
+\title{Fusion Moves for Correlation Clustering}
 
 \author{First Author\\
 Institution1\\
@@ -129,6 +130,14 @@ First line of institution2 address\\
 
 \end{abstract}
 \section{Introduction}
+
+\begin{itemize}
+  \item Multicut in computer vision, applications, sparse segmentation -> IMPORTANT PROBLEM
+  \item Problem: Existing Methods does not scale, even CGC. - Large scale 3d problems
+  \item Contribution: Fast scalable method using novel fusion moves for correlation clustering
+\end{itemize}
+
+
 
 \todo[inline]{should there be a general introduction to multicuts?}
 
@@ -203,35 +212,14 @@ We generate cheap and versatile proposals
 and \emph{fuse} them with the current best solution with the
 guarantee that this cannot increase the energy.
 
+
+\textbf{Contribution:}
+
+\textbf{Outline:}
+
 %-------------------------------------------------------------------------
 
-\subsection{Related Work}
-
-
-\subsubsection{Multicut Objective}
-
-The multicut / correlation clustering objective 
-can be formulated in different ways.
-
-
-
-\paragraph{Edge Indicator Variables:}
-\begin{center}
-    \begin{eqnarray}
-        y^* &=& \argmin_{y} \sum_{ e_{ij} \in E } w_{ij} \cdot y_{ij} \\
-        s.t.:& & y \in \textit{Multicut Polytope} \nonumber
-    \end{eqnarray}
-\end{center}
-
-\paragraph{Fully Connected Graph:}
-\begin{center}
-    \begin{eqnarray}
-        y^*   & = & \argmin_{y} \sum_{ i<j \in V } w_{ij} \cdot y_{ij} \\
-        s.t.: &  & y_{ij} + y_{jk} < y_{i,k} \quad \forall i, j, k   \nonumber
-    \end{eqnarray}
-\end{center}
-
-\paragraph{Node Coloring:}
+\subsection{Problem Formulation}
 \begin{center}
     \begin{eqnarray}
         l^* &=& \argmin_{L} \sum_{ e_{ij} \in E } w_{ij} \cdot [l_{u} \neq l_{v}] \\
@@ -239,13 +227,46 @@ can be formulated in different ways.
     \end{eqnarray}
 \end{center}
 
+Problem-> Ambiguity
+
+% \subsubsection{Multicut Objective}
+
+% The multicut / correlation clustering objective 
+% can be formulated in different ways.
 
 
-\subsubsection{Solver for the Multicut Objective}
+
+% \paragraph{Edge Indicator Variables:}
+% \begin{center}
+%     \begin{eqnarray}
+%         y^* &=& \argmin_{y} \sum_{ e_{ij} \in E } w_{ij} \cdot y_{ij} \\
+%         s.t.:& & y \in \textit{Multicut Polytope} \nonumber
+%     \end{eqnarray}
+% \end{center}
+
+% \paragraph{Fully Connected Graph:}
+% \begin{center}
+%     \begin{eqnarray}
+%         y^*   & = & \argmin_{y} \sum_{ i<j \in V } w_{ij} \cdot y_{ij} \\
+%         s.t.: &  & y_{ij} + y_{jk} < y_{i,k} \quad \forall i, j, k   \nonumber
+%     \end{eqnarray}
+% \end{center}
+
+% \paragraph{Node Coloring:}
+% \begin{center}
+%     \begin{eqnarray}
+%         l^* &=& \argmin_{L} \sum_{ e_{ij} \in E } w_{ij} \cdot [l_{u} \neq l_{v}] \\
+%         y_{ij}^* &=& [l_{u} \neq l_{v}]  
+%     \end{eqnarray}
+% \end{center}
+
+\subsection{Related Work}
+
+% \subsubsection{Solver for the Multicut Objective}
     
     \input{inputs/tab_mc_overview.tex}
 
-
+\subsubsection{Correlation Clustering}
    \begin{itemize}
    \item Multicut~\cite{kappes_2011_emmcvpr}
    \item Expand and Explorer~\cite{bagon_2011_arxiv}
@@ -263,15 +284,24 @@ with state of the art any time performance~\cite{kappes_2014_ws}.
 
 
 
-\subsection{Karger-Stein Algorithms}
-Use randomized procedure to reduce the number of nodes / edges to a reasonable 
-number.
-On the smaller graph, more expensive solvers are used.
+% \subsection{Karger-Stein Algorithms}
+% Use randomized procedure to reduce the number of nodes / edges to a reasonable 
+% number.
+% On the smaller graph, more expensive solvers are used.
 
 
 
 %------------------------------------------------------------------------
-\section{Intersection Fusion Cut}
+\section{Correlation-Clustering-Fusion (CCF) Moves}
+Motivation Using Fusion moves -> problem ambiguity
+
+
+\input{inputs/fig_alg_graph.tex}
+
+
+\subsection{Define Fusion on Segmentations}
+\input{inputs/fig_move_graph.tex}
+
 
 Global optimal solvers for multicut do not scale beyond ??? \cite{???}.
 Good approximate solvers for planar graphs exist \cite{beier_2014_cvpr,yarkony_2012_eccv} 
@@ -446,16 +476,14 @@ todo
 \end{proof}
 
 
-\input{inputs/fig_alg_graph.tex}
 
-\input{inputs/fig_move_graph.tex}
 
 
 
 %-------------------------------------------------------------------------
 \subsection{Proposal Generators}
 
-
+\textbf{Desired Properties}
 
 
 
@@ -545,6 +573,7 @@ the edge weighs.
 
 \input{inputs/fig_hc.tex}
 
+\subsection{Polyhedral Interpretation}
 
 %-------------------------------------------------------------------------
 \subsection{Fusion Move Solver}
@@ -564,21 +593,46 @@ the edge weighs.
 
 \subsection{Benchmark Models}
 
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[p]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+restrict y to domain=0:4600,
+xlabel = {runtime},
+xmin = 0,
+xmax = 4100,
+%ymin =  75282844.25,
+%ymax =  81774642.015,
+%xtick       = { 1 , 60 , 3600 },
+%xticklabels = { 1 sec. , 1 min.  , 1 hour },
+%ytick       = {75661636, 78718140, 81774643 },
+%yticklabels = {$75661636$, $78718140$, $81774643$ },
+width = 0.9\columnwidth,
+scaled ticks = false
+]
+%\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-150.data};
+%\addlegendentry{HC-CGC}
 
+\addplot[color=red,mark=x] table[x=time,y=CGC-planar]{data/image-seg.data};
+\addlegendentry{CGC-planar} 
 
+\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/image-seg.data};
+\addlegendentry{MCI-CCIFD} 
 
+\addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/image-seg.data};
+\addlegendentry{MC-Fusion (HC-MC-CGC)}
 
+\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/image-seg.data};
+\addlegendentry{MC-Fusion (HC-CGC-CGC)}
 
-\input{tables/anytime/image-seg.tex}
-
-
-\input{tables/anytime/knott-3d-150.tex}
-
-
-\input{tables/knott-3d-300.tex}
-
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{image-seg}
+\end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[H]
+\begin{figure}[p]
 \centering
 \begin{tikzpicture}
 \begin{semilogxaxis}[
@@ -615,7 +669,7 @@ scaled ticks = false
 \caption{knott-3d-150}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[H]
+\begin{figure}[p]
 \centering
 \begin{tikzpicture}
 \begin{semilogxaxis}[
@@ -652,7 +706,7 @@ scaled ticks = false
 \caption{knott-3d-300}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[H]
+\begin{figure}[p]
 \centering
 \begin{tikzpicture}
 \begin{semilogxaxis}[
@@ -689,7 +743,7 @@ scaled ticks = false
 \caption{knott-3d-450}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[H]
+\begin{figure}[p]
 \centering
 \begin{tikzpicture}
 \begin{semilogxaxis}[
@@ -726,11 +780,12 @@ scaled ticks = false
 \caption{knott-3d-550}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\begin{figure}[H]
-\begin{figure}[H]
+\begin{figure}[p]
 \centering
 \begin{tikzpicture}
 \begin{semilogxaxis}[
 %restrict y to domain=-10000000:-100000,
+restrict y to domain=-10000000:700000,
 xlabel = {runtime},
 xmin = 0,
 xmax = 4100,
@@ -752,6 +807,9 @@ scaled ticks = false
 \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/seg-3d.data};
 \addlegendentry{MCI-CCIFD} 
 
+%\addplot[color=yellow,mark=o] table[x=time, y=DYNCC-HC-MC]{data/seg-3d.data};
+%\addlegendentry{MC-Fusion (HC-MC)}
+
 \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC-CGC]{data/seg-3d.data};
 \addlegendentry{MC-Fusion (HC-MC-CGC)}
 
@@ -764,7 +822,8 @@ scaled ticks = false
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\input{tables/anytime/knott-3d-450.tex}
+
+
 \begin{figure}
 \input{scatterplots/knott-3d-450.tex}
 \caption{Values and runtime for the 8 knott-3d-450 instances. Note that we use for DYNCC a defensive stopping condition.
@@ -772,15 +831,6 @@ A more aggressive one would lead to much faster runtime with only a bit worse va
 DYNCC find solutions with less than distance 100 to the optimum a magnitude faster than the state of the art, which produce poor results on hard instances with a 1 hour time limit.
 }
 \end{figure}
-
-\input{tables/knott-3d-550.tex}
-
-
-\input{tables/anytime/seg-3d.tex}
-
-
-\input{tables/modularity-clustering.tex}
-
 
 
 
@@ -798,5 +848,19 @@ DYNCC find solutions with less than distance 100 to the optimum a magnitude fast
 \bibliographystyle{ieee}
 \bibliography{egbib}
 }
+
+\newpage
+\onecolumn
+\section{Appendix}
+
+\input{tables/anytime/image-seg.tex}
+\input{tables/anytime/knott-3d-150.tex}
+\input{tables/knott-3d-300.tex}
+\input{tables/anytime/knott-3d-450.tex}
+\input{tables/knott-3d-550.tex}
+\input{tables/anytime/seg-3d.tex}
+\input{tables/modularity-clustering.tex}
+
+
 
 \end{document}
