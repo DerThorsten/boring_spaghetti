@@ -219,15 +219,24 @@ guarantee that this cannot increase the energy.
 
 %-------------------------------------------------------------------------
 
-\subsection{Problem Formulation}
+\section{Problem Formulation}
+Def: Graph, weighted graph, cut, multicut 
+
+
 \begin{center}
     \begin{eqnarray}
-        l^* &=& \argmin_{L} \sum_{ e_{ij} \in E } w_{ij} \cdot [l_{u} \neq l_{v}] \\
-        y_{ij}^* &=& [l_{u} \neq l_{v}]  
+        l^* &=& \argmin_{L \in \{1,\ldots,|V|\}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{u} \neq l_{v}] \label{eq:nodeproblem}\\
+   %     y_{ij}^* &=& [l_{u} \neq l_{v}] 
+        y^* &=& \argmin_{y \in MC(G)\cap \{0,1\}^{|E|}} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}%\\ 
     \end{eqnarray}
 \end{center}
 
-Problem-> Ambiguity
+The exist an surjective mapping from a node-label $l$ to edge-labeling $y$ and
+a bijective mapping from a partitioning of $V$ to vertices of the multicut polytope $MC$.
+Consequently, 
+(i) problems \ref{eq:nodeproblem} and \ref{eq:edgeproblem} are equivalent
+and (ii) the node-labeling is not unique for a given partitioning and introduce some
+ambiguities.
 
 % \subsubsection{Multicut Objective}
 
@@ -260,13 +269,13 @@ Problem-> Ambiguity
 %     \end{eqnarray}
 % \end{center}
 
-\subsection{Related Work}
+\section{Related Work}
 
 % \subsubsection{Solver for the Multicut Objective}
     
     \input{inputs/tab_mc_overview.tex}
 
-\subsubsection{Correlation Clustering}
+\subsection{Correlation Clustering}
    \begin{itemize}
    \item Multicut~\cite{kappes_2011_emmcvpr}
    \item Expand and Explorer~\cite{bagon_2011_arxiv}
@@ -275,7 +284,7 @@ Problem-> Ambiguity
    \item Cut Glue And Cut~\cite{beier_2014_cvpr}
    \end{itemize}
 
-\subsubsection{Fusion Moves}
+\subsection{Fusion Moves}
 Move making algorithms, in particular fusion moves, 
 have become increasingly popular for energy minimization~\cite{???,kappes_2014_ws}.
 For many large scale computer vision applications fusion moves lead to good approximations

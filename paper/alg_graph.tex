@@ -12,20 +12,20 @@
 \begin{tikzpicture}
     
     \draw node[opBox] (gen) {GENERATOR};
-    \draw node[cutNode,right = 1cm of gen] (proposal_cut) {$\bar{P}$};
+    \draw node[cutNode,right = 1cm of gen] (proposal_cut) {$\bar{y}$};
     \draw node[right of = proposal_cut](dummy){};
-    \draw node[cutNode,right of = dummy] (best_cut) {$P$};
+    \draw node[cutNode,right of = dummy] (best_cut) {$y$};
     \draw node[opBox,below of = dummy] (intersect) {INTERSECT\\UNCUT};
-    \draw node[cutNode,below of = intersect] (int_cut){$\tilde{P}$};
+    \draw node[cutNode,below of = intersect] (int_cut){$\tilde{y}$};
     \draw node[opBox,below of = int_cut] (contract) {CONTRACT\\UNCUT\\EDGES};
-    \draw node[gNode,right = 2cm of contract](cgraph)  {$( \tilde{\mathcal{G}}, \tilde{\mathcal{W}})$};
+    \draw node[gNode,right = 2cm of contract](cgraph)  {$( \tilde{\mathcal{G}}, \tilde{\mathcal{w}})$};
     \draw node[opBox, above of =  cgraph] (multicut) {MULTICUT};
-    \draw node[cutNode,above of = multicut] (rcut) {$\bar{P}^{\tilde{\mathcal{G}}}$};
+    \draw node[cutNode,above of = multicut] (rcut) {$\bar{w}^{\tilde{\mathcal{G}}}$};
     \draw node[opBox, above of =  rcut] (pback) {PROJECT\\CUT\\BACK};
 
     \node[draw,dotted,fit=(proposal_cut) (cgraph),inner sep = 3mm,thick, draw=gray,opacity=0.5] {};
 
-    \draw node[gNode,below = of gen](graph)  {$( \mathcal{G}, \mathcal{W})$};
+    \draw node[gNode,below = of gen](graph)  {$( \mathcal{G}, \mathcal{w})$};
     \path[]
     (gen) edge[aEdge]  node[]{} (proposal_cut)
     (graph) edge[aEdge] (gen)
@@ -46,22 +46,22 @@
 \end{tikzpicture}
 \caption{
     The proposed algorithm works in the following way:
-    Given a graph $\mathcal{G}$, edge weights $\mathcal{W}$ and
-    a proposal generator, the current best solution $P$ is iteratively improved.
+    Given a graph $\mathcal{G}$, edge weights $\mathcal{w}$ and
+    a proposal generator, the current best solution $y$ is iteratively improved.
     A proposal generator generates different versatile
-    proposal partitions $\bar{P}$.
-    The proposal  $\bar{P}$ is intersected with $P$ which results in
-    $\tilde{P}$. Contracting each each which is not 
-    cut in $\tilde{P}$ leads to a coarser graph  
+    proposal partitions $\bar{y}$.
+    The proposal  $\bar{y}$ is intersected with $y$ which results in
+    $\tilde{y}$. Contracting each each which is not 
+    cut in $\tilde{y}$ leads to a coarser graph  
     $\tilde{\mathcal{G}} = ( \tilde{\mathcal{V}}, \tilde{\mathcal{E}} )$ 
-    with new edge weights $\tilde{\mathcal{W}}$.
-    If  $\bar{P}$ and $P$ have a small fraction of cut edges, $\tilde{\mathcal{G}}$ will be small ( $|\tilde{\mathcal{V}}| << |\mathcal{V}|$
+    with new edge weights $\tilde{\mathcal{w}}$.
+    If  $\bar{y}$ and $y$ have a small fraction of cut edges, $\tilde{\mathcal{G}}$ will be small ( $|\tilde{\mathcal{V}}| << |\mathcal{V}|$
     and $|\tilde{\mathcal{E}}| << |\mathcal{E}|$).
     The multicut objective on the smaller graph $\tilde{\mathcal{G}}$ can be optimized magnitudes 
     faster than on $\tilde{\mathcal{G}}$.
-    It is guaranteed that the optimal multicut partitioning $\bar{P}^{\tilde{\mathcal{G}}}$ on $\tilde{\mathcal{G}}$ projected 
-    back to $\mathcal{G}$ as a lower or equal energy than any of the two input partitions $P$ and $\bar{P}$, 
-    therefore we store the result of fusion as new best state $P$ and repeat the procedure.
+    It is guaranteed that the optimal multicut partitioning $\bar{y}^{\tilde{\mathcal{G}}}$ on $\tilde{\mathcal{G}}$ projected 
+    back to $\mathcal{G}$ as a lower or equal energy than any of the two input partitions $y$ and $\bar{y}$, 
+    therefore we store the result of fusion as new best state $y$ and repeat the procedure.
 }\label{fig:algo_graph}
 \end{figure}
 
