@@ -4,7 +4,6 @@
 \tikzstyle{aedge}=[fill=white,solid,font=\sffamily\tiny, text=black!70          ]
 \tikzstyle{vert}=[circle,minimum size = 0.5cm,inner sep = 1pt,draw, font=\small,align=left]
 \centering
-\begin{subfigure}[t]{0.20\linewidth}
    %\begin{framed}
    \resizebox{1.0\linewidth}{!}{
       \begin{tikzpicture}[scale=1.0,transform shape]
@@ -52,32 +51,23 @@
             (8)     edge[aedge]     node{$w_{(8, 12)}$  }     (12)
             (12)    edge[aedge]     node{$w_{(12, 16)}$ }     (16)
         ;
-      \end{tikzpicture}
-   }
-   %\end{framed} 
-\caption{Graph $\mathcal{G}$}    
-\end{subfigure}\quad\quad
-\begin{subfigure}[t]{0.20\linewidth}
-   %\begin{framed}
-   \resizebox{1.0\linewidth}{!}{
-      \begin{tikzpicture}[scale=1.0,transform shape]
 
-        \draw (0*2,3*2) node[vert,fill=red!50](1){$1$};
-        \draw (1*2,3*2) node[vert,fill=red!50](2){$2$};
-        \draw (2*2,3*2) node[vert,fill=red!50](3){$3$};
-        \draw (3*2,3*2) node[vert,fill=red!50](4){$4$};
-        \draw (0*2,2*2) node[vert,fill=red!50](5){$5$};
-        \draw (1*2,2*2) node[vert,fill=red!50](6){$6$};
-        \draw (2*2,2*2) node[vert,fill=red!50](7){$7$};
-        \draw (3*2,2*2) node[vert,fill=red!50](8){$8$};
-        \draw (0*2,1*2) node[vert,fill=blue!50](9){$9$};
-        \draw (1*2,1*2) node[vert,fill=blue!50](10){$10$};
-        \draw (2*2,1*2) node[vert,fill=blue!50](11){$11$};
-        \draw (3*2,1*2) node[vert,fill=blue!50](12){$12$};
-        \draw (0*2,0*2) node[vert,fill=blue!50](13){$13$};
-        \draw (1*2,0*2) node[vert,fill=blue!50](14){$14$};
-        \draw (2*2,0*2) node[vert,fill=blue!50](15){$15$};
-        \draw (3*2,0*2) node[vert,fill=blue!50](16){$16$};
+        \draw (8+0*2,3*2) node[vert,fill=red!50](1){$1$};
+        \draw (8+1*2,3*2) node[vert,fill=red!50](2){$2$};
+        \draw (8+2*2,3*2) node[vert,fill=red!50](3){$3$};
+        \draw (8+3*2,3*2) node[vert,fill=red!50](4){$4$};
+        \draw (8+0*2,2*2) node[vert,fill=red!50](5){$5$};
+        \draw (8+1*2,2*2) node[vert,fill=red!50](6){$6$};
+        \draw (8+2*2,2*2) node[vert,fill=red!50](7){$7$};
+        \draw (8+3*2,2*2) node[vert,fill=red!50](8){$8$};
+        \draw (8+0*2,1*2) node[vert,fill=blue!50](9){$9$};
+        \draw (8+1*2,1*2) node[vert,fill=blue!50](10){$10$};
+        \draw (8+2*2,1*2) node[vert,fill=blue!50](11){$11$};
+        \draw (8+3*2,1*2) node[vert,fill=blue!50](12){$12$};
+        \draw (8+0*2,0*2) node[vert,fill=blue!50](13){$13$};
+        \draw (8+1*2,0*2) node[vert,fill=blue!50](14){$14$};
+        \draw (8+2*2,0*2) node[vert,fill=blue!50](15){$15$};
+        \draw (8+3*2,0*2) node[vert,fill=blue!50](16){$16$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[aedge]     node{$w_{(1, 2)}$   }     (2)
@@ -105,32 +95,25 @@
             (8)     edge[cedge]     node{$w_{(8, 12)}$  }     (12)
             (12)    edge[aedge]     node{$w_{(12, 16)}$ }     (16)
         ;
-      \end{tikzpicture}
-   }
-   %\end{framed}
-\caption{$\mathcal{E}^A_{cut}$}
-\end{subfigure}\quad\quad
-\begin{subfigure}[t]{0.20\linewidth}
-   %\begin{framed}
-   \resizebox{1.0\linewidth}{!}{
-      \begin{tikzpicture}[scale=1.0,transform shape]
+        \draw (15+0*2,3*2-3) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\textbf{+}$};
+        %\draw (15+0*2,3*2-4) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\rightarrow$};
 
-        \draw (0*2,3*2) node[vert,fill=green!50](1){$1$};
-        \draw (1*2,3*2) node[vert,fill=orange!50](2){$2$};
-        \draw (2*2,3*2) node[vert,fill=orange!50](3){$3$};
-        \draw (3*2,3*2) node[vert,fill=orange!50](4){$4$};
-        \draw (0*2,2*2) node[vert,fill=yellow!=30](5){$5$};
-        \draw (1*2,2*2) node[vert,fill=magenta!40](6){$6$};
-        \draw (2*2,2*2) node[vert,fill=magenta!40](7){$7$};
-        \draw (3*2,2*2) node[vert,fill=magenta!40](8){$8$};
-        \draw (0*2,1*2) node[vert,fill=yellow!=30](9){$9$};
-        \draw (1*2,1*2) node[vert,fill=magenta!40](10){$10$};
-        \draw (2*2,1*2) node[vert,fill=magenta!40](11){$11$};
-        \draw (3*2,1*2) node[vert,fill=magenta!40](12){$12$};
-        \draw (0*2,0*2) node[vert,fill=yellow!=30](13){$13$};
-        \draw (1*2,0*2) node[vert,fill=magenta!40](14){$14$};
-        \draw (2*2,0*2) node[vert,fill=magenta!40](15){$15$};
-        \draw (3*2,0*2) node[vert,fill=magenta!40](16){$16$};
+        \draw (16+0*2,3*2) node[vert,fill=green!50](1){$1$};
+        \draw (16+1*2,3*2) node[vert,fill=orange!50](2){$2$};
+        \draw (16+2*2,3*2) node[vert,fill=orange!50](3){$3$};
+        \draw (16+3*2,3*2) node[vert,fill=orange!50](4){$4$};
+        \draw (16+0*2,2*2) node[vert,fill=yellow!=30](5){$5$};
+        \draw (16+1*2,2*2) node[vert,fill=magenta!40](6){$6$};
+        \draw (16+2*2,2*2) node[vert,fill=magenta!40](7){$7$};
+        \draw (16+3*2,2*2) node[vert,fill=magenta!40](8){$8$};
+        \draw (16+0*2,1*2) node[vert,fill=yellow!=30](9){$9$};
+        \draw (16+1*2,1*2) node[vert,fill=magenta!40](10){$10$};
+        \draw (16+2*2,1*2) node[vert,fill=magenta!40](11){$11$};
+        \draw (16+3*2,1*2) node[vert,fill=magenta!40](12){$12$};
+        \draw (16+0*2,0*2) node[vert,fill=yellow!=30](13){$13$};
+        \draw (16+1*2,0*2) node[vert,fill=magenta!40](14){$14$};
+        \draw (16+2*2,0*2) node[vert,fill=magenta!40](15){$15$};
+        \draw (16+3*2,0*2) node[vert,fill=magenta!40](16){$16$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[cedge]     node{$w_{(1, 2)}$   }     (2)
@@ -158,32 +141,25 @@
             (8)     edge[aedge]     node{$w_{(8, 12)}$  }     (12)
             (12)    edge[aedge]     node{$w_{(12, 16)}$ }     (16)
         ;
-      \end{tikzpicture}
-   }
-   %\end{framed}
-\caption{$\mathcal{E}^B_{cut}$}  
-\end{subfigure}\quad\quad
-\begin{subfigure}[t]{0.20\linewidth}
-   %\begin{framed}
-   \resizebox{1.0\linewidth}{!}{
-      \begin{tikzpicture}[scale=1.0,transform shape]
+        
+        \draw (23+0*2,3*2-3) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\textbf{=}$};
 
-        \draw (0*2,3*2) node[vert,fill=blue!50!green](1){$1$};
-        \draw (1*2,3*2) node[vert,fill=brown!50](2){$2$};
-        \draw (2*2,3*2) node[vert,fill=brown!50](3){$3$};
-        \draw (3*2,3*2) node[vert,fill=brown!50](4){$4$};
-        \draw (0*2,2*2) node[vert,fill=cyan!=30](5){$5$};
-        \draw (1*2,2*2) node[vert,fill=red!50!lime](6){$6$};
-        \draw (2*2,2*2) node[vert,fill=red!50!lime](7){$7$};
-        \draw (3*2,2*2) node[vert,fill=red!50!lime](8){$8$};
-        \draw (0*2,1*2) node[vert,fill=violet!60](9){$9$};
-        \draw (1*2,1*2) node[vert,fill=lime!40](10){$10$};
-        \draw (2*2,1*2) node[vert,fill=lime!40](11){$11$};
-        \draw (3*2,1*2) node[vert,fill=lime!40](12){$12$};
-        \draw (0*2,0*2) node[vert,fill=violet!60](13){$13$};
-        \draw (1*2,0*2) node[vert,fill=lime!40](14){$14$};
-        \draw (2*2,0*2) node[vert,fill=lime!40](15){$15$};
-        \draw (3*2,0*2) node[vert,fill=lime!40](16){$16$};
+        \draw (24+0*2,3*2) node[vert,fill=blue!50!green](1){$1$};
+        \draw (24+1*2,3*2) node[vert,fill=brown!50](2){$2$};
+        \draw (24+2*2,3*2) node[vert,fill=brown!50](3){$3$};
+        \draw (24+3*2,3*2) node[vert,fill=brown!50](4){$4$};
+        \draw (24+0*2,2*2) node[vert,fill=cyan!=30](5){$5$};
+        \draw (24+1*2,2*2) node[vert,fill=red!50!lime](6){$6$};
+        \draw (24+2*2,2*2) node[vert,fill=red!50!lime](7){$7$};
+        \draw (24+3*2,2*2) node[vert,fill=red!50!lime](8){$8$};
+        \draw (24+0*2,1*2) node[vert,fill=violet!60](9){$9$};
+        \draw (24+1*2,1*2) node[vert,fill=lime!40](10){$10$};
+        \draw (24+2*2,1*2) node[vert,fill=lime!40](11){$11$};
+        \draw (24+3*2,1*2) node[vert,fill=lime!40](12){$12$};
+        \draw (24+0*2,0*2) node[vert,fill=violet!60](13){$13$};
+        \draw (24+1*2,0*2) node[vert,fill=lime!40](14){$14$};
+        \draw (24+2*2,0*2) node[vert,fill=lime!40](15){$15$};
+        \draw (24+3*2,0*2) node[vert,fill=lime!40](16){$16$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[cedge]     node{$w_{(1, 2)}$   }     (2)
@@ -211,24 +187,17 @@
             (8)     edge[cedge]     node{$w_{(8, 12)}$  }     (12)
             (12)    edge[aedge]     node{$w_{(12, 16)}$ }     (16)
         ;
-      \end{tikzpicture}
-   }
-   %\end{framed}
-\caption{$\mathcal{E}^{AB}_{cut} = \mathcal{E}^B_{cut} \cup \mathcal{E}^B_{cut}$}  
-\end{subfigure}
 
-\vspace{0.1cm}
+        \draw (24+0*2,-1) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\downarrow$};
+        \draw (27+0*2,-1) node[minimum size=2cm,font=\sffamily\huge] (dummy){$\textbf{contract}$};
+        \draw (30   +0*2,-1) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\downarrow$};
 
-\begin{subfigure}[t]{0.20\linewidth}
-   %\begin{framed}
-   \resizebox{1.0\linewidth}{!}{
-      \begin{tikzpicture}[scale=1.0,transform shape]
-        \draw (0*2,3*2) node[vert](1){$\{1\}$};
-        \draw (2*2,3*2) node[vert](2){$\{2, 3, 4\}$};
-        \draw (0*2,2*2) node[vert,](5){$\{5\}$};
-        \draw (2*2,2*2) node[vert](6){$\{6, 7, 8\}$};
-        \draw (0*2,1*2) node[vert](9){$\{9, 13\}$};
-        \draw (2*2,0.811*2) node[vert ](10){$\{10, 11, 12,$\\$14, 15, 16\}$};
+        \draw (24+0*2,    -8.5+3*2) node[vert](1){$\{1\}$};
+        \draw (24+2*2,    -8.5+3*2) node[vert](2){$\{2, 3, 4\}$};
+        \draw (24+0*2,    -8.5+2*2) node[vert,](5){$\{5\}$};
+        \draw (24+2*2,    -8.5+2*2) node[vert](6){$\{6, 7, 8\}$};
+        \draw (24+0*2,    -8.5+1*2) node[vert](9){$\{9, 13\}$};
+        \draw (24+2*2+0.5,-8.5+1*2-0.5) node[vert ](10){$\{10, 11, 12,$\\$14, 15, 16\}$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[aedge]     node{$w_{(1, 2)}$   }     (2)
@@ -240,23 +209,17 @@
             (2)     edge[aedge]     node{$w_{(2, 6)} + w_{(3, 7)} + w_{(4, 8)} $   }     (6)
             (6)     edge[aedge]     node{$w_{(6, 10)} + w_{(7, 11)} + w_{(8, 12)} $   }     (10)
         ;
-        %;
-      \end{tikzpicture}
-   }
-   %\end{framed}
-\caption{$\mathcal{\bar{G}}=\textbf{\scriptsize{contract}}(\mathcal{E} \backslash \{\mathcal{E}^{AB}_{cut}\})$}
-\end{subfigure}
-\quad\quad\quad
-\begin{subfigure}[t]{0.20\linewidth}
-   %\begin{framed}
-   \resizebox{1.0\linewidth}{!}{
-      \begin{tikzpicture}[scale=1.0,transform shape]
-        \draw (0*2,3*2) node[vert,fill=blue!20!cyan](1){$\{1\}$};
-        \draw (2*2,3*2) node[vert,fill=green!30!cyan](2){$\{2, 3, 4\}$};
-        \draw (0*2,2*2) node[vert,fill=blue!20!cyan ](5){$\{5\}$};
-        \draw (2*2,2*2) node[vert,fill=blue!40!green](6){$\{6, 7, 8\}$};
-        \draw (0*2,1*2) node[vert,fill=blue!40!green](9){$\{9, 13\}$};
-        \draw (2*2,0.811*2) node[vert,fill=blue!40!green](10){$\{10, 11, 12,$\\$14, 15, 16\}$};
+
+        \draw (22   +0*2,-2.5) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\longleftarrow$};
+        \draw (22   +0*2,-4.5) node[minimum size=2cm,font=\sffamily\huge] (dummy){$\textbf{run CC}$};
+        \draw (22   +0*2,-6.5) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\longleftarrow$};
+
+        \draw (15+0*2,-8.5+3*2) node[vert,fill=blue!20!cyan](1){$\{1\}$};
+        \draw (15+2*2,-8.5+3*2) node[vert,fill=green!30!cyan](2){$\{2, 3, 4\}$};
+        \draw (15+0*2,-8.5+2*2) node[vert,fill=blue!20!cyan ](5){$\{5\}$};
+        \draw (15+2*2,-8.5+2*2) node[vert,fill=blue!40!green](6){$\{6, 7, 8\}$};
+        \draw (15+0*2,-8.5+1*2) node[vert,fill=blue!40!green](9){$\{9, 13\}$};
+        \draw (15+2*2+0.5,-8.5+0.811*2-0.5) node[vert,fill=blue!40!green](10){$\{10, 11, 12,$\\$14, 15, 16\}$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[cedge]     node{$w_{(1, 2)}$   }     (2)
@@ -268,34 +231,28 @@
             (2)     edge[cedge]     node{$w_{(2, 6)} + w_{(3, 7)} + w_{(4, 8)} $   }     (6)
             (6)     edge[aedge]     node{$w_{(6, 10)} + w_{(7, 11)} + w_{(8, 12)} $   }     (10)
         ;
-        %;
-      \end{tikzpicture}
-   }
-   %\end{framed}
-\caption{$\mathcal{E}_{\textit{\tiny{cut}}}^{\bar{\mathcal{G}}}  $}
-\end{subfigure}
-\quad\quad\quad
-\begin{subfigure}[t]{0.20\linewidth}
-   %\begin{framed}
-   \resizebox{1.0\linewidth}{!}{
-      \begin{tikzpicture}[scale=1.0,transform shape]
 
-        \draw (0*2,3*2) node[vert,fill=blue!20!cyan](1){$1$};
-        \draw (1*2,3*2) node[vert,fill=green!30!cyan](2){$2$};
-        \draw (2*2,3*2) node[vert,fill=green!30!cyan](3){$3$};
-        \draw (3*2,3*2) node[vert,fill=green!30!cyan](4){$4$};
-        \draw (0*2,2*2) node[vert,fill=blue!20!cyan](5){$5$};
-        \draw (1*2,2*2) node[vert,fill=blue!40!green](6){$6$};
-        \draw (2*2,2*2) node[vert,fill=blue!40!green](7){$7$};
-        \draw (3*2,2*2) node[vert,fill=blue!40!green](8){$8$};
-        \draw (0*2,1*2) node[vert,fill=blue!40!green](9){$9$};
-        \draw (1*2,1*2) node[vert,fill=blue!40!green](10){$10$};
-        \draw (2*2,1*2) node[vert,fill=blue!40!green](11){$11$};
-        \draw (3*2,1*2) node[vert,fill=blue!40!green](12){$12$};
-        \draw (0*2,0*2) node[vert,fill=blue!40!green](13){$13$};
-        \draw (1*2,0*2) node[vert,fill=blue!40!green](14){$14$};
-        \draw (2*2,0*2) node[vert,fill=blue!40!green](15){$15$};
-        \draw (3*2,0*2) node[vert,fill=blue!40!green](16){$16$};
+        \draw (13   +0*2,-2.5) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\longleftarrow$};
+        \draw (13   +0*2,-4.5) node[minimum size=2cm,font=\sffamily\huge] (dummy){$\textbf{project}$};
+        \draw (13   +0*2,-6.5) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\longleftarrow$};
+
+
+        \draw (5+0*2,-8.5+3*2) node[vert,fill=blue!20!cyan](1){$1$};
+        \draw (5+1*2,-8.5+3*2) node[vert,fill=green!30!cyan](2){$2$};
+        \draw (5+2*2,-8.5+3*2) node[vert,fill=green!30!cyan](3){$3$};
+        \draw (5+3*2,-8.5+3*2) node[vert,fill=green!30!cyan](4){$4$};
+        \draw (5+0*2,-8.5+2*2) node[vert,fill=blue!20!cyan](5){$5$};
+        \draw (5+1*2,-8.5+2*2) node[vert,fill=blue!40!green](6){$6$};
+        \draw (5+2*2,-8.5+2*2) node[vert,fill=blue!40!green](7){$7$};
+        \draw (5+3*2,-8.5+2*2) node[vert,fill=blue!40!green](8){$8$};
+        \draw (5+0*2,-8.5+1*2) node[vert,fill=blue!40!green](9){$9$};
+        \draw (5+1*2,-8.5+1*2) node[vert,fill=blue!40!green](10){$10$};
+        \draw (5+2*2,-8.5+1*2) node[vert,fill=blue!40!green](11){$11$};
+        \draw (5+3*2,-8.5+1*2) node[vert,fill=blue!40!green](12){$12$};
+        \draw (5+0*2,-8.5+0*2) node[vert,fill=blue!40!green](13){$13$};
+        \draw (5+1*2,-8.5+0*2) node[vert,fill=blue!40!green](14){$14$};
+        \draw (5+2*2,-8.5+0*2) node[vert,fill=blue!40!green](15){$15$};
+        \draw (5+3*2,-8.5+0*2) node[vert,fill=blue!40!green](16){$16$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[cedge]     node{$w_{(1, 2)}$   }     (2)
@@ -325,9 +282,7 @@
         ;
       \end{tikzpicture}
    }
-   %\end{framed}
-\caption{$\mathcal{E}_{\textit{\tiny{cut}}}^{\bar{\mathcal{G}}}=\textbf{\scriptsize{projectBack}} (\mathcal{E}_{\textit{\tiny{cut}}}^{\bar{\mathcal{G}}} )  $}
-\end{subfigure}
+   %\end{framed} 
 \caption{
         Describe Method here
 }
