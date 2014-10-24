@@ -4,7 +4,7 @@
 \tikzstyle{aedge}=[fill=white,solid,font=\sffamily\tiny, text=black!70          ]
 \tikzstyle{vert}=[circle,minimum size = 0.5cm,inner sep = 1pt,draw, font=\small,align=left]
 \centering
-   %\begin{framed}
+%\begin{subfigure}[t]{1\linewidth}
    \resizebox{1.0\linewidth}{!}{
       \begin{tikzpicture}[scale=1.0,transform shape]
         \tikzstyle{vert}=[circle,minimum size = 0.5cm,inner sep = 0pt,draw, font=\small, node distance = 5cm]
@@ -197,7 +197,7 @@
         \draw (24+0*2,    -8.5+2*2) node[vert,](5){$\{5\}$};
         \draw (24+2*2,    -8.5+2*2) node[vert](6){$\{6, 7, 8\}$};
         \draw (24+0*2,    -8.5+1*2) node[vert](9){$\{9, 13\}$};
-        \draw (24+2*2+0.5,-8.5+1*2-0.5) node[vert ](10){$\{10, 11, 12,$\\$14, 15, 16\}$};
+        \draw (24+2*2+0.5,-8.5+1*2-0.5) node[vert ](10){$\{10, 11, 12,14, 15, 16\}$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[aedge]     node{$w_{(1, 2)}$   }     (2)
@@ -219,7 +219,7 @@
         \draw (15+0*2,-8.5+2*2) node[vert,fill=blue!20!cyan ](5){$\{5\}$};
         \draw (15+2*2,-8.5+2*2) node[vert,fill=blue!40!green](6){$\{6, 7, 8\}$};
         \draw (15+0*2,-8.5+1*2) node[vert,fill=blue!40!green](9){$\{9, 13\}$};
-        \draw (15+2*2+0.5,-8.5+0.811*2-0.5) node[vert,fill=blue!40!green](10){$\{10, 11, 12,$\\$14, 15, 16\}$};
+        \draw (15+2*2+0.5,-8.5+0.811*2-0.5) node[vert,fill=blue!40!green](10){$\{10, 11, 12,14, 15, 16\}$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[cedge]     node{$w_{(1, 2)}$   }     (2)
@@ -281,8 +281,16 @@
             (12)    edge[aedge]     node{$w_{(12, 16)}$ }     (16)
         ;
       \end{tikzpicture}
-   }
-   %\end{framed} 
+   } 
+%\end{subfigure}\quad\quad
+
+
+\vspace{0.1cm}
+
+
+
+\quad\quad\quad
+
 \caption{
         Describe Method here
 }
