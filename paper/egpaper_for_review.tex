@@ -54,6 +54,7 @@
 \definecolor{shadecolor}{rgb}{0.01,0.199,0.1}
 \usepackage{xargs} 
 \newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
 
 % If you comment hyperref and then uncomment it, you should delete
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
@@ -71,7 +72,7 @@
 \newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
 \newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
 \newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
-
+\newcommand{\OR}{\textrm{ or }}
 
 % \cvprfinalcopy % *** Uncomment this line for the final submission
 
@@ -559,6 +560,22 @@ the edge weighs.
 \input{inputs/fig_hc.tex}
 
 \subsection{Properties and Polyhedral Interpretation}
+An alternative interpretation of our method is shown in Fig.~\ref{fig:polyheadral}.
+In each iteration the current and proposed segmentation define an inner polyheadral 
+approximation of the original multicut polytope. 
+Optimizing over this polytope is the same problem as the original one, but much smaller.
+Furthermore, the costs does not change and and improvement in the smaller polytope will 
+be the same in the original graph.
+The choice of the proposal defines the shape of the auxiliary polytope. 
+In the given toy example, the first (red) polytope give a huge improvement, the second proposal
+defines the blue polytope which does not lead to an improvement. 
+The third proposal generates the green polytope that includes the global optimal solution.
+
+This procedure is fundamental different to common polyhedral multicut methods~\cite{kappes_2011_emmcvpr,kappes_2013_arxiv}, 
+which tighten a outer relaxation of the multicut polytope and contrary to our method do not operate in the feasible domain. 
+
+
+
 \begin{figure}
 \centering
 \input{polytope-tikz.tex}
@@ -567,45 +584,50 @@ Each polyhedral approximation includes the current vertex. Starting with $y_0$ w
 and find $y_1$ as optima. When optimize over the blue polytope we stay in $y_1$ as optima.
 When optimizing over the green polytope we find $y_2$ which we will never leaf again or any polytope containing $y_2$. 
 }
+\label{fig:polyheadral}
 \end{figure}
 
 
-\begin{theorem}[NameMe]
-Solving ??? on the contracted graph is 
-equivalent to solving ??? on the 
-original graph with additional 
-must link constraints
+\begin{theorem}[Equivalence]
+The optimal multicut $\bar{y}^*$ on the contracted graph $G_y$
+is equivalent to the optimal multicut $y^*$ in the original graph $G$ 
+with additional must link constraints ($y^* \leq y$).
+%
+\begin{proof}
+Since $y^*$ fulfills all  must link constraints, we have  $y^*\cdot w = \rho^{-1}_y(y^*)\cdot \bar{w}$.
+Consequently, $y^*\cdot w = \rho_y(\bar{y}) \cdot w$ and  $\rho^{-1}_y(y^*)\cdot \bar{w}= \bar{y}\cdot\bar{w}$.
+\end{proof}
+%
 \end{theorem}
 
-\begin{proof}[Proof of theorem ]
-todo
+
+
+
+\begin{theorem}[Monotone]
+Let $y'$ and $y''$ be two proposal solutions and  $y^*$ the optimal fused segmentation.
+Than $y^*$  will never decrease the energy:
+$y^* \cdot w \leq  \min( y'\cdot w,  y''\cdot w) $ 
+%
+\begin{proof}
+The feasible set of the fusion move includes per definition  $y'$ and $y''$.
+If $y'$ or $y''$ would have lower multicut cost than $y^*$, $y^*$ would not be optimal 
+and that why not the propose segmentation of a fusion.
 \end{proof}
-
-
-
-\begin{theorem}[NameMe]
-Let $x_{a}$ and $x_{b}$ be two proposal solutions and  $x_{new}$ the solution of \ref{???}.
-$x_{new}$  will never decrease the energy:
-$x_{new} \cdot w \leq  \min( x_{a}\cdot w,  x_{b}\cdot w) $ 
+%
 \end{theorem}
 
-\begin{proof}[Proof of theorem ]
-todo
-\end{proof}
+\begin{remark}[Fix-point]
+Let $Y$ be the set of possible proposals, than
+$y'$ is a fix-point if $y'=\arg\max_{y\in P(G_{y'\OR y''})} y\cdot w$ for all $y''\in Y$
+\end{remark}
 
 
 
-\begin{theorem}[NameMe]
+\begin{remark}[Optimality]
+Let $y'$ be the current and $y''$ the proposed segmentation.
+If the optimal solution $y^*$ lies in $P(G_{y' \OR y''})$ than a optimal fusion move will return $y^*$.
+\end{remark}
 
-Let $x_{a}$ and $x_{b}$ be two proposal solutions and  $x_{opt}$ the global solution,
-$X_{a}^c, X_{b}^c$ and $ X_{opt}^c$ the set of cut edges in  $x_{a}, x_{b}$  and $ x_{opt}$
-optimal solution.
-Iff  $ X_{opt}^c \subseteq  (X_{a}^c \cup X_{b}^c)$,  the solution of \ref{???} will be $x_{opt}$.
-\end{theorem}
-
-\begin{proof}[Proof of of theorem]
-todo
-\end{proof}
 
 
 \section{Experiments}
