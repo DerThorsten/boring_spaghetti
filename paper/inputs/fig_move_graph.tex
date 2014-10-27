@@ -238,7 +238,14 @@
             (4)     edge[cedge]     node{$w_{(4, 8)}$   }     (8)
             (8)     edge[aedge]     node{$w_{(8, 12)}$  }     (12)
             (12)    edge[aedge]     node{$w_{(12, 16)}$ }     (16)
-        ;
+        ;  
+
+
+        \draw[line width=6pt]     (35+2.5*2,3*2+1) -- (35+2.5*2,3*2+4);
+        \draw[line width=6pt, ->] (35+2.5*2,3*2+4) -- (7,3*2+4); 
+        \draw[line width=6pt] (8+2.5*2,3*2+1) edge [bend left=50,->] (13+2.5*2,3*2+1);
+        \draw[line width=6pt] (15+2.5*2,3*2+1) edge [bend left=40,->] (22+2.5*2,3*2+1);
+        \draw[line width=6pt] (24+2.5*2,3*2+1) edge [bend left=40,->] (31+2.5*2,3*2+1);
       \end{tikzpicture}
    } 
 %\end{subfigure}\quad\quad
