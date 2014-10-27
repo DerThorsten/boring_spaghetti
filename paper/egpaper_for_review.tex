@@ -459,45 +459,6 @@ Therefore we fuse multiple solutions,
 
 
 
-\begin{theorem}[NameMe]
-Solving ??? on the contracted graph is 
-equivalent to solving ??? on the 
-original graph with additional 
-must link constraints
-\end{theorem}
-
-\begin{proof}[Proof of theorem ]
-todo
-\end{proof}
-
-
-
-\begin{theorem}[NameMe]
-Let $x_{a}$ and $x_{b}$ be two proposal solutions and  $x_{new}$ the solution of \ref{???}.
-$x_{new}$  will never decrease the energy:
-$x_{new} \cdot w \leq  \min( x_{a}\cdot w,  x_{b}\cdot w) $ 
-\end{theorem}
-
-\begin{proof}[Proof of theorem ]
-todo
-\end{proof}
-
-
-
-\begin{theorem}[NameMe]
-
-Let $x_{a}$ and $x_{b}$ be two proposal solutions and  $x_{opt}$ the global solution,
-$X_{a}^c, X_{b}^c$ and $ X_{opt}^c$ the set of cut edges in  $x_{a}, x_{b}$  and $ x_{opt}$
-optimal solution.
-Iff  $ X_{opt}^c \subseteq  (X_{a}^c \cup X_{b}^c)$,  the solution of \ref{???} will be $x_{opt}$.
-\end{theorem}
-
-\begin{proof}[Proof of of theorem]
-todo
-\end{proof}
-
-
-
 %-------------------------------------------------------------------------
 \subsection{Fusion Move Solver}
 
@@ -596,7 +557,7 @@ the edge weighs.
 
 \input{inputs/fig_hc.tex}
 
-\subsection{Polyhedral Interpretation}
+\subsection{Properties and Polyhedral Interpretation}
 \begin{figure}
 \centering
 \input{polytope-tikz.tex}
@@ -606,6 +567,45 @@ and find $y_1$ as optima. When optimize over the blue polytope we stay in $y_1$ 
 When optimizing over the green polytope we find $y_2$ which we will never leaf again or any polytope containing $y_2$. 
 }
 \end{figure}
+
+
+\begin{theorem}[NameMe]
+Solving ??? on the contracted graph is 
+equivalent to solving ??? on the 
+original graph with additional 
+must link constraints
+\end{theorem}
+
+\begin{proof}[Proof of theorem ]
+todo
+\end{proof}
+
+
+
+\begin{theorem}[NameMe]
+Let $x_{a}$ and $x_{b}$ be two proposal solutions and  $x_{new}$ the solution of \ref{???}.
+$x_{new}$  will never decrease the energy:
+$x_{new} \cdot w \leq  \min( x_{a}\cdot w,  x_{b}\cdot w) $ 
+\end{theorem}
+
+\begin{proof}[Proof of theorem ]
+todo
+\end{proof}
+
+
+
+\begin{theorem}[NameMe]
+
+Let $x_{a}$ and $x_{b}$ be two proposal solutions and  $x_{opt}$ the global solution,
+$X_{a}^c, X_{b}^c$ and $ X_{opt}^c$ the set of cut edges in  $x_{a}, x_{b}$  and $ x_{opt}$
+optimal solution.
+Iff  $ X_{opt}^c \subseteq  (X_{a}^c \cup X_{b}^c)$,  the solution of \ref{???} will be $x_{opt}$.
+\end{theorem}
+
+\begin{proof}[Proof of of theorem]
+todo
+\end{proof}
+
 
 \section{Experiments}
 
