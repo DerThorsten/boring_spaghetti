@@ -585,8 +585,15 @@ the edge weighs.
 \input{inputs/fig_hc.tex}
 
 \subsection{Polyhedral Interpretation}
+\begin{figure}
+\centering
 \input{polytope-tikz.tex}
-
+\caption{Each move can be interpreted as an optimization of an inner polyhedral optimization.
+Each polyhedral approximation includes the current vertex. Starting with $y_0$ we optimize over the red polytope 
+and find $y_1$ as optima. When optimize over the blue polytope we stay in $y_1$ as optima.
+When optimizing over the green polytope we find $y_2$ which we will never leaf again or any polytope containing $y_2$. 
+}
+\end{figure}
 
 \section{Experiments}
 
