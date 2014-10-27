@@ -7,7 +7,7 @@
 %\begin{subfigure}[t]{1\linewidth}
    \resizebox{1.0\linewidth}{!}{
       \begin{tikzpicture}[scale=1.0,transform shape]
-        \tikzstyle{vert}=[circle,minimum size = 0.5cm,inner sep = 0pt,draw, font=\small, node distance = 5cm]
+        \tikzstyle{vert}=[circle,minimum size = 0.5cm,inner sep = 0pt,draw, font=\small, node distance = 5cm,align=left]
 
 
        
@@ -156,7 +156,7 @@
         \draw (16+0*2,    2*2) node[vert,](5){$\{5\}$};
         \draw (16+2*2,    2*2) node[vert](6){$\{6, 7, 8\}$};
         \draw (16+0*2,    1*2) node[vert](9){$\{9, 13\}$};
-        \draw (16+2*2+0.5,1*2-0.5) node[vert ](10){$\{10, 11, 12,14, 15, 16\}$};
+        \draw (16+2*2,1*2) node[vert ](10){$\{10, 11, 12,$\\$14, 15, 16\}$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[aedge]     node{$w_{(1, 2)}$   }     (2)
@@ -178,7 +178,7 @@
         \draw (24+0*2,0+2*2) node[vert,fill=blue!20!cyan ](5){$\{5\}$};
         \draw (24+2*2,0+2*2) node[vert,fill=blue!40!green](6){$\{6, 7, 8\}$};
         \draw (24+0*2,0+1*2) node[vert,fill=blue!40!green](9){$\{9, 13\}$};
-        \draw (24+2*2+0.5,0+0.811*2-0.5) node[vert,fill=blue!40!green](10){$\{10, 11, 12,14, 15, 16\}$};
+        \draw (24+2*2,0+ 1*2) node[vert,fill=blue!40!green](10){$\{10, 11, 12,$\\$14, 15, 16\}$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[cedge]     node{$w_{(1, 2)}$   }     (2)
