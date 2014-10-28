@@ -10,8 +10,8 @@ numpy.random.seed(42)
 #gm=opengm.loadGm("/home/tbeier/datasets/image-seg/291000.bmp.h5","gm")
 #gm=opengm.loadGm("/home/tbeier/datasets/image-seg/148026.bmp.h5","gm")
 #gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-450/gm_knott_3d_102.h5","gm")#(ROTTEN)
-gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-450/gm_knott_3d_096.h5","gm")
-#gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-300/gm_knott_3d_078.h5","gm")
+#gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-450/gm_knott_3d_096.h5","gm")
+gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-300/gm_knott_3d_078.h5","gm")
 #gm=opengm.loadGm("/home/tbeier/datasets/knott-3d-150/gm_knott_3d_038.h5","gm")
 
 #---------------------------------------------------------------
@@ -27,7 +27,7 @@ verbose = True
 
 with opengm.Timer("with new method"):
 
-    fusionParam = opengm.InfParam(fusionSolver = 'multicut', planar=False, decompose=True)
+    fusionParam = opengm.InfParam(fusionSolver = 'multicut', planar=False, decompose=False)
     randomizer = opengm.weightRandomizer(noiseType='normalAdd',noiseParam=1.500000001,ignoreSeed=False)
     parallelProposals = 8
     arg = None
@@ -38,7 +38,7 @@ with opengm.Timer("with new method"):
     proposalParam = opengm.InfParam(
     randomizer = randomizer,
     stopWeight=-0.0,
-    nodeStopNum=0.01,
+    nodeStopNum=0.1,
     ignoreNegativeWeights=False,
     setCutToZero=False
     )
@@ -46,8 +46,8 @@ with opengm.Timer("with new method"):
 
 
     infParam = opengm.InfParam(
-    numStopIt=10,
-    numIt=10,
+    numStopIt=20,
+    numIt=20,
     generator='randomizedHierarchicalClustering',
     proposalParam=proposalParam,
     fusionParam = fusionParam,
