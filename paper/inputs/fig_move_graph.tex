@@ -147,9 +147,6 @@
             (12)    edge[aedge]     node{$w_{(12, 16)}$ }     (16)
         ;
 
-        \draw (15.5+0*2, 1+5) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\rightarrow$};
-        \draw (15.5+0*2,-1+5) node[rotate=90,minimum size=2cm,font=\sffamily\huge] (dummy){$\textbf{contract}$};
-        \draw (15.5+0*2,-3+5) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\rightarrow$};
 
         \draw (17+0*2,    3*2) node[vert](1){$\{1\}$};
         \draw (17+2*2,    3*2) node[vert](2){$\{2, 3, 4\}$};
@@ -169,16 +166,14 @@
             (6)     edge[aedge]     node{$w_{(6, 10)} + w_{(7, 11)} + w_{(8, 12)} $   }     (10)
         ;
 
-        \draw (23.7+0*2, 1+5) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\rightarrow$};
-        \draw (23.7+0*2,-1+5) node[rotate=90,minimum size=2cm,font=\sffamily\huge] (dummy){$\textbf{run CC}$};
-        \draw (23.7+0*2,-3+5) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\rightarrow$};
 
-        \draw (26+0*2,0+3*2) node[vert,fill=blue!20!cyan](1){$\{1\}$};
-        \draw (26+2*2,0+3*2) node[vert,fill=green!30!cyan](2){$\{2, 3, 4\}$};
-        \draw (26+0*2,0+2*2) node[vert,fill=blue!20!cyan ](5){$\{5\}$};
-        \draw (26+2*2,0+2*2) node[vert,fill=blue!40!green](6){$\{6, 7, 8\}$};
-        \draw (26+0*2,0+1*2) node[vert,fill=blue!40!green](9){$\{9, 13\}$};
-        \draw (26+2*2,0+ 1*2) node[vert,fill=blue!40!green](10){$\{10, 11, 12,$\\$14, 15, 16\}$};
+
+        \draw (25+0*2,0+3*2) node[vert,fill=blue!20!cyan](1){$\{1\}$};
+        \draw (25+2*2,0+3*2) node[vert,fill=green!30!cyan](2){$\{2, 3, 4\}$};
+        \draw (25+0*2,0+2*2) node[vert,fill=blue!20!cyan ](5){$\{5\}$};
+        \draw (25+2*2,0+2*2) node[vert,fill=blue!40!green](6){$\{6, 7, 8\}$};
+        \draw (25+0*2,0+1*2) node[vert,fill=blue!40!green](9){$\{9, 13\}$};
+        \draw (25+2*2,0+ 1*2) node[vert,fill=blue!40!green](10){$\{10, 11, 12,$\\$14, 15, 16\}$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[cedge]     node{$w_{(1, 2)}$   }     (2)
@@ -191,27 +186,24 @@
             (6)     edge[aedge]     node{$w_{(6, 10)} + w_{(7, 11)} + w_{(8, 12)} $   }     (10)
         ;
 
-        \draw (32.7+0*2, 1+5) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\rightarrow$};
-        \draw (32.7+0*2,-1+5) node[rotate=90,minimum size=2cm,font=\sffamily\huge] (dummy){$\textbf{project}$};
-        \draw (32.7+0*2,-3+5) node[minimum size=2cm,font=\sffamily\Huge] (dummy){$\rightarrow$};
 
 
-        \draw (35+0*2,0+3*2) node[vert,fill=blue!20!cyan](1){$1$};
-        \draw (35+1*2,0+3*2) node[vert,fill=green!30!cyan](2){$2$};
-        \draw (35+2*2,0+3*2) node[vert,fill=green!30!cyan](3){$3$};
-        \draw (35+3*2,0+3*2) node[vert,fill=green!30!cyan](4){$4$};
-        \draw (35+0*2,0+2*2) node[vert,fill=blue!20!cyan](5){$5$};
-        \draw (35+1*2,0+2*2) node[vert,fill=blue!40!green](6){$6$};
-        \draw (35+2*2,0+2*2) node[vert,fill=blue!40!green](7){$7$};
-        \draw (35+3*2,0+2*2) node[vert,fill=blue!40!green](8){$8$};
-        \draw (35+0*2,0+1*2) node[vert,fill=blue!40!green](9){$9$};
-        \draw (35+1*2,0+1*2) node[vert,fill=blue!40!green](10){$10$};
-        \draw (35+2*2,0+1*2) node[vert,fill=blue!40!green](11){$11$};
-        \draw (35+3*2,0+1*2) node[vert,fill=blue!40!green](12){$12$};
-        \draw (35+0*2,0+0*2) node[vert,fill=blue!40!green](13){$13$};
-        \draw (35+1*2,0+0*2) node[vert,fill=blue!40!green](14){$14$};
-        \draw (35+2*2,0+0*2) node[vert,fill=blue!40!green](15){$15$};
-        \draw (35+3*2,0+0*2) node[vert,fill=blue!40!green](16){$16$};
+        \draw (33+0*2,0+3*2) node[vert,fill=blue!20!cyan](1){$1$};
+        \draw (33+1*2,0+3*2) node[vert,fill=green!30!cyan](2){$2$};
+        \draw (33+2*2,0+3*2) node[vert,fill=green!30!cyan](3){$3$};
+        \draw (33+3*2,0+3*2) node[vert,fill=green!30!cyan](4){$4$};
+        \draw (33+0*2,0+2*2) node[vert,fill=blue!20!cyan](5){$5$};
+        \draw (33+1*2,0+2*2) node[vert,fill=blue!40!green](6){$6$};
+        \draw (33+2*2,0+2*2) node[vert,fill=blue!40!green](7){$7$};
+        \draw (33+3*2,0+2*2) node[vert,fill=blue!40!green](8){$8$};
+        \draw (33+0*2,0+1*2) node[vert,fill=blue!40!green](9){$9$};
+        \draw (33+1*2,0+1*2) node[vert,fill=blue!40!green](10){$10$};
+        \draw (33+2*2,0+1*2) node[vert,fill=blue!40!green](11){$11$};
+        \draw (33+3*2,0+1*2) node[vert,fill=blue!40!green](12){$12$};
+        \draw (33+0*2,0+0*2) node[vert,fill=blue!40!green](13){$13$};
+        \draw (33+1*2,0+0*2) node[vert,fill=blue!40!green](14){$14$};
+        \draw (33+2*2,0+0*2) node[vert,fill=blue!40!green](15){$15$};
+        \draw (33+3*2,0+0*2) node[vert,fill=blue!40!green](16){$16$};
         %
         \path[every node/.style={font=\sffamily\tiny, fill=white}]
             (1)     edge[cedge]     node{$w_{(1, 2)}$   }     (2)
@@ -241,11 +233,24 @@
         ;  
 
 
-        \draw[line width=6pt]     (35+2.5*2,3*2+1) -- (35+2.5*2,3*2+4);
-        \draw[line width=6pt, ->] (35+2.5*2,3*2+4) -- (7,3*2+4); 
-        \draw[line width=6pt] (8+2.5*2,3*2+1) edge [bend left=50,->] (13+2.5*2,3*2+1);
-        \draw[line width=6pt] (15+2.5*2,3*2+1) edge [bend left=40,->] (22+2.5*2,3*2+1);
-        \draw[line width=6pt] (24+2.5*2,3*2+1) edge [bend left=40,->] (31+2.5*2,3*2+1);
+        \draw[line width=6pt]     (33+2.5*2,3*2+1) -- (33+2.5*2,3*2+4);
+        \draw[line width=6pt, ->] (33+2.5*2,3*2+4) -- (7,3*2+4); 
+
+
+        \draw[line width=6pt] (8+2.5*2,3*2+1) edge [bend left=50,->]    (13+2.5*2,3*2+1);
+        \draw[line width=6pt] (15+2.5*2,3*2+1) edge [bend left=40,->]   (22+2.5*2,3*2+1);        
+        \draw[line width=6pt] (23+2.5*2,3*2+1) edge [bend left=40,->]   (31+2.5*2,3*2+1);
+
+
+        \draw (15.5+0*2, 9) node[font=\sffamily\huge] (dummy){$\textbf{contract}$};
+        \draw (23.5+0*2, 9) node[font=\sffamily\huge] (dummy){$\textbf{run CC}$};
+        \draw (32.0+0*2, 9) node[font=\sffamily\huge] (dummy){$\textbf{project}$};
+
+        \draw (23.5+0*2, 11) node[font=\sffamily\huge] (dummy){$\textbf{update current best}$};
+
+        \draw (3+0*2, 11) node[font=\sffamily\huge] (dummy){$\textbf{current best}$};
+        \draw (3+0*2, -5.5) node[font=\sffamily\huge] (dummy){$\textbf{proposal}$};
+
       \end{tikzpicture}
    } 
 %\end{subfigure}\quad\quad
