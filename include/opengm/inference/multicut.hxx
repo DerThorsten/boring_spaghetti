@@ -90,6 +90,11 @@ public:
 #endif
 
 
+   template<class ACC_, class GM_>
+   struct rebind{
+        typedef Multicut<GM_, ACC_> type;
+   };
+
    struct Parameter{
    public:
       enum MWCRounding {NEAREST,DERANDOMIZED,PSEUDODERANDOMIZED};
@@ -110,15 +115,26 @@ public:
 
       /// \param numThreads number of threads that should be used (default = 0 [automatic])
       /// \param cutUp value which the optima at least has (helps to cut search-tree)
-      Parameter
-      (
-         int numThreads=0,
-         double cutUp=1.0e+75
-         )
-         : numThreads_(numThreads), verbose_(false),verboseCPLEX_(false), cutUp_(cutUp),
-           timeOut_(36000000), maximalNumberOfConstraintsPerRound_(1000000),
-           edgeRoundingValue_(0.00000001),MWCRounding_(NEAREST), reductionMode_(3),useOldPriorityQueue_(false), useChordalSearch_(false)
-         {};
+    Parameter
+    (
+        int numThreads=0,
+        double cutUp=1.0e+75
+    )
+    :   numThreads_(numThreads), verbose_(false),verboseCPLEX_(false), cutUp_(cutUp),
+        timeOut_(36000000), maximalNumberOfConstraintsPerRound_(1000000),
+        edgeRoundingValue_(0.00000001),MWCRounding_(NEAREST), reductionMode_(3),useOldPriorityQueue_(false), useChordalSearch_(false)
+    {};
+
+    template<class OTHER_PARAM>
+    Parameter
+    (
+        const OTHER_PARAM & p
+    )
+    :   numThreads_(p.numThreads_), verbose_(p.verbose_),verboseCPLEX_(p.verboseCPLEX_), cutUp_(p.cutUp_),
+        timeOut_(p.timeOut_), maximalNumberOfConstraintsPerRound_(p.maximalNumberOfConstraintsPerRound_),
+        edgeRoundingValue_(p.edgeRoundingValue_),MWCRounding_(p.MWCRounding_), reductionMode_(p.reductionMode_),
+        useOldPriorityQueue_(p.useOldPriorityQueue_), useChordalSearch_(p.useChordalSearch_)
+    {};
    };
 
    virtual ~Multicut();

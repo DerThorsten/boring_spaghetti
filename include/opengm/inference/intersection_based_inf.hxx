@@ -506,9 +506,9 @@ namespace proposal_gen{
             //std::cout<<"add edges\n";
             for(size_t i=0; i<gm_.numberOfFactors(); ++i){
                 if(gm_[i].numberOfVariables()==2){
-                    ValueType val00  = gm_[i](lAA);
-                    ValueType val01  = gm_[i](lAB);
-                    ValueType weight = val01 - val00; 
+                    const ValueType val00  = gm_[i](lAA);
+                    const ValueType val01  = gm_[i](lAB);
+                    const ValueType weight = val01 - val00; 
                     if(!param_.ignoreNegativeWeights_ || weight >= 0.0){
                         const GraphEdge gEdge = graph_.addEdge(gm_[i].variableIndex(0),gm_[i].variableIndex(1));
                         weights_[gEdge.id()]+=weight;
