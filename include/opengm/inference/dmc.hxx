@@ -12,7 +12,8 @@
 #include "opengm/inference/movemaker.hxx"
 #include "opengm/datastructures/buffer_vector.hxx"
 
-
+#include <opengm/graphicalmodel/space/simplediscretespace.hxx>
+#include <opengm/functions/potts.hxx>
 #include "opengm/inference/visitors/visitors.hxx"
 
 namespace opengm {
@@ -21,7 +22,7 @@ namespace opengm {
 /// J. E. Besag, "On the Statistical Analysis of Dirty Pictures", Journal of the Royal Statistical Society, Series B 48(3):259-302, 1986
 /// \ingroup inference 
 template<class GM, class INF>
-class DMC : public Inference<GM, typename INF::ACC>
+class DMC : public Inference<GM, typename INF::AccumulationType>
 {
 public:
 
@@ -38,7 +39,7 @@ public:
         public:
 
         Parameter(
-            const ValueType threshold = ValueType(0),
+            const ValueType threshold = ValueType(-0.000000001),
             const InfParam infParam = InfParam()
         )
         :   threshold_(threshold),
@@ -148,7 +149,7 @@ InferenceTermination DMC<GM,INF>::infer
             const ValueType val01  = gm_[fi](lAB);
             const ValueType weight = val01 - val00; 
 
-            if(weight<param_.threshold_){
+            if(weight>param_.threshold_){
                 const size_t vi0 = gm_[fi].variableIndex(0);
                 const size_t vi1 = gm_[fi].variableIndex(1);
                 ufd.merge(vi0, vi1);
@@ -160,20 +161,23 @@ InferenceTermination DMC<GM,INF>::infer
     }
 
     if(ufd.numberOfSets() == 1){
+        //std::cout<<" all in one cc\n";
         // FALL BACK HERE!!!
-        typedef typename INF:: template rebind<GM,ACC> OrgInf;
+        typedef typename INF:: template rebind<GM,ACC>::type OrgInf;
         typename OrgInf::Parameter orgInfParam(param_.infParam_); 
-        OrgInf orgInf(orgInfParam);
+        OrgInf orgInf(gm_, orgInfParam);
         orgInf.infer();
         orgInf.arg(arg_);
-        value = gm_.evaluate(arg_);
+        value_ = gm_.evaluate(arg_);
     }
     else {
-
+        //std::cout<<" NOT all in one cc\n";
         std::map<LabelType, LabelType> repr;
         ufd.representativeLabeling(repr);
-
-        std::vector< std::vector< LabelType> > subVar(repr.size());
+        //std::cout<<"gm_.numVar "<<gm_.numberOfVariables()<<"\n";
+        //std::cout<<"reprs size"<<repr.size()<<"\n";
+        //std::cout<<"ufd.numberOfSets() "<<ufd.numberOfSets()<<"\n";
+        std::vector< std::vector< LabelType> > subVar(ufd.numberOfSets());
         // set up the sub var
         for(size_t vi=0; vi<gm_.numberOfVariables(); ++vi){
             subVar[repr[ufd.find(vi)]].push_back(vi);
@@ -186,18 +190,99 @@ InferenceTermination DMC<GM,INF>::infer
         // mark all factors where weight is smaller
         // as param_.threshold_ as used
         for(size_t fi=0; fi< gm_.numberOfFactors(); ++fi){
-            const ValueType weight = val01 - val00; 
-            if(weight<param_.threshold_){
+            if(
+                ufd.find(gm_[fi].variableIndex(0)) 
+                !=  
+                ufd.find(gm_[fi].variableIndex(1))
+            )
+            {
                 usedFactors_[fi] = 1;
             }
         }
 
-        #pragma omp parallel for
+        std::vector<IndexType> globalToLocal(gm_.numberOfVariables(), gm_.numberOfVariables()+1);
+
+        IndexType offset = 0;
         for(size_t subProb = 0; subProb<nSubProb; ++subProb){
             
+            //std::cout<<"subProb "<<subProb<<"\n";
+            const IndexType nSubVar = subVar[subProb].size();
+            //std::cout<<"nSubVar "<<nSubVar<<"\n";
 
+            typedef PottsFunction<ValueType,IndexType,IndexType> Pf;
+            typedef SimpleDiscreteSpace<IndexType, IndexType> Space;
+            typedef GraphicalModel<ValueType, OperatorType, Pf , Space> Model;
+            Space space(nSubVar, nSubVar);
+            Model subGm(space);
+
+            for(IndexType lvi=0; lvi<nSubVar; ++lvi){
+                const IndexType gvi = subVar[subProb][lvi];
+                globalToLocal[gvi] = lvi;
+            }
+
+
+            if(nSubVar==1){
+                const IndexType gvi = subVar[subProb][0];
+                arg_[gvi] = offset;
+            }
+            else if(nSubVar==2){
+                const IndexType gvi0 = subVar[subProb][0];
+                const IndexType gvi1 = subVar[subProb][1];
+                arg_[gvi0] =     offset;
+                arg_[gvi1] =     offset;
+            }
+            else{
+
+                for(IndexType lvi=0; lvi<nSubVar; ++lvi){
+                    const IndexType gvi = subVar[subProb][lvi];
+                    OPENGM_CHECK_OP(lvi, == , globalToLocal[gvi], ' ');
+                    // number of factors
+                    const size_t nf = gm_.numberOfFactors(gvi);
+
+                    for(size_t f=0; f<nf; ++f){
+                        const IndexType nfi =  gm_.factorOfVariable(gvi, f);
+                        if(usedFactors_[nfi] != 1){
+                            usedFactors_[nfi] = 1;
+
+                            // add factor to graphical model
+                            const ValueType val00  = gm_[nfi](lAA);
+                            const ValueType val01  = gm_[nfi](lAB);
+                            const ValueType weight = val01 - val00; 
+                            const IndexType vi0 = gm_[nfi].variableIndex(0);
+                            const IndexType vi1 = gm_[nfi].variableIndex(1);
+
+                            if( ufd.find(vi0) !=  ufd.find(vi1)){
+                                OPENGM_CHECK_OP(ufd.find(vi0),!=,ufd.find(vi1), "internal error");
+                            }
+
+                            const IndexType lvis[] = {
+                                std::min(globalToLocal[vi0],globalToLocal[vi1]),
+                                std::max(globalToLocal[vi0],globalToLocal[vi1])
+                            };
+                            const Pf pf(nSubVar, nSubVar, 0.0, weight);
+                            subGm.addFactor(subGm.addFunction(pf), lvis, lvis+2);
+                        }
+                    }
+                }
+
+                // infer the submodel
+                typedef typename INF:: template rebind<Model,ACC>::type SubInf;
+                typename SubInf::Parameter subInfParam(param_.infParam_); 
+                SubInf subInf(subGm, subInfParam);
+                subInf.infer();
+
+                std::vector<LabelType> subArg(subGm.numberOfVariables());
+                subInf.arg(subArg);
+
+                for(IndexType lvi=0; lvi<nSubVar; ++lvi){
+                    const IndexType gvi = subVar[subProb][lvi];
+                    arg_[gvi] = subArg[lvi] + offset;
+                }
+            }
+
+            offset += nSubVar;
         }
-
+        value_ = gm_.evaluate(arg_);
         visitor.end(*this);
 
     }

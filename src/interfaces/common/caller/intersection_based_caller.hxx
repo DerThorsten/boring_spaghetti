@@ -99,6 +99,7 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
    addArgument(StringArgument<>(selectedGenType_, "g", "gen", "Selected proposal generator", gen.front(), gen));
    addArgument(StringArgument<>(selectedFusionType_, "f", "fusion", "Select fusion method", fusion.front(), fusion));
    addArgument(BoolArgument(fusionParam_.planar_,"pl","planar", "is problem planar"));
+   addArgument(BoolArgument(fusionParam_.decompose_,"dc","decompose", "try to decompose subproblems"));
    addArgument(StringArgument<>(fusionParam_.workflow_, "", "workflow", "workflow of cutting-plane procedure", false));
 
    //addArgument(IntArgument<>(numberOfThreads_, "", "threads", "number of threads", static_cast<int>(1)));

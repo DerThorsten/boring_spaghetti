@@ -4,7 +4,7 @@
 
 #include <opengm/inference/inference.hxx>
 #include <opengm/inference/multicut.hxx>
-
+#include <opengm/inference/dmc.hxx>
 // FIXME
 using namespace std;
 #define Isinf Isinf2
@@ -175,6 +175,7 @@ public:
             const bool planar = false,
             const std::string  workflow = std::string(),
             const int nThreads = -1,
+            const bool decompose = false,
             const std::vector<bool> & allowCutsWithin  = std::vector<bool>()
         )
         : 
@@ -182,6 +183,7 @@ public:
             planar_(planar),
             workflow_(workflow),
             nThreads_(nThreads),
+            decompose_(decompose),
             allowCutsWithin_(allowCutsWithin)
         {
 
@@ -190,6 +192,7 @@ public:
         bool planar_;
         std::string workflow_;
         int nThreads_;
+        bool decompose_;
         std::vector<bool> allowCutsWithin_;
 
     };
@@ -718,27 +721,43 @@ public:
 
         std::vector<LabelType> subArg;
 
-        try{
+        //try{
             //::cout<<"WITH MC\n";
-            typedef Multicut<SubModel, Minimizer> Inf;
-            typedef  typename  Inf::Parameter Param;
-            Param p(0,0.0);
+            typedef Multicut<SubModel, Minimizer> McInf;
+            typedef  typename  McInf::Parameter McParam;
+            McParam pmc(0,0.0);
 
             if(param_.nThreads_ <= 0){
-                p.numThreads_ = 0;
+                pmc.numThreads_ = 0;
             }
             else{
-                p.numThreads_ = param_.nThreads_;
+                pmc.numThreads_ = param_.nThreads_;
             }
-            p.workFlow_ = param_.workflow_;
+            pmc.workFlow_ = param_.workflow_;
 
-            Inf inf(subGm,p);
-            inf.infer();
-            inf.arg(subArg);
-        }
-        catch(...){
-            std::cout<<"error from cplex\n....\n";
-        }
+
+            if(param_.decompose_ == false){
+                McInf inf(subGm,pmc);
+                inf.infer();
+                inf.arg(subArg);
+            }
+            else{
+                typedef DMC<SubModel, McInf> DmcInf;
+                typedef  typename  DmcInf::Parameter DmcParam;
+                typedef  typename DmcInf::InfParam DmcInfParam;
+                DmcParam dmcParam;
+                DmcInfParam dmcInfParam(pmc);
+
+                dmcParam.infParam_  = dmcInfParam;
+
+                DmcInf inf(subGm, dmcParam);
+                inf.infer();
+                inf.arg(subArg);
+            }
+        //}
+        //catch(...){
+        //     std::cout<<"error from cplex\n....\n";
+        //}
 
         for(IndexType vi=0; vi<gm_.numberOfVariables(); ++vi){
             res[vi] = subArg[ab[vi]];

@@ -41,7 +41,6 @@ int main() {
 
 
     typedef SimpleDiscreteSpace<size_t, size_t> Space;
-    
     typedef GraphicalModel<double, Adder, OPENGM_TYPELIST_2(ExplicitFunction<double> , PottsFunction<double> ) , Space> Model;
 
     const size_t nx = 30; // width of the grid

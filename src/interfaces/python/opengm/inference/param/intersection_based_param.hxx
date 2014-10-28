@@ -84,11 +84,13 @@ public:
         Parameter & p,
         const typename FM::FusionSolver fusionSolver,
         const bool planar,
-        const int nThreads
+        const int nThreads,
+        const int decompose
     ) {
         p.fusionSolver_ = fusionSolver;
         p.planar_ = planar;
         p.nThreads_ = nThreads;
+        p.decompose_ = decompose;
 
     } 
 
@@ -110,11 +112,13 @@ public:
             .def_readwrite("fusionSolver",&Parameter::fusionSolver_,"fusionSolver parameter")
             .def_readwrite("planar",&Parameter::planar_,"planar")
             .def_readwrite("nThreads",&Parameter::nThreads_,"nThreads")
+            .def_readwrite("decompose",&Parameter::decompose_,"decompose")
             .def ("set", &SelfType::set, 
                 (
                     boost::python::arg("fusionSolver")= typename FM::FusionSolver(),
                     boost::python::arg("planar")=false,
-                    boost::python::arg("nThreads")=-1
+                    boost::python::arg("nThreads")=-1,
+                    boost::python::arg("decompose")=false
                 ) 
             )
         ;

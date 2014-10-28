@@ -68,6 +68,10 @@ public:
 ///
 /// see [2] for further details.
 /// \ingroup inference 
+struct ParamHeper{
+enum MWCRounding {NEAREST,DERANDOMIZED,PSEUDODERANDOMIZED};
+};
+
 template<class GM, class ACC>
 class Multicut : public Inference<GM, ACC>
 {
@@ -90,14 +94,14 @@ public:
 #endif
 
 
-   template<class ACC_, class GM_>
+   template<class GM_, class ACC_>
    struct rebind{
         typedef Multicut<GM_, ACC_> type;
    };
 
-   struct Parameter{
+   struct Parameter : public ParamHeper{
    public:
-      enum MWCRounding {NEAREST,DERANDOMIZED,PSEUDODERANDOMIZED};
+      
 
       int numThreads_;
       bool verbose_;
@@ -107,7 +111,7 @@ public:
       std::string workFlow_;
       size_t maximalNumberOfConstraintsPerRound_;
       double edgeRoundingValue_;
-      MWCRounding MWCRounding_;
+      ParamHeper::MWCRounding MWCRounding_;
       size_t reductionMode_;
       std::vector<bool> allowCutsWithin_;
       bool useOldPriorityQueue_;
@@ -1848,10 +1852,10 @@ Multicut<GM,ACC>::arg
             }
             return NORMAL;
          }
-         else if(parameter_.MWCRounding_==parameter_.DERANDOMIZED){
+         else if(parameter_.MWCRounding_==Parameter::DERANDOMIZED){
             return derandomizedRounding(x);
          }
-         else if(parameter_.MWCRounding_==parameter_.PSEUDODERANDOMIZED){
+         else if(parameter_.MWCRounding_==Parameter::PSEUDODERANDOMIZED){
             return pseudoDerandomizedRounding(x,1000);
          }
          else{
