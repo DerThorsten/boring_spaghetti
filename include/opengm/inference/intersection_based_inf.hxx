@@ -1049,6 +1049,7 @@ public:
             const bool cgcFinalization = false,
             const bool planar = false,
             const bool doCutMove = false,
+            const bool acceptFirst = true,
             const std::vector<bool> & allowCutsWithin = std::vector<bool> ()
         )
             :   proposalParam_(proposalParam),
@@ -1059,6 +1060,7 @@ public:
                 cgcFinalization_(cgcFinalization),
                 planar_(planar),
                 doCutMove_(doCutMove),
+                acceptFirst_(acceptFirst)
                 allowCutsWithin_(allowCutsWithin)
         {
             storagePrefix_ = std::string("");
@@ -1071,6 +1073,7 @@ public:
         bool cgcFinalization_;
         bool planar_;
         bool doCutMove_;
+        bool acceptFirst_;
         std::vector<bool> allowCutsWithin_;
         std::string storagePrefix_;
 
@@ -1310,7 +1313,7 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
             ACC::neutral(bestValue_);
             continue;
         }
-        else if(!mmcv && iteration == 0 && bestValue_>=-0.0000000001 ){
+        else if(!mmcv && iteration == 0 && param_.acceptFirst_ ){
             proposalGen_->getProposal(bestArg_,proposedState);
             std::copy(proposedState.begin(),  proposedState.end(), bestArg_.begin());
             bestValue_ = gm_.evaluate(bestArg_);

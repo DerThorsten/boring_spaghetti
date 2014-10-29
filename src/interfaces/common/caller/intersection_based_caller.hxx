@@ -66,6 +66,8 @@ protected:
    bool cgcFinalization_;
    bool doCutMove_;
 
+   bool acceptFirst_;
+
    std::string storagePrefix_;
    
 public:
@@ -107,6 +109,8 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
    addArgument(Size_TArgument<>(numStopIt_, "", "numStopIt", "number of iterations with no improvment that cause stopping (0=auto)", static_cast<size_t>(20))); 
    addArgument(Size_TArgument<>(parallelProposals_, "pp", "parallelProposals", "number of parallel proposals (1)", static_cast<size_t>(1))); 
 
+
+   addArgument(BoolArgument(acceptFirst_,"af","acceptFirst", ""));
    addArgument(BoolArgument(cgcFinalization_,"cgcf","cgcFinalization", "use cgc in the end"));
    addArgument(BoolArgument(doCutMove_,"dcm","doCutMove", "do the cut phase within cgc (better not, should be faster)"));
 
@@ -151,6 +155,7 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::setParam(
    param.fusionParam_ = fusionParam_;
    param.proposalParam_.randomizer_ = wRand_;
    param.storagePrefix_ = storagePrefix_;
+   param.acceptFirst_ = acceptFirst_;
 }
 
 template <class IO, class GM, class ACC>
