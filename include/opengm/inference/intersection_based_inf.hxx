@@ -1060,7 +1060,7 @@ public:
                 cgcFinalization_(cgcFinalization),
                 planar_(planar),
                 doCutMove_(doCutMove),
-                acceptFirst_(acceptFirst)
+                acceptFirst_(acceptFirst),
                 allowCutsWithin_(allowCutsWithin)
         {
             storagePrefix_ = std::string("");
