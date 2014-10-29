@@ -160,9 +160,6 @@ $\rho_y^{-1} : P(G_y) \to P(G)$
 
 
 
-\todo[inline]{should there be a general introduction to multicuts?}
-
-
 Given an edge weighted graph, positive weights (\emph{attractive})
 encourage the adjacent nodes to be in the same 
 connected component, while negative weights (\emph{repulsive}) encourage
@@ -184,63 +181,51 @@ successfully used for
     \item Alush and Globerger showed how to average multiple segmentations with the multicut objective~\cite{alush_2012_pami}.
     \item Multicuts can also be used for interactive segmentation~\cite{bagon_2011_arxiv},
     \item for co-segmentation~\cite{glassner_2011_cvpr}
-    \item and to cluster fully connected graphs~\cite{???}.
+    \item and to cluster sparse and graphs~\cite{???}.
 \end{inparaenum}
 
 
-
-
-
-\todo[inline]{WHY WE NEED THIS NEW SOLVER?}
-
-
-Nunez-Iglesias \etal describe the multicut as
-\say{one-shot agglomeration of supervoxels} whose 
-main drawback is the scalability \cite{nunez_iglesias_2013}.
-
-\todo[inline]{BETTER MOTIVATE SUPERNODES}
-
-To address scalability, supernodes can be useful.
-To create supernodes, some edges will be contracted
-and their nodes are merged into super-nodes.
-Doing so, we can reduce  the graph 
-to a reasonable size, such that we can find
-global optimal multicut solutions within reasonable time.
-%
-Any edge which is contracted is lost.
-If such an edge is cut in the global optimal solution, we cannot 
-find this global optimal solutions.
-Therefore we avoid fixed decisions and use a
-dynamic energy aware contraction scheme.
-%
-Different edge contractions lead to different super-node graphs.
-A trivial approach is the following.
-Create different super-node graphs, optimize them with multicuts,
-and take the result which leads to the lowest energy
-on the unmodified initial graph.
-% 
-Doing so, we throw away all results which do not have the lowest energy.
-Within this work we propose a framework which 
-combine multiple \emph{proposal} super-node graphs
-without any premature irreversible decisions.
-Furthermore, multiple super-node graphs are combined such
-that the information form all of them is used.
-\todo[inline]{\emph{proposal} super-node graphs sounds shitty}
-%
-The proposed algorithm can be interpreted as a fusion moves
-algorithm for correlation clustering / multicut objective.
-We generate cheap and versatile proposals
-and \emph{fuse} them with the current best solution with the
-guarantee that this cannot increase the energy.
+Despite the nice properties of correlation clustering
+to perform a \say{one-shot agglomeration of supervoxels} ~\cite{nunez_iglesias_2013},
+the main draw back of correlation clustering is scalability~\cite{nunez_iglesias_2013}.
+Existing solvers for correlation clustering do not scale for non planar graphs.
+Even state of the art approximate move making algorithm fail 
+to give good approximations non planar graphs.
+When increasing the problem sizes, either the runtime explodes or the 
+approximations are far away from being useful.
 
 
 \textbf{Contribution:}
+\begin{inparaenum}[(i)]
+\item Within this work we propose a fast and scalable move making algorithm for correlation clustering,
+\item which generalized  fusion moves \cite{???} to correlation clustering problems.
+\item We reduce the inference to a series of moves where
+each moves optimizes over a subspace spanned by the current best solution
+and a proposal solution.
+\item We propose two versatile proposal generators,
+\item and show how to optimize these moves.
+\item We give a polyhedral interpretation of this algorithm,
+\item and evaluate the proposed method 
+on existing benchmark problems.
+\item We show state of the art any time performance on those instances.
+\end{inparaenum}[(i)]
 
 \textbf{Outline:}
-
+In sec.~\ref{sec:problem_formulation} we will give a 
+detailed problem definition where we introduce 
+the correlation clustering objective.
+In sec.~\ref{sec:related_work} we will 
+discuss existing methods for correlation 
+clustering and briefly explain the concept of fusion moves.
+In sec: ~\ref{sec:cc_fm} we describe our proposed
+method and show the properties of the algorithm.
+In sec.~\ref{sec:exp} we show an evaluation
+of the method on existing parameter  and discuss the effects of parameters.
+Future work will be discussed in sec. \ref{sec:future} and
+we will conclude in ~\ref{sec:conclusion}.
 %-------------------------------------------------------------------------
 
-\section{Problem Formulation}
+\section{Problem Formulation}\label{sec:problem_formulation}
 Def: Graph, weighted graph, cut, multicut 
 
 
@@ -290,27 +275,48 @@ ambiguities.
 %     \end{eqnarray}
 % \end{center}
 
-\section{Related Work}
+\section{Related Work}\label{sec:related_work}
 
-% \subsubsection{Solver for the Multicut Objective}
-    
-    \input{inputs/tab_mc_overview.tex}
+\subsection{Correlation Clustering}\label{sec:cc}
+A major branch of research has focused on solving 
+relaxations of eq.~\ref{eq:edgeproblem} by linear programming
+or solving  eq.~\ref{eq:edgeproblem} directly to global optimality
+by using integer linear programming in a cutting plane fashion  \cite{kappes_2011_emmcvpr,andres_2011_iccv}.
 
-\subsection{Correlation Clustering}
-   \begin{itemize}
-   \item Multicut~\cite{kappes_2011_emmcvpr}
-   \item Expand and Explorer~\cite{bagon_2011_arxiv}
-   \item Fast Planar CC~\cite{yarkony_2012_eccv}
-   \item Break and Conquer \cite{alush_2013_simbad}.
-   \item Cut Glue And Cut~\cite{beier_2014_cvpr}
-   \end{itemize}
 
-\subsection{Fusion Moves}
+Yarkony et al ~\cite{yarkony_2012_eccv} uses 
+a dual decomposition based approach for planar graphs
+where the subproblems are planar max cut instances.
+
+An other branch of research uses move making algorithm 
+to optimize correlation clustering.
+Bansal and Bagon use a modified $\alpha-$expansion \cite{bansal_2004_ml} 
+algorithm suitable for correlation clustering,
+while the state of the art method from  Beier \etal~\cite{beier_2014_cvpr} iteratively re-optimizes the cuts
+between adjacent connected components.
+
+
+   % \begin{itemize}
+   % \item Multicut~\cite{kappes_2011_emmcvpr}
+   % \item Expand and Explorer~\cite{bagon_2011_arxiv}
+   % \item Fast Planar CC~\cite{yarkony_2012_eccv}
+   % \item Break and Conquer \cite{alush_2013_simbad}.
+   % \item Cut Glue And Cut~\cite{beier_2014_cvpr}
+   % \end{itemize}
+
+\subsection{Fusion Moves}\label{sec:fm}
 Move making algorithms, in particular fusion moves, 
 have become increasingly popular for energy minimization~\cite{???,kappes_2014_ws}.
 For many large scale computer vision applications fusion moves lead to good approximations
 with state of the art any time performance~\cite{kappes_2014_ws}.
-
+The fusion move algorithm works as follows:
+A current best solution is maintained and proposal solutions 
+are generated.
+Within each move, the variables can choose the label from the current best or from the 
+proposed solution. This problem can be formulated as an 
+optimization problem with a binary label space.
+Any optimal solution of this auxiliary problem is guaranteed
+to not worsen the current best solution.
 
 
 
@@ -322,7 +328,7 @@ with state of the art any time performance~\cite{kappes_2014_ws}.
 
 
 %------------------------------------------------------------------------
-\section{Correlation-Clustering-Fusion (CCF) Moves}
+\section{Correlation-Clustering-Fusion (CCF) Moves}\label{sec:cc_fm}
 Motivation Using Fusion moves -> problem ambiguity
 
 
@@ -637,7 +643,7 @@ If the optimal solution $y^*$ lies in $P(G_{y' \OR y''})$ than a optimal fusion 
 
 
 
-\section{Experiments}
+\section{Experiments}\label{sec:exp}
 
 \subsection{Parameter Choice}
 \begin{figure}
@@ -898,7 +904,7 @@ DYNCC find solutions with less than distance 100 to the optimum a magnitude fast
 %\input{inputs/fig_pixel_mc.tex}
 
 
-\section{Further Work}
+\section{Further Work}\label{sec:future}
 So far we have generated the proposals randomly and do not take the current segmentation into account.
 
 So far we only enforce must link constraints to obtain smaller problems.
@@ -906,7 +912,7 @@ One can also enforce must-not link constraints to the problem.
 If those are closed, they automatically lead to a decomposition of the problem, which is a interesting property for very huge data.
 
 
-\section{Conclusion}
+\section{Conclusion}\label{sec:conclusion}
 
     
 
