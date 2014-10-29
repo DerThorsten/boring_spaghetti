@@ -385,6 +385,8 @@ public:
 
 
 
+        std::cout<<"INTERSECTED SIZE "<<numNewVar<<"\n";
+
         if(param_.fusionSolver_ == CgcSolver){
             return doMoveCgc(accWeights,ab,numNewVar, a, b, res, valA, valB, valRes);
         }
