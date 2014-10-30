@@ -60,7 +60,7 @@
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
 % run, let it finish, and you should be clear).
 \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
-
+\usepackage{bm}% ändert \boldsymbol
 \def\arraystretch{0.8}
 \renewcommand{\tabcolsep}{2pt}
 \newcommand{\thickline}{2pt}
@@ -231,7 +231,7 @@ Def: Graph, weighted graph, cut, multicut
 
 \begin{center}
     \begin{eqnarray}
-        l^* &=& \argmin_{L \in \{1,\ldots,|V|\}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{u} \neq l_{v}] \label{eq:nodeproblem}\\
+        l^* &=& \argmin_{L \in \{1,\ldots,|V|\}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{i} \neq l_{j}] \label{eq:nodeproblem}\\
    %     y_{ij}^* &=& [l_{u} \neq l_{v}] 
         y^* &=& \argmin_{y \in MC(G)\cap \{0,1\}^{|E|}} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}%\\ 
     \end{eqnarray}
@@ -332,45 +332,75 @@ to not worsen the current best solution.
 Motivation Using Fusion moves -> problem ambiguity
 
 
-\input{inputs/fig_alg_graph.tex}
+%\input{inputs/fig_alg_graph.tex}
 
 
 \subsection{Define Fusion on Segmentations}
+
+Given two proposal solutions $y'$ and $y''$
+the fusion move between those solutions is defined
+as follows:
+
+Let the $\bar{y}$ be the edge wise or of  $y'$ and $y''$.
+\begin{equation}
+\breve{y} =  y' \cup y''.
+\end{equation}
+Contraction of all edges in $G$ where $\bar{y}=0$ defines
+a smaller graph $G_{\bar{y}}$ and the corresponding
+edge weights $W_{\hat{y}}$.
+Any cut $\bar{y}$ on $G_{\hat{y}}$ induces a cut $y$ on $G$.
+The function 
+$\rho_y^{-1}$ maps a cut from $G_{\hat{y}}$  to $G$ 
+
+\begin{equation}
+   \rho_y^{-1} : P(G_y) \to P(G)
+\end{equation}
+
+Therefore solving eq. \ref{eq:edgeproblem} 
+on $G_{\hat{y}}$
+leads to a cut on $G$ which is guaranteed to 
+to have a better or equal energy
+then any of the two proposal solutions.
+
 \input{inputs/fig_move_graph.tex}
 
 
-Global optimal solvers for multicut do not scale beyond ??? \cite{???}.
-Good approximate solvers for planar graphs exist \cite{beier_2014_cvpr,yarkony_2012_eccv} 
-but have difficulties to find good solutions for non planar graphs \cite{beier_2014_cvpr}.
-%
-To make multicuts scalable, it is desirable to replace the graph $G$
-with a graph $\hat{G}$, which is smaller in the number of nodes and edges. 
-If $\hat{G}$ is small enough, it is feasible to use global optimal solvers.
-%
-A trivial way to reduce the size of the graph  is edge contraction.
-Until a desirable size is reached, one might contract the edge with
-the highest weight. A cut on the contracted graph  $\hat{G}$ is always
-a valid cut on $\hat{G}$.
-%
-On the other hand, if an edge $e$ is contracted, it will never be cut.
-If $e$ is part of the cut in a global optimal solution, we cannot find
-this cut.
-%
-To overcome this problem  we can randomize the edge contraction,
-and repeat this multiple times and remember the best solution.
-%
-But this would throw away all the ``not the best'' solutions (rewrite me).
-Within this work we propose the following nifty trick.
-Instead of throwing away solutions, we intersect them with the 
-best solution, and solve the multicut on the resulting
-graph.
-Therefore we fuse multiple solutions,
+% Global optimal solvers for multicut do not scale beyond ??? \cite{???}.
+% Good approximate solvers for planar graphs exist \cite{beier_2014_cvpr,yarkony_2012_eccv} 
+% but have difficulties to find good solutions for non planar graphs \cite{beier_2014_cvpr}.
+
+% To make multicuts scalable, it is desirable to replace the graph $G$
+% with a graph $\hat{G}$, which is smaller in the number of nodes and edges. 
+% If $\hat{G}$ is small enough, it is feasible to use global optimal solvers.
+
+% A trivial way to reduce the size of the graph  is edge contraction.
+% Until a desirable size is reached, one might contract the edge with
+% the highest weight. A cut on the contracted graph  $\hat{G}$ is always
+% a valid cut on $\hat{G}$.
+
+% On the other hand, if an edge $e$ is contracted, it will never be cut.
+% If $e$ is part of the cut in a global optimal solution, we cannot find
+% this cut.
+
+% To overcome this problem  we can randomize the edge contraction,
+% and repeat this multiple times and remember the best solution.
+
+% But this would throw away all the ``not the best'' solutions (rewrite me).
+% Within this work we propose the following nifty trick.
+% Instead of throwing away solutions, we intersect them with the 
+% best solution, and solve the multicut on the resulting
+% graph.
+% Therefore we fuse multiple solutions,
 
 
 
 \begin{algorithm}
 \begin{scriptsize}
 \caption{Fusion Based Algorithms}\label{alg:fusion}
+
+
+
+
 \begin{algorithmic}[1]
 \Procedure{Intersection-Based-Inference}{GEN,$J$,$X$}
 \State $x^0 \gets \textrm{initial state form } X$
@@ -477,6 +507,25 @@ Therefore we fuse multiple solutions,
 %-------------------------------------------------------------------------
 \subsection{Fusion Move Solver}
 
+
+
+
+\begin{center}
+    \begin{eqnarray}
+        y 
+        &=& 
+        \rho_{\hat{y}}^{-1}(
+        \argmin_{y \in MC(G_{\hat{y}})\cap \{0,1\}^{|E_{\hat{y}}|}} 
+        \sum_{ (i,j) \in E_{\hat{y}} } 
+        w^{\hat{y}}_{ij} \cdot \bar{y}_{ij} 
+    \end{eqnarray}
+\end{center}
+
+\begin{center}
+    \begin{eqnarray}
+      y \cdot w \leq \min(y'\cdot w,  y'' \cdot w) 
+    \end{eqnarray}
+\end{center}
 
 
 %-------------------------------------------------------------------------
@@ -629,7 +678,8 @@ and that why not the propose segmentation of a fusion.
 %
 \end{theorem}
 
-\begin{remark}[Fix-point]
+
+\begin{remark}[Fix-point (pointless to me)]
 Let $Y$ be the set of possible proposals, than
 $y'$ is a fix-point if $y'=\arg\max_{y\in P(G_{y'\OR y''})} y\cdot w$ for all $y''\in Y$
 \end{remark}
