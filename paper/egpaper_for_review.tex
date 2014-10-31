@@ -707,6 +707,36 @@ If the optimal solution $y^*$ lies in $P(G_{y' \OR y''})$ than a optimal fusion 
 
 \subsection{Synthetic Models}
 
+\subsection{Social Networks}
+A application for large scale correlation clustering are social networks.
+We consider two of those networks from the Stanford Large Network Dataset Collection\footnote{http://snap.stanford.edu/data/index.html}.
+Both networks are given by weighted directed graphs with edge weights $-1$ and $1$. 
+%
+The first network is called \emph{Epinions}. 
+This is who-trust-whom online social network of a a general consumer review site Epinions.com. 
+Each directed edge $a\to b$ indicated that user $a$ trusts  or does not trust user $b$ is the edge-weight is positive or negative, respectively.
+The network contains $131828$ nodes and $841372$ edges from which $85.3\%$ are positively weighted.
+%
+The first network is called \emph{Slashdot}. 
+Slashdot is a technology-related news website know for its specific user community. 
+In 2002 Slashdot introduced the Slashdot Zoo feature which allows users to tag each other as friends or foes. 
+The network was obtained in November 2008 and contains $77350$ nodes and $516575$ edges from which $76.73\%$ are positively weighted.
+
+We consider the problem to cluster this graphs such that positively weighted edges link inside and negatively weighted between clusters.
+In other words friends and people who trust each other should be in the same segment and foes and non-trusting people in different clusters.
+% 
+To compensate the high impact of nodes with high degree we can normalize the edge weights such that each person has the same impact to the overall network, by enforcing.
+\begin{align}
+  \sum_{i\to j \in E_{\to}} |w_{i\to j}| &= 1&\forall i\in V, deg^{\textrm{out}}(i)\geq 1 
+\end{align}
+We define the following energy function
+\begin{align}
+ J(y) &= \sum_{i\to j \in E^+_{\to}} y_{ij}\cdot w_{i \to j} +  \sum_{i\to j \in E^-_{\to}} (y_{ij}-1)\cdot w_{i \to j} \nonumber\\
+      &= \sum_{ij \in E} y_{ij}\cdot \underbrace{(w_{i \to j}+w_{j \to i})}_{w_{ij}} + \textrm{const}
+\end{align}
+which is zero if the given partitioning does not violated any relation and larger otherwise.
+
+
 \subsection{Real World Models}
 
 \newpage
