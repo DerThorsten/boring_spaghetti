@@ -738,6 +738,40 @@ which is zero if the given partitioning does not violated any relation and large
 
 
 \subsection{Real World Models}
+An example for large scale correlation clustering is 
+segmentation of region adjacency graphs (RAG) for
+3D closed surface segmentation of neural tissue data 
+\cite{kroeger_2012_eccv}.
+The energy is based on a likelihood of merging adjacent super-voxels.
+Each edge has a probability to keep adjacent segments separate ($p(y_{ij} =1)$)
+or to merge them ($p(y_{ij} = 0)$).
+The energy function is defined as following.
+\begin{align}
+ J(y)  &= \sum_{ij \in E} y_{ij}\cdot \underbrace{  log\left( \frac{p(y_{ij} =0)}{p(y_{ij} =1)}\right) + log \frac{1-\beta}{\beta}  }_{w_{ij}}
+\end{align}
+Where $\beta$ is used as a prior.
+Models of different size are included in the graphical model
+benchmark of Kappes \etal ~\cite{kappes_2013_benchmark_cvpr} (???).
+We use models with the cube sizes $300^3$, $450^3$, $550^3$ and $900^3$.
+The number of variables varies from ??? to ???, and the number
+of edges from ??? to ???.
+
+\begin{center}
+    \begin{figure}
+        \begin{center}
+            \begin{subfigure}[b]{0.45\linewidth}
+                \includegraphics[width=1.0\linewidth]{images/-010.jpg}
+            \end{subfigure}
+            \quad
+            \begin{subfigure}[b]{0.45\linewidth}
+                \includegraphics[width=1.0\linewidth]{images/-030.jpg}
+            \end{subfigure}
+        \end{center}
+    \caption{
+        Raw FIBSEM data and correlation clustering result of the model from \cite{kroeger_2012_eccv}
+    }
+    \end{figure}
+\end{center}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
