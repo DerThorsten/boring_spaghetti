@@ -463,7 +463,7 @@ public:
         double fusionTimeLimit_;
     };
 
-    HlFusionMover(const GM & gm, const Parameter & param) 
+    HlFusionMover(const GM & gm, const Parameter & param = Parameter()) 
     :   gm_(gm),
         param_(param),
         fusionMover_(gm),

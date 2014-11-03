@@ -166,7 +166,8 @@ public:
         MulticutNativeSolver,
         CgcSolver,
         HierachicalClusteringSolver,
-        BaseSolver
+        BaseSolver,
+        ClassicFusion
     };
 
     struct Parameter{
@@ -308,6 +309,9 @@ public:
         ValueType & valRes
     ){
 
+        if(param_.fusionSolver_ == ClassicFusion)
+            return fuseClassic(a,b,res,valA,valB,valRes);
+
         std::vector<LabelType> ab(gm_.numberOfVariables());
         IndexType numNewVar = this->intersect(a, b, ab);
         //std::cout<<"numNewVar "<<numNewVar<<"\n";
@@ -385,7 +389,7 @@ public:
 
 
 
-        std::cout<<"INTERSECTED SIZE "<<numNewVar<<"\n";
+        //std::cout<<"INTERSECTED SIZE "<<numNewVar<<"\n";
 
         if(param_.fusionSolver_ == CgcSolver){
             return doMoveCgc(accWeights,ab,numNewVar, a, b, res, valA, valB, valRes);
@@ -406,7 +410,65 @@ public:
             throw RuntimeError("unknown fusionSolver");
             return false;
         }
-           
+
+    }
+
+
+    bool fuseClassic(
+        const std::vector<LabelType> & a,
+        const std::vector<LabelType> & b,
+        std::vector<LabelType> & res,
+        const ValueType valA,
+        const ValueType valB,
+        ValueType & valRes
+    ){
+        LabelType maxL = *std::max_element(a.begin(), a.end());
+        std::vector<LabelType> bb = b;
+        for(size_t i=0; i<bb.size(); ++i){
+            bb[i] += maxL;
+        }
+
+        HlFusionMover<GM, ACC> hlf(gm_);
+        hlf.fuse(a,b,res, valA, valB, valRes);
+        // make dense
+        std::map<LabelType, LabelType> mdense;
+
+        LabelType dl=0;
+        for(size_t i=0;i<res.size(); ++i){
+            const LabelType resL = res[i];
+            if(mdense.find(resL) == mdense.end()){
+                res[i] = dl;
+                ++dl;
+            }
+            else{
+                res[i] = mdense[res[i]];
+            }
+        }  
+        valRes  = gm_.evaluate(res);
+        if(valRes< std::min(valA,valB)){
+            // make dense
+            std::map<LabelType, LabelType> mdense;
+
+            LabelType dl=0;
+            for(size_t i=0;i<res.size(); ++i){
+                const LabelType resL = res[i];
+                if(mdense.find(resL) == mdense.end()){
+                    res[i] = dl;
+                    ++dl;
+                }
+                else{
+                    res[i] = mdense[res[i]];
+                }
+            }
+        }
+        else if(valA<valRes){
+            valRes=valA;
+            res = a;
+        }
+        else{
+            valRes=valB;
+            res = b;
+        }
     }
 
     bool fuseMmwc(
