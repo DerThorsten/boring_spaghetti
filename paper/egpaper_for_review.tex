@@ -119,10 +119,6 @@ First line of institution2 address\\
 %\thispagestyle{empty}
 
 
-
-
-
-\listoftodos[Notes]
 %%%%%%%%% ABSTRACT
 \begin{abstract}
    We address the problem of partitioning a  graph
@@ -147,83 +143,106 @@ First line of institution2 address\\
 \end{abstract}
 \section{Introduction}
 
+Segmentation is an important problem in computer vision and data mining as a first step
+towards understanding an image or data in general. 
+Many algorithms start with an over-segmentation
+into superpixels (superregions), which are then clustered into ``perceptually meaningful''
+regions.
+Usually, the number of these regions is \emph{not} known beforehand.
 
-\paragraph{Our Notation}
-$G$ Graph.
-$V$ Set of Nodes.
-$E$ Set of Edges.
-$l$ node label.
-$y$ edge label.
-$w$ edge weight
-$MC(G)$ multicut polytope
-$P(G)$ the set of valid edge labeling (MC(G) is convex hull of P(G))
-$y^*$ for opt. labeling
-$G_y=(V_y,E_y)$ contradiction of graph $G$ with respect to $y$
-
-%$\rho_y : E \to E_y$
-%$\rho_y^{-1} : E_y \to E$
-
-$\rho_y : P(G) \to P(G_y)$
-
-
-$\rho_y^{-1} : P(G_y) \to P(G)$
-\begin{itemize}
-  \item Multicut in computer vision, applications, sparse segmentation -> IMPORTANT PROBLEM
-  \item Problem: Existing Methods does not scale, even CGC. - Large scale 3d problems
-  \item Contribution: Fast scalable method using novel fusion moves for correlation clustering
-\end{itemize}
-
-
-
-Given an edge weighted graph, positive weights (\emph{attractive})
-encourage the adjacent nodes to be in the same 
-connected component, while negative weights (\emph{repulsive}) encourage
-the nodes to stay in different connect components.
-Therefore the sign of the weights encodes if two
-nodes should be merged or not and the magnitude of the weights encodes
-the certainty of this desire.
-The objective of correlation clustering / multicuts
-is finding the cut with a minimal sum of cut edge weights.
-The number of connected components / clusters is discovered
-from the weights ( rewrite?!?).
-Correlation clustering / the multicut is NP-hard \cite{???}.
+Recently, the multicut formulation~\cite{chopra_1993_mp, Kappes-2013-multicut}
+(sometimes called \emph{correlation clustering}, \cite{bansal_2004_ml})
+has become increasingly popular for unsupervised image segmentation.
 %
-Despite the NP-hardness, correlation clustering has been 
-successfully used for
-\begin{inparaenum}[(i)]
-    \item partitioning a superpixel region adjacency graph~\cite{andres_2011_iccv,kroeger_2012_eccv}
-    \item with optional long range repulsive edges~\cite{andres_2013_emmcvpr}.
-    \item Alush and Globerger showed how to average multiple segmentations with the multicut objective~\cite{alush_2012_pami}.
-    \item Multicuts can also be used for interactive segmentation~\cite{bagon_2011_arxiv},
-    \item for co-segmentation~\cite{glassner_2011_cvpr}
-    \item and to cluster sparse and graphs~\cite{???}.
-\end{inparaenum}
+Given an edge-weighted region adjacency graph,
+the problem is to find the segmentation which
+minimizes the cost of the cut edges.
+Such an approach has been shown to yield
+state-of-the-art results on the Berkeley Segmentation Database
+\cite{andres_2011_iccv,yarkony_2012_eccv,alush_2013_simbad}.
 
+Despite the clear mathematical formulation and nice properties of correlation clustering
+to perform a one-shot agglomeration of supervoxels,
+the main draw back of correlation clustering is scalability~\cite{nunez_iglesias_2013}
+which arise from the NP-hardness of the problem.
 
-Despite the nice properties of correlation clustering
-to perform a \say{one-shot agglomeration of supervoxels} ~\cite{nunez_iglesias_2013},
-the main draw back of correlation clustering is scalability~\cite{nunez_iglesias_2013}.
-Existing solvers for correlation clustering do not scale for non planar graphs.
-Even state of the art approximate move making algorithm fail 
-to give good approximations non planar graphs.
-When increasing the problem sizes, either the runtime explodes or the 
+Recently, Beier~\etal~\cite{Beier-2014} presented a promising 
+approximative method called Cut, Clue \& Cut.
+While this scales well for planar graphs, it does not for non planar graphs and has a bad any-time performance.
+A further inherent drawback of this method is that the subproblems are not limited in their size.
+%
+Consequently, partition problems on large scale data, \eg
+huge volume images in computational neuroscience~\cite{kroeger_2012_eccv}
+or social networks~\cite{Leskovec-2010}, 
+are not tractable, because the runtime explodes or the 
 approximations are far away from being useful.
 
+In the present work we present a novel approach that uses the concept of fusion for correlation clustering.
+Starting with an initial segmentation we fuse the current segmentations with a proposed one.
+Due to the ambiguity of node-labeling for unsupervised segmentations~\cite{} 
+original fusion moves~\cite{Lempinski-2010} are improper, see Sec.~\ref{sec:fusion} for discussion.
+To overcome this problem we suggest to use fusion moves on the edge-variables that indicates a cut and form a
+bijective representation of segmentations.
+The subproblem of fusing of segmentations reduce to a much smaller multicut problem which can be solved extremely efficiently.
 
 \textbf{Contribution:}
 \begin{inparaenum}[(i)]
-\item Within this work we propose a fast and scalable move making algorithm for correlation clustering,
-\item which generalized  fusion moves \cite{???} to correlation clustering problems.
-\item We reduce the inference to a series of moves where
-each moves optimizes over a subspace spanned by the current best solution
-and a proposal solution.
-\item We propose two versatile proposal generators,
-\item and show how to optimize these moves.
-\item We give a polyhedral interpretation of this algorithm,
-\item and evaluate the proposed method 
-on existing benchmark problems.
-\item We show state of the art any time performance on those instances.
-\end{inparaenum}[(i)]
+\item We propose a fast and scalable move making algorithm for correlation clustering,
+\item and give a polyhedral interpretation of this algorithm.
+\item We propose two versatile proposal generators, 
+\item and evaluate the proposed method on existing and new benchmark problems.
+\end{inparaenum}
+
+
+% Given an edge weighted graph, positive weights (\emph{attractive})
+% encourage the adjacent nodes to be in the same 
+% connected component, while negative weights (\emph{repulsive}) encourage
+% the nodes to stay in different connect components.
+% Therefore the sign of the weights encodes if two
+% nodes should be merged or not and the magnitude of the weights encodes
+% the certainty of this desire.
+% The objective of correlation clustering / multicuts
+% is finding the cut with a minimal sum of cut edge weights.
+% The number of connected components / clusters is discovered
+% from the weights ( rewrite?!?).
+% Correlation clustering / the multicut is NP-hard \cite{???}.
+% %
+% Despite the NP-hardness, correlation clustering has been 
+% successfully used for
+% \begin{inparaenum}[(i)]
+%     \item partitioning a superpixel region adjacency graph~\cite{andres_2011_iccv,kroeger_2012_eccv}
+%     \item with optional long range repulsive edges~\cite{andres_2013_emmcvpr}.
+%     \item Alush and Globerger showed how to average multiple segmentations with the multicut objective~\cite{alush_2012_pami}.
+%     \item Multicuts can also be used for interactive segmentation~\cite{bagon_2011_arxiv},
+%     \item for co-segmentation~\cite{glassner_2011_cvpr}
+%     \item and to cluster sparse and graphs~\cite{???}.
+% \end{inparaenum}
+
+
+% Despite the nice properties of correlation clustering
+% to perform a \say{one-shot agglomeration of supervoxels} ~\cite{nunez_iglesias_2013},
+% the main draw back of correlation clustering is scalability~\cite{nunez_iglesias_2013}.
+% Existing solvers for correlation clustering do not scale for non planar graphs.
+% Even state of the art approximate move making algorithm fail 
+% to give good approximations non planar graphs.
+% When increasing the problem sizes, either the runtime explodes or the 
+% approximations are far away from being useful.
+
+
+% \textbf{Contribution:}
+% \begin{inparaenum}[(i)]
+% \item Within this work we propose a fast and scalable move making algorithm for correlation clustering,
+% \item which generalized  fusion moves \cite{???} to correlation clustering problems.
+% \item We reduce the inference to a series of moves where
+% each moves optimizes over a subspace spanned by the current best solution
+% and a proposal solution.
+% \item We propose two versatile proposal generators,
+% \item and show how to optimize these moves.
+% \item We give a polyhedral interpretation of this algorithm,
+% \item and evaluate the proposed method 
+% on existing benchmark problems.
+% \item We show state of the art any time performance on those instances.
+% \end{inparaenum}[(i)]
 
 \textbf{Outline:}
 In sec.~\ref{sec:problem_formulation} we will give a 
@@ -240,24 +259,58 @@ Future work will be discussed in sec. \ref{sec:future} and
 we will conclude in ~\ref{sec:conclusion}.
 %-------------------------------------------------------------------------
 
-\section{Problem Formulation}\label{sec:problem_formulation}
-Def: Graph, weighted graph, cut, multicut 
+\section{Notation and Problem Formulation}\label{sec:problem_formulation}
+Let $G=(V,E, w)$ be a weighted graph of nodes $V$ and edges $E$.
+%
+The function $w : E \rightarrow \mathbb{R}$ assigns a weight to each edge.
+A positive weight expresses the desire that two adjacent nodes should
+be merged, whereas a negative weight indicates
+that these nodes should be separated into two different regions.
+%
+A \emph{subgraph} $G_A = \{A, E_A, w\}$ consists
+of nodes $A \subseteq V$ and edges $E_A := E\cap (A\times A)$.
+%
+A segmentation of the graph $G$ can by either given by an 
+node labeling $l \in \mathbb{N}^{|V|}$
+or an edge labeling $y \in\{0,1\}^{|E|}$.  
+An edge labeling is only consistent if it contains no dangling edges~\cite{Kappes-2013-multicut}.
+We denote the set of all consistent edge labelings by $P(G)$.
+The convex hull of this set is known as the \emph{multicut polytope} $MC(G)$.
+
+A consistent edge labeling $y$ defines a segmentation of $V$ by enumerating the connected components 
+in $G|_y=(V,\{e\in E|y_e=0\}$ by $l_v = \#(v)$, where $\#(v)$ denotes the number of the connected component of the node $v\in V$.
+
+We define the contradiction of graph $G_y=(V_y,E_y)$
+with $V_y=\{\#(v)|v\in V\}$ and $E_y=\{\#(v),\#(u)|uv\in E, y_{uv}=1\})$.
+
+%$\rho_y : P(G) \to P(G_y)$
+%$\rho_y^{-1} : P(G_y) \to P(G)$
 
 
-\begin{center}
-    \begin{eqnarray}
-        l^* &=& \argmin_{L \in \{1,\ldots,|V|\}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{i} \neq l_{j}] \label{eq:nodeproblem}\\
-   %     y_{ij}^* &=& [l_{u} \neq l_{v}] 
-        y^* &=& \argmin_{y \in MC(G)\cap \{0,1\}^{|E|}} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}%\\ 
-    \end{eqnarray}
-\end{center}
+% \begin{itemize}
+%   \item Multicut in computer vision, applications, sparse segmentation -> IMPORTANT PROBLEM
+%   \item Problem: Existing Methods does not scale, even CGC. - Large scale 3d problems
+%   \item Contribution: Fast scalable method using novel fusion moves for correlation clustering
+% \end{itemize}
 
-The exist an surjective mapping from a node-label $l$ to edge-labeling $y$ and
-a bijective mapping from a partitioning of $V$ to vertices of the multicut polytope $MC$.
-Consequently, 
-(i) problems \ref{eq:nodeproblem} and \ref{eq:edgeproblem} are equivalent
-and (ii) the node-labeling is not unique for a given partitioning and introduce some
-ambiguities.
+% Def: Graph, weighted graph, cut, multicut 
+
+Given a weighted graph $G=(V,E,w)$ we consider the problem of segmenting $G$ such that the costs
+of the edges between distinct segments is minimized. This can be formulated in the node~\ref{eq:nodeproblem} 
+or edge domain~\ref{eq:edgeproblem} 
+
+\begin{eqnarray}
+  l^* &=& \argmin_{L \in \mathbb{N}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{i} \neq l_{j}] \label{eq:nodeproblem}\\
+  % y_{ij}^* &=& [l_{u} \neq l_{v}] 
+  y^* &=& \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}%\\ 
+\end{eqnarray}
+
+% The exist an surjective mapping from a node-label $l$ to edge-labeling $y$ and
+% a bijective mapping from a partitioning of $V$ to vertices of the multicut polytope $MC$.
+% Consequently, 
+% (i) problems \ref{eq:nodeproblem} and \ref{eq:edgeproblem} are equivalent
+% and (ii) the node-labeling is not unique for a given partitioning and introduce some
+% ambiguities.
 
 % \subsubsection{Multicut Objective}
 
