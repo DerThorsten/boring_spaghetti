@@ -86,6 +86,7 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
    fusion.push_back("CGC");
    fusion.push_back("HC");
    fusion.push_back("BASE");
+   fusion.push_back("CF");
 
    std::vector<std::string> gen;  
    gen.push_back("RHC");
@@ -197,6 +198,9 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::runImpl(GM& model, OutputBase&
    }
    else if(selectedFusionType_ == "BASE"){
       fusionParam_.fusionSolver_  = FusionMoverType::BaseSolver;
+   }
+   else if(selectedFusionType_ == "CF"){
+      fusionParam_.fusionSolver_  = FusionMoverType::ClassicFusion;
    }
 
 

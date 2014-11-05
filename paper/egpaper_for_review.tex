@@ -76,8 +76,20 @@
 
 % \cvprfinalcopy % *** Uncomment this line for the final submission
 
+
 \def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
 \def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+\newcommand{\realplot}[1]{
+\begin{tikzpicture}
+    \begin{axis}
+        \addlegendimage{empty legend}\addlegendentry{Matrix #1}
+        \addplot {0};
+        \addplot {1};
+        \addplot {2};
+        \addplot {3};
+    \end{axis}
+\end{tikzpicture}}
 
 % Pages are numbered in submission mode, and unnumbered in camera-ready
 \ifcvprfinal\pagestyle{empty}\fi
@@ -105,6 +117,9 @@ First line of institution2 address\\
 
 \maketitle
 %\thispagestyle{empty}
+
+
+
 
 
 \listoftodos[Notes]
@@ -394,110 +409,110 @@ then any of the two proposal solutions.
 
 
 
-\begin{algorithm}
-\begin{scriptsize}
-\caption{Fusion Based Algorithms}\label{alg:fusion}
+%\begin{algorithm}
+%\begin{scriptsize}
+%\caption{Fusion Based Algorithms}\label{alg:fusion}
+%
+%
+%
+%
+%\begin{algorithmic}[1]
+%\Procedure{Intersection-Based-Inference}{GEN,$J$,$X$}
+%\State $x^0 \gets \textrm{initial state form } X$
+%\State $n \gets 0 $                                 \Comment{Number of moves}
+%\State $m \gets 0 $                                 \Comment{Number of moves without progress}
+%\While{$m < m_{\max}$ and $n < n_{\max}$ }
+%\State $n \gets n+1$ 
+% \State $x'\gets GEN(x^{n-1},J,X)$                    \Comment{Generate proposal}
+% \If{$J(x^{n-1}) \leq J(x')$}                       
+%   \State $x^{n} \gets Fuse(x^{n-1},x',J)$             
+% \Else
+%   \State $x^{n} \gets Fuse(x',x^{n-1},J)$
+% \EndIf
+% \If{$J(x^{n}) \leq J(x^{n-1})$}
+%   \State $m \gets 0$                                 \Comment{Reset counter}
+% \Else
+%   \State $m \gets m+1$                               \Comment{Increment counter}
+% \EndIf
+%\EndWhile
+%\State \textbf{return} $x^n$
+%\EndProcedure
+%\end{algorithmic}
+%\end{scriptsize}
+%\end{algorithm}
 
 
 
 
-\begin{algorithmic}[1]
-\Procedure{Intersection-Based-Inference}{GEN,$J$,$X$}
-\State $x^0 \gets \textrm{initial state form } X$
-\State $n \gets 0 $                                 \Comment{Number of moves}
-\State $m \gets 0 $                                 \Comment{Number of moves without progress}
-\While{$m < m_{\max}$ and $n < n_{\max}$ }
-\State $n \gets n+1$ 
- \State $x'\gets GEN(x^{n-1},J,X)$                    \Comment{Generate proposal}
- \If{$J(x^{n-1}) \leq J(x')$}                       
-   \State $x^{n} \gets Fuse(x^{n-1},x',J)$             
- \Else
-   \State $x^{n} \gets Fuse(x',x^{n-1},J)$
- \EndIf
- \If{$J(x^{n}) \leq J(x^{n-1})$}
-   \State $m \gets 0$                                 \Comment{Reset counter}
- \Else
-   \State $m \gets m+1$                               \Comment{Increment counter}
- \EndIf
-\EndWhile
-\State \textbf{return} $x^n$
-\EndProcedure
-\end{algorithmic}
-\end{scriptsize}
-\end{algorithm}
-
-
-
-
-\begin{algorithm}
-\begin{scriptsize}
-\caption{Fusion Moves}\label{alg:fusion_moves}
-\scriptsize
-\begin{algorithmic}[1]
-\Require $J(x) \leq J(x')$
-\Ensure $J(\hat{x}) \leq J(x)$
-\vspace{0.2cm}
-\Procedure{Fuse}{$x,x',J$}
-\State $\bar{x} \gets \textbf{\scriptsize{Intersect}}(x,x')$  
-    \Comment{
-        \begin{minipage}{0.4\linewidth} 
-            \begin{tiny}
-            \begin{singlespace}
-                intersect
-                uncut edges in $x$ and $x'$,
-                return  
-                connected component labeling
-            \end{singlespace}
-            \end{tiny}
-        \end{minipage}
-    }
-\vspace{0.1cm}
-\State $ \tilde{G}=(\tilde{E},\tilde{V}),\tilde{W} 
-    \gets \textbf{\scriptsize{Contract}}(G,W,\bar{x})$  
-    \Comment{ 
-        \begin{minipage}{0.2\linewidth} 
-            \begin{tiny}
-            \begin{singlespace}
-                Contract all edges 
-                which are uncut in $\bar{x}$ 
-            \end{singlespace}
-            \end{tiny}
-        \end{minipage}
-    }
-\vspace{0.1cm}
-\State $\tilde{x}^*= \argmin\limits_{\tilde{x}} \sum\limits_{e_{ij} \in \tilde{E}} \tilde{w}_{ij}[\tilde{x}_i \neq \tilde{x}_j]$
-    \Comment{ 
-        \begin{minipage}{0.3\linewidth} 
-            \begin{tiny}
-            \begin{singlespace}
-                Solve the multicut objective
-                on smaller graph $\tilde{G}=(\tilde{V},\tilde{E})$
-            \end{singlespace}
-            \end{tiny}
-        \end{minipage}
-    }
-
-\State $\hat{x} \gets \textbf{\scriptsize{ProjectBack}}(\tilde{x}^*)$
-    \Comment{ 
-        \begin{minipage}[\textheight]{0.4\linewidth} 
-            \begin{tiny}
-            \begin{singlespace}
-                Translate the connected component
-                labeling $\tilde{x}^*$ of $\tilde{G}$ 
-                to a connected component labeling of $G$
-            \end{singlespace}
-            \end{tiny}
-        \end{minipage}
-    }
-\State \textbf{return} $\hat{x}$
-\EndProcedure
-\vspace{0.3cm}
-\Procedure{FUSE$_{\textrm{BASE}}$}{$x,x',J$}
-\State \textbf{return} ${\arg\min}_{\bar{x} \in \{x,x'\}}J(\bar{x})$
-\EndProcedure
-\end{algorithmic}
-\end{scriptsize}
-\end{algorithm}
+%\begin{algorithm}
+%\begin{scriptsize}
+%\caption{Fusion Moves}\label{alg:fusion_moves}
+%\scriptsize
+%\begin{algorithmic}[1]
+%\Require $J(x) \leq J(x')$
+%\Ensure $J(\hat{x}) \leq J(x)$
+%\vspace{0.2cm}
+%\Procedure{Fuse}{$x,x',J$}
+%\State $\bar{x} \gets \textbf{\scriptsize{Intersect}}(x,x')$  
+%    \Comment{
+%        \begin{minipage}{0.4\linewidth} 
+%            \begin{tiny}
+%            \begin{singlespace}
+%                intersect
+%                uncut edges in $x$ and $x'$,
+%                return  
+%                connected component labeling
+%            \end{singlespace}
+%            \end{tiny}
+%        \end{minipage}
+%    }
+%\vspace{0.1cm}
+%\State $ \tilde{G}=(\tilde{E},\tilde{V}),\tilde{W} 
+%    \gets \textbf{\scriptsize{Contract}}(G,W,\bar{x})$  
+%    \Comment{ 
+%        \begin{minipage}{0.2\linewidth} 
+%            \begin{tiny}
+%            \begin{singlespace}
+%                Contract all edges 
+%                which are uncut in $\bar{x}$ 
+%            \end{singlespace}
+%            \end{tiny}
+%        \end{minipage}
+%    }
+%\vspace{0.1cm}
+%\State $\tilde{x}^*= \argmin\limits_{\tilde{x}} \sum\limits_{e_{ij} \in \tilde{E}} \tilde{w}_{ij}[\tilde{x}_i \neq \tilde{x}_j]$
+%    \Comment{ 
+%        \begin{minipage}{0.3\linewidth} 
+%            \begin{tiny}
+%            \begin{singlespace}
+%                Solve the multicut objective
+%                on smaller graph $\tilde{G}=(\tilde{V},\tilde{E})$
+%            \end{singlespace}
+%            \end{tiny}
+%        \end{minipage}
+%    }
+%
+%\State $\hat{x} \gets \textbf{\scriptsize{ProjectBack}}(\tilde{x}^*)$
+%    \Comment{ 
+%        \begin{minipage}[\textheight]{0.4\linewidth} 
+%            \begin{tiny}
+%            \begin{singlespace}
+%                Translate the connected component
+%                labeling $\tilde{x}^*$ of $\tilde{G}$ 
+%                to a connected component labeling of $G$
+%            \end{singlespace}
+%            \end{tiny}
+%        \end{minipage}
+%    }
+%\State \textbf{return} $\hat{x}$
+%\EndProcedure
+%\vspace{0.3cm}
+%\Procedure{FUSE$_{\textrm{BASE}}$}{$x,x',J$}
+%\State \textbf{return} ${\arg\min}_{\bar{x} \in \{x,x'\}}J(\bar{x})$
+%\EndProcedure
+%\end{algorithmic}
+%\end{scriptsize}
+%\end{algorithm}
 
 
 
@@ -536,44 +551,44 @@ then any of the two proposal solutions.
 
 
 
-\begin{algorithm}
-    \begin{scriptsize}
-        \caption{Proposal Generators}\label{alg:proposal_gen}   
-        \begin{algorithmic}[1]
-            %\Require $J(x) \leq J(x')$
-            %\Ensure $J(\hat{x}) \leq J(x)$
-            %\vspace{0.3cm}
-            \Procedure{Rand2Coloring}{$x,G=(E,V),W$}
-            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
-            \State $x'= \argmin\limits_{\bar{x}} \sum\limits_{e_{ij} \in E } \tilde{w}_{ij}[\bar{x}_i \neq \bar{x}_j]  [x_i = x_j]   $
-
-            $ \quad\quad s.t.\quad x_i \in \{0, 1\} \forall i $
-            \State \textbf{return} $x'$
-            \EndProcedure
-            %
-            %
-            \vspace{0.3cm}
-            \Procedure{RandEdgeWeightedWatersheds}{$x,G=(E,V),W$}
-            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
-            \State $ getRandomSeeds$
-            \State $ runEdgeWeightedWs$
-            \EndProcedure   
-            %
-            %
-            \vspace{0.3cm}
-            \Procedure{RandHierarchicalClustering}{$x,G=(E,V),W$}
-            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
-            \State $\hat{G}=(\hat{E},\hat{V}) \gets G=(E,V)$
-            \State $\hat{W} \gets W$
-            \While{$|\hat{V}|>\gamma$ \textbf{and}  $\max(\hat{W})>\theta$ }
-                \State $\hat{G}=(\hat{E},\hat{V}),\hat{W} \gets 
-                    \textbf{\scriptsize{contract}}(\hat{G},\hat{W},  \argmax\limits_{\hat{E}}(\hat{W}) )$
-            \EndWhile
-            \State $x' \gets \textbf{\scriptsize{getClusterResults}}(???) $ 
-            \EndProcedure
-        \end{algorithmic}
-    \end{scriptsize}
-\end{algorithm}
+%\begin{algorithm}
+%    \begin{scriptsize}
+%        \caption{Proposal Generators}\label{alg:proposal_gen}   
+%        \begin{algorithmic}[1]
+%            %\Require $J(x) \leq J(x')$
+%            %\Ensure $J(\hat{x}) \leq J(x)$
+%            %\vspace{0.3cm}
+%            \Procedure{Rand2Coloring}{$x,G=(E,V),W$}
+%            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
+%            \State $x'= \argmin\limits_{\bar{x}} \sum\limits_{e_{ij} \in E } \tilde{w}_{ij}[\bar{x}_i \neq \bar{x}_j]  [x_i = x_j]   $
+%
+%            $ \quad\quad s.t.\quad x_i \in \{0, 1\} \forall i $
+%            \State \textbf{return} $x'$
+%            \EndProcedure
+%            %
+%            %
+%            \vspace{0.3cm}
+%            \Procedure{RandEdgeWeightedWatersheds}{$x,G=(E,V),W$}
+%            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
+%            \State $ getRandomSeeds$
+%            \State $ runEdgeWeightedWs$
+%            \EndProcedure   
+%            %
+%            %
+%            \vspace{0.3cm}
+%            \Procedure{RandHierarchicalClustering}{$x,G=(E,V),W$}
+%            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
+%            \State $\hat{G}=(\hat{E},\hat{V}) \gets G=(E,V)$
+%            \State $\hat{W} \gets W$
+%            \While{$|\hat{V}|>\gamma$ \textbf{and}  $\max(\hat{W})>\theta$ }
+%                \State $\hat{G}=(\hat{E},\hat{V}),\hat{W} \gets 
+%                    \textbf{\scriptsize{contract}}(\hat{G},\hat{W},  \argmax\limits_{\hat{E}}(\hat{W}) )$
+%            \EndWhile
+%            \State $x' \gets \textbf{\scriptsize{getClusterResults}}(???) $ 
+%            \EndProcedure
+%        \end{algorithmic}
+%    \end{scriptsize}
+%\end{algorithm}
 
 
 
@@ -774,232 +789,257 @@ of edges from ??? to ???.
 \end{center}
 
 \newpage
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[p]
-\centering
-\begin{tikzpicture}
-\begin{semilogxaxis}[
-restrict y to domain=0:4600,
-xlabel = {runtime},
-xmin = 0,
-xmax = 4100,
-%ymin =  75282844.25,
-%ymax =  81774642.015,
-%xtick       = { 1 , 60 , 3600 },
-%xticklabels = { 1 sec. , 1 min.  , 1 hour },
-%ytick       = {75661636, 78718140, 81774643 },
-%yticklabels = {$75661636$, $78718140$, $81774643$ },
-width = 0.9\columnwidth,
-scaled ticks = false
-]
-%\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-150.data};
-%\addlegendentry{HC-CGC}
+\pgfplotsset{every axis legend/.append style={
+at={(1.0,1.2)},
+anchor=north east}} 
+\begin{figure*}
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=0:4600,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  ]
+  %\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-150.data};
+  %\addlegendentry{HC-CGC}
 
-\addplot[color=red,mark=x] table[x=time,y=CGC-planar]{data/image-seg.data};
-\addlegendentry{CGC-planar} 
+  \addplot[color=red,mark=x] table[x=time,y=CGC-planar]{data/image-seg.data};
+  %\addlegendentry{CGC-planar} 
 
-\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/image-seg.data};
-\addlegendentry{MCI-CCIFD} 
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/image-seg.data};
+  %\addlegendentry{MCI-CCIFD} 
 
-\addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/image-seg.data};
-\addlegendentry{MC-Fusion (HC-MC-CGC)}
+  \addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/image-seg.data};
+  %\addlegendentry{MC-Fusion (HC-MC-CGC)}
 
-\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/image-seg.data};
-\addlegendentry{MC-Fusion (HC-CGC-CGC)}
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/image-seg.data};
+  %\addlegendentry{MC-Fusion (HC-CGC-CGC)}
 
-\end{semilogxaxis}
-\end{tikzpicture}
-\caption{image-seg}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[p]
-\centering
-\begin{tikzpicture}
-\begin{semilogxaxis}[
-restrict y to domain=-6000:-4500,
-xlabel = {runtime},
-xmin = 0,
-xmax = 4100,
-%ymin =  75282844.25,
-%ymax =  81774642.015,
-%xtick       = { 1 , 60 , 3600 },
-%xticklabels = { 1 sec. , 1 min.  , 1 hour },
-%ytick       = {75661636, 78718140, 81774643 },
-%yticklabels = {$75661636$, $78718140$, $81774643$ },
-width = 0.9\columnwidth,
-scaled ticks = false
-]
-%\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-150.data};
-%\addlegendentry{HC-CGC}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{image-seg}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.33\textwidth}
+    \centering
+    \begin{tikzpicture}
+    \begin{semilogxaxis}[
+    restrict y to domain=-6000:-4500,
+    xlabel = {runtime},
+    xmin = 0,
+    xmax = 4100,
+    %ymin =  75282844.25,
+    %ymax =  81774642.015,
+    %xtick       = { 1 , 60 , 3600 },
+    %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+    %ytick       = {75661636, 78718140, 81774643 },
+    %yticklabels = {$75661636$, $78718140$, $81774643$ },
+    width = 1.0\columnwidth,
+    scaled ticks = false
+    ]
+    %\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-150.data};
+    %%\addlegendentry{HC-CGC}
+    %
+    \addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-150.data};
+    %\addlegendentry{CGC} 
+    %
+    \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-150.data};
+    %\addlegendentry{MCI-CCIFD} 
+    %
+    \addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-150.data};
+    %\addlegendentry{MC-Fusion (HC-MC-CGC)}
+    %
+    \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-150.data};
+    %\addlegendentry{MC-Fusion (HC-CGC-CGC)}
+    %
+    \end{semilogxaxis}
+    \end{tikzpicture}
+    \caption{knott-3d-150}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=-40000:-24000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  legend to name = named,
+  legend columns=5
+  ]
+  \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-300.data};
+  \addlegendentry{HC-CGC}
 
-\addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-150.data};
-\addlegendentry{CGC} 
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-300.data};
+  \addlegendentry{CGC} 
 
-\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-150.data};
-\addlegendentry{MCI-CCIFD} 
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-300.data};
+  \addlegendentry{MCI-CCIFD} 
 
-\addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-150.data};
-\addlegendentry{MC-Fusion (HC-MC-CGC)}
+  \addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-300.data};
+  \addlegendentry{MC-Fusion (HC-MC-CGC)}
 
-\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-150.data};
-\addlegendentry{MC-Fusion (HC-CGC-CGC)}
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-300.data};
+  \addlegendentry{MC-Fusion (HC-CGC-CGC)}
 
-\end{semilogxaxis}
-\end{tikzpicture}
-\caption{knott-3d-150}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[p]
-\centering
-\begin{tikzpicture}
-\begin{semilogxaxis}[
-restrict y to domain=-40000:-24000,
-xlabel = {runtime},
-xmin = 0,
-xmax = 4100,
-%ymin =  75282844.25,
-%ymax =  81774642.015,
-%xtick       = { 1 , 60 , 3600 },
-%xticklabels = { 1 sec. , 1 min.  , 1 hour },
-%ytick       = {75661636, 78718140, 81774643 },
-%yticklabels = {$75661636$, $78718140$, $81774643$ },
-width = 0.9\columnwidth,
-scaled ticks = false
-]
-\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-300.data};
-\addlegendentry{HC-CGC}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-300}
+  \end{subfigure}
+  \newline
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=-80000:-60000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false
+  ]
+  \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-450.data};
+  %\addlegendentry{HC-CGC}
 
-\addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-300.data};
-\addlegendentry{CGC} 
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-450.data};
+  %\addlegendentry{CGC} 
 
-\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-300.data};
-\addlegendentry{MCI-CCIFD} 
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-450.data};
+  %\addlegendentry{MCI-CCIFD} 
 
-\addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-300.data};
-\addlegendentry{MC-Fusion (HC-MC-CGC)}
+  \addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-450.data};
+  %\addlegendentry{MC-Fusion (HC-MC-CGC)}
 
-\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-300.data};
-\addlegendentry{MC-Fusion (HC-CGC-CGC)}
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-450.data};
+  %\addlegendentry{MC-Fusion (HC-CGC-CGC)}
 
-\end{semilogxaxis}
-\end{tikzpicture}
-\caption{knott-3d-300}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[p]
-\centering
-\begin{tikzpicture}
-\begin{semilogxaxis}[
-restrict y to domain=-80000:-60000,
-xlabel = {runtime},
-xmin = 0,
-xmax = 4100,
-%ymin =  75282844.25,
-%ymax =  81774642.015,
-%xtick       = { 1 , 60 , 3600 },
-%xticklabels = { 1 sec. , 1 min.  , 1 hour },
-%ytick       = {75661636, 78718140, 81774643 },
-%yticklabels = {$75661636$, $78718140$, $81774643$ },
-width = 0.9\columnwidth,
-scaled ticks = false
-]
-\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-450.data};
-\addlegendentry{HC-CGC}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-450}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=-10000000:-100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false
+  ]
+  \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-550.data};
+  %\addlegendentry{HC-CGC}
 
-\addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-450.data};
-\addlegendentry{CGC} 
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-550.data};
+  %\addlegendentry{CGC} 
 
-\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-450.data};
-\addlegendentry{MCI-CCIFD} 
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-550.data};
+  %\addlegendentry{MCI-CCIFD} 
 
-\addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-450.data};
-\addlegendentry{MC-Fusion (HC-MC-CGC)}
+  \addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-550.data};
+  %\addlegendentry{MC-Fusion (HC-MC-CGC)}
 
-\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-450.data};
-\addlegendentry{MC-Fusion (HC-CGC-CGC)}
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-550.data};
+  %\addlegendentry{MC-Fusion (HC-CGC-CGC)}
 
-\end{semilogxaxis}
-\end{tikzpicture}
-\caption{knott-3d-450}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[p]
-\centering
-\begin{tikzpicture}
-\begin{semilogxaxis}[
-restrict y to domain=-10000000:-100000,
-xlabel = {runtime},
-xmin = 0,
-xmax = 4100,
-%ymin =  75282844.25,
-%ymax =  81774642.015,
-%xtick       = { 1 , 60 , 3600 },
-%xticklabels = { 1 sec. , 1 min.  , 1 hour },
-%ytick       = {75661636, 78718140, 81774643 },
-%yticklabels = {$75661636$, $78718140$, $81774643$ },
-width = 0.9\columnwidth,
-scaled ticks = false
-]
-\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-550.data};
-\addlegendentry{HC-CGC}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-550}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\begin{subfigure}[H]
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  %restrict y to domain=-10000000:-100000,
+  restrict y to domain=-10000000:700000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false
+  ]
+  \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/seg-3d.data};
+  %\addlegendentry{HC-CGC}
 
-\addplot[color=red,mark=x] table[x=time,y=CGC]{data/knott-3d-550.data};
-\addlegendentry{CGC} 
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data/seg-3d.data};
+  %\addlegendentry{CGC} 
 
-\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/knott-3d-550.data};
-\addlegendentry{MCI-CCIFD} 
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/seg-3d.data};
+  %\addlegendentry{MCI-CCIFD} 
 
-\addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC-CGC]{data/knott-3d-550.data};
-\addlegendentry{MC-Fusion (HC-MC-CGC)}
+  %\addplot[color=yellow,mark=o] table[x=time, y=DYNCC-HC-MC]{data/seg-3d.data};
+  %%\addlegendentry{MC-Fusion (HC-MC)}
 
-\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/knott-3d-550.data};
-\addlegendentry{MC-Fusion (HC-CGC-CGC)}
+  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC-CGC]{data/seg-3d.data};
+  %\addlegendentry{MC-Fusion (HC-MC-CGC)}
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/seg-3d.data};
+  %DYNCC-HC-CGC-CGC
+  %\addlegendentry{MC-Fusion (HC-CGC-CGC)}
 
-\end{semilogxaxis}
-\end{tikzpicture}
-\caption{knott-3d-550}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\begin{figure}[H]
-\begin{figure}[p]
-\centering
-\begin{tikzpicture}
-\begin{semilogxaxis}[
-%restrict y to domain=-10000000:-100000,
-restrict y to domain=-10000000:700000,
-xlabel = {runtime},
-xmin = 0,
-xmax = 4100,
-%ymin =  75282844.25,
-%ymax =  81774642.015,
-%xtick       = { 1 , 60 , 3600 },
-%xticklabels = { 1 sec. , 1 min.  , 1 hour },
-%ytick       = {75661636, 78718140, 81774643 },
-%yticklabels = {$75661636$, $78718140$, $81774643$ },
-width = 0.9\columnwidth,
-scaled ticks = false
-]
-\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/seg-3d.data};
-\addlegendentry{HC-CGC}
-
-\addplot[color=red,mark=x] table[x=time,y=CGC]{data/seg-3d.data};
-\addlegendentry{CGC} 
-
-\addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data/seg-3d.data};
-\addlegendentry{MCI-CCIFD} 
-
-%\addplot[color=yellow,mark=o] table[x=time, y=DYNCC-HC-MC]{data/seg-3d.data};
-%\addlegendentry{MC-Fusion (HC-MC)}
-
-\addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC-CGC]{data/seg-3d.data};
-\addlegendentry{MC-Fusion (HC-MC-CGC)}
-
-\addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC-CGC]{data/seg-3d.data};
-\addlegendentry{MC-Fusion (HC-CGC-CGC)}
-
-\end{semilogxaxis}
-\end{tikzpicture}
-\caption{seg-3d}
-\end{figure}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{seg-3d}
+  \end{subfigure}
+  \begin{center}
+  \hypersetup{linkcolor = black}
+  \ref{named}
+  \hypersetup{linkcolor = red}
+  \end{center}
+  \caption{
+    Among all tested solvers, the proposed method is the only
+    one scaling to large 3D data.
+    Except for the small 3D block, CC-Fusion finds very low
+    energies one to three magnitudes faster 
+    than any other method.
+    With increasing block size, is outperformed even more.
+    For the 2D datasets CGC is very fast, but our proposed
+    solver finds lower energies while still being faster
+    than the global optimal multicut solver.
+  }
+\end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
