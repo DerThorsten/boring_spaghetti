@@ -175,7 +175,7 @@ public:
             const FusionSolver fusionSolver = SelfType::DefaultSolver,
             const bool planar = false,
             const std::string  workflow = std::string(),
-            const int nThreads = -1,
+            const int nThreads = 1,
             const bool decompose = false,
             const std::vector<bool> & allowCutsWithin  = std::vector<bool>()
         )
