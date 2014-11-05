@@ -1,0 +1,305 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pgfplotsset{every axis legend/.append style={
+at={(1.0,1.2)},
+anchor=north east}} 
+\begin{figure*}[p]
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=0:4620,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  ]
+  %\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data/knott-3d-150.data};
+  %\addlegendentry{HC-CGC}
+
+  \addplot[color=red,mark=x] table[x=time,y=CGC-planar]{data2/image-seg.data};
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data2/image-seg.data};
+  \addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC]{data2/image-seg.data};
+ % \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data2/image-seg.data};
+  \addplot[color=orange,mark=x] table[x=time, y=DYNCC-WS-MC]{data2/image-seg.data};
+  \addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data2/image-seg.data};
+
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{image-seg}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.33\textwidth}
+    \centering
+    \begin{tikzpicture}
+    \begin{semilogxaxis}[
+    restrict y to domain=-6000:-4400,
+    xlabel = {runtime},
+    xmin = 0,
+    xmax = 4100,
+    %ymin =  75282844.25,
+    %ymax =  81774642.015,
+    %xtick       = { 1 , 60 , 3600 },
+    %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+    %ytick       = {75661636, 78718140, 81774643 },
+    %yticklabels = {$75661636$, $78718140$, $81774643$ },
+    width = 1.0\columnwidth,
+    scaled ticks = false
+    ]
+    %\addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data2/knott-3d-150.data};
+    %%\addlegendentry{HC-CGC}
+    %
+    \addplot[color=red,mark=x] table[x=time,y=CGC]{data2/knott-3d-150.data};            
+    \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data2/knott-3d-150.data};
+    \addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC]{data2/knott-3d-150.data};  
+    \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data2/knott-3d-150.data}; 
+    \addplot[color=orange,mark=x] table[x=time, y=DYNCC-WS-CGC]{data2/knott-3d-150.data};
+    \addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data2/knott-3d-150.data};
+   
+    \end{semilogxaxis}
+    \end{tikzpicture}
+    \caption{knott-3d-150}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=-40000:-24000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  legend to name = named,
+  legend columns=5
+  ]
+  \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data2/knott-3d-300.data};          \addlegendentry{HC-CGC}
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data2/knott-3d-300.data};               \addlegendentry{CGC}
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data2/knott-3d-300.data};       \addlegendentry{MC-I}
+  \addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC]{data2/knott-3d-300.data};    \addlegendentry{Fusion-HC-MC}
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data2/knott-3d-300.data};    \addlegendentry{Fusion-HC-CGC}
+  \addplot[color=orange,mark=x] table[x=time, y=DYNCC-WS-CGC]{data2/knott-3d-300.data};  \addlegendentry{Fusion-WS-CGC}
+  \addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data2/knott-3d-300.data};          \addlegendentry{KL}
+  
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-300}
+  \end{subfigure}
+  \newline
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=-80000:-60000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false
+  ]
+  \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data2/knott-3d-450.data};
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data2/knott-3d-450.data};
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data2/knott-3d-450.data};
+  \addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC]{data2/knott-3d-450.data};
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data2/knott-3d-450.data};
+  \addplot[color=orange,mark=x] table[x=time, y=DYNCC-WS-CGC]{data2/knott-3d-450.data};
+  \addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data2/knott-3d-450.data};  
+  
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-450}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=-10000000:-100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false
+  ]
+  \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data2/knott-3d-550.data};
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data2/knott-3d-550.data};
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data2/knott-3d-550.data};
+  \addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC]{data2/knott-3d-550.data};
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data2/knott-3d-550.data};
+  \addplot[color=orange,mark=x] table[x=time, y=DYNCC-WS-CGC]{data2/knott-3d-550.data};
+  \addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data2/knott-3d-550.data};  
+ 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-550}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\begin{subfigure}[H]
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:1200000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false
+  ]
+  \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data2/seg-3d.data};
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data2/seg-3d.data};
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data2/seg-3d.data};
+  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data2/seg-3d.data}; 
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data2/seg-3d.data}; 
+  \addplot[color=orange,mark=x] table[x=time, y=DYNCC-WS-CGC]{data2/seg-3d.data};
+  \addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data2/seg-3d.data};  
+
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{seg-3d}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false
+  ]
+  \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data2/socialnets.data};
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data2/socialnets.data};
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data2/socialnets.data};
+  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data2/socialnets.data};
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data2/socialnets.data};
+  \addplot[color=orange,mark=x] table[x=time, y=DYNCC-WS-CGC]{data2/socialnets.data};
+ 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{social nets}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false
+  ]
+  \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data2/normalizedsocialnets.data};
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data2/normalizedsocialnets.data};
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data2/normalizedsocialnets.data};
+  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data2/normalizedsocialnets.data};
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data2/normalizedsocialnets.data};
+  \addplot[color=orange,mark=x] table[x=time, y=DYNCC-WS-CGC]{data2/normalizedsocialnets.data};
+ 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{social nets}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  %ymin =  75282844.25,
+  %ymax =  81774642.015,
+  %xtick       = { 1 , 60 , 3600 },
+  %xticklabels = { 1 sec. , 1 min.  , 1 hour },
+  %ytick       = {75661636, 78718140, 81774643 },
+  %yticklabels = {$75661636$, $78718140$, $81774643$ },
+  width = 1.0\columnwidth,
+  scaled ticks = false
+  ]
+  \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data2/modularity-clustering.data};
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data2/modularity-clustering.data};
+  \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data2/modularity-clustering.data};
+  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data2/modularity-clustering.data};
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data2/modularity-clustering.data};
+  \addplot[color=orange,mark=x] table[x=time, y=DYNCC-HC-CGC]{data2/modularity-clustering.data};
+  \addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data2/modularity-clustering.data};
+ 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{modularity clustering}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{center}
+  \hypersetup{linkcolor = black}
+  \ref{named}
+  \hypersetup{linkcolor = red}
+  \end{center}
+  \caption{
+    Among all tested solvers, the proposed method is the only
+    one scaling to large 3D data.
+    Except for the small 3D block, CC-Fusion finds very low
+    energies one to three magnitudes faster 
+    than any other method.
+    With increasing block size, is outperformed even more.
+    For the 2D datasets CGC is very fast, but our proposed
+    solver finds lower energies while still being faster
+    than the global optimal multicut solver.
+  }
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
