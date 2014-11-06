@@ -396,7 +396,14 @@ to not worsen the current best solution.
 
 \section{Energy Based Hierarchical Clustering (EBHC)}
 
-Hierarchical clustering can be used to find approximate
+Agglomerative hierarchical clustering (HC) is widely used
+in graph / energy segmentation
+\cite{arbelaez_2006}.
+Hierarchical clustering is fast, and 
+due to the agglomeration of edge weights, 
+hierarchical clustering is robust against noise.
+
+HC can be used to find approximate
 solutions for correlation clustering.
 In each step, the edge with the highest weight $w$ is
 contracted (red edges in fig. ~\ref{fig:hc_alg}).
