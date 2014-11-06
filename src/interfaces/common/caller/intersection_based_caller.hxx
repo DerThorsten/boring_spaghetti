@@ -67,7 +67,7 @@ protected:
    bool doCutMove_;
 
    bool acceptFirst_;
-
+   bool warmStart_;
    std::string storagePrefix_;
    
 public:
@@ -109,6 +109,8 @@ inline  IntersectionBasedCaller<IO, GM, ACC>::IntersectionBasedCaller(IO& ioIn)
    addArgument(Size_TArgument<>(numIt_, "", "numIt", "number of iterations", static_cast<size_t>(100))); 
    addArgument(Size_TArgument<>(numStopIt_, "", "numStopIt", "number of iterations with no improvment that cause stopping (0=auto)", static_cast<size_t>(20))); 
    addArgument(Size_TArgument<>(parallelProposals_, "pp", "parallelProposals", "number of parallel proposals (1)", static_cast<size_t>(1))); 
+
+   addArgument(BoolArgument(warmStart_,"ws","warmStart", "use warm start"));
 
 
    addArgument(BoolArgument(acceptFirst_,"af","acceptFirst", ""));
@@ -157,6 +159,7 @@ inline void IntersectionBasedCaller<IO, GM, ACC>::setParam(
    param.proposalParam_.randomizer_ = wRand_;
    param.storagePrefix_ = storagePrefix_;
    param.acceptFirst_ = acceptFirst_;
+   param.warmStart_ = warmStart_;
 }
 
 template <class IO, class GM, class ACC>

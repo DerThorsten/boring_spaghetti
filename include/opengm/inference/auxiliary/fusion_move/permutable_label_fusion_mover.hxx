@@ -5,6 +5,8 @@
 #include <opengm/inference/inference.hxx>
 #include <opengm/inference/multicut.hxx>
 #include <opengm/inference/dmc.hxx>
+#include "opengm/inference/auxiliary/fusion_move/fusion_mover.hxx"
+
 // FIXME
 using namespace std;
 #define Isinf Isinf2

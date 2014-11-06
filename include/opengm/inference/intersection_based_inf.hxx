@@ -1050,6 +1050,7 @@ public:
             const bool planar = false,
             const bool doCutMove = false,
             const bool acceptFirst = true,
+            const bool warmStart = true,
             const std::vector<bool> & allowCutsWithin = std::vector<bool> ()
         )
             :   proposalParam_(proposalParam),
@@ -1061,6 +1062,7 @@ public:
                 planar_(planar),
                 doCutMove_(doCutMove),
                 acceptFirst_(acceptFirst),
+                warmStart_(warmStart),
                 allowCutsWithin_(allowCutsWithin)
         {
             storagePrefix_ = std::string("");
@@ -1075,6 +1077,7 @@ public:
         bool doCutMove_;
         bool acceptFirst_;
         std::vector<bool> allowCutsWithin_;
+        bool warmStart_;
         std::string storagePrefix_;
 
     };
@@ -1170,9 +1173,41 @@ IntersectionBasedInf<GM, PROPOSAL_GEN>::IntersectionBasedInf
     fusionMover_ = fusionMoverArray_[0];
     proposalGen_ = proposalGenArray_[0];
 
-    //set default starting point
-    std::vector<LabelType> conf(gm_.numberOfVariables(),0);
-    setStartingPoint(conf.begin());
+    if(!param_.warmStart_){
+        //set default starting point
+        std::vector<LabelType> conf(gm_.numberOfVariables(),0);
+        setStartingPoint(conf.begin());
+    }
+    else{
+
+        LabelType lAA[2]={0, 0};
+        LabelType lAB[2]={0, 1};
+        Partition<LabelType> ufd(gm_.numberOfVariables());
+        for(size_t fi=0; fi< gm_.numberOfFactors(); ++fi){
+            if(gm_[fi].numberOfVariables()==2){
+
+                const ValueType val00  = gm_[fi](lAA);
+                const ValueType val01  = gm_[fi](lAB);
+                const ValueType weight = val01 - val00; 
+                if(weight>0.0){
+                    const size_t vi0 = gm_[fi].variableIndex(0);
+                    const size_t vi1 = gm_[fi].variableIndex(1);
+                    ufd.merge(vi0, vi1);
+                }
+            }
+            else{
+                throw RuntimeError("wrong factor order for multicut");
+            }
+        }
+        std::vector<LabelType> conf(gm_.numberOfVariables(),0);
+        for(IndexType vi=0; vi<gm_.numberOfVariables(); ++vi){
+            conf[vi] = ufd.find(vi);            
+        }
+        setStartingPoint(conf.begin());
+    }
+
+
+    
 
     if(param_.cgcFinalization_){
         CgcParam cgcParam;
@@ -1313,7 +1348,7 @@ InferenceTermination IntersectionBasedInf<GM, PROPOSAL_GEN>::inferIntersectionBa
             ACC::neutral(bestValue_);
             continue;
         }
-        else if(!mmcv && iteration == 0 && param_.acceptFirst_ ){
+        else if(!mmcv && iteration == 0 && param_.acceptFirst_ && !param_.warmStart_){
             proposalGen_->getProposal(bestArg_,proposedState);
             std::copy(proposedState.begin(),  proposedState.end(), bestArg_.begin());
             bestValue_ = gm_.evaluate(bestArg_);
