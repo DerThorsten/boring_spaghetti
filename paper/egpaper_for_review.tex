@@ -394,6 +394,32 @@ to not worsen the current best solution.
 % On the smaller graph, more expensive solvers are used.
 
 
+\section{Energy Based Hierarchical Clustering (EBHC)}
+
+Hierarchical clustering can be used to find approximate
+solutions for correlation clustering.
+In each step, the edge with the highest weight $w$ is
+contracted (red edges in fig. ~\ref{fig:hc_alg}).
+Doing so, parallel edges edges can occur.
+Whenever there are multiple edges between 
+a pair of nodes, these edges are merged into a single edge
+by summing up their weights.
+The algorithm stops if the highest edge weight is
+smaller or equal to zero  (green edge in fig. ~\ref{fig:hc_alg}). Any further edge
+contraction leads to worse energies.
+
+Given the intrinsic greediness of hierarchical clustering, 
+we do not expect very good solutions, but still a good starting 
+point for move making algorithm as CGC \cite{beier_2014_cvpr}.
+Therefore we propose to initialize  CGC with EBHC
+and hope speedup of CGC.
+
+Furthermore, we propose a algorithm to combine / fuse together
+multiple EBHC results from perpetuated energies.
+This algorithm, namely 
+
+\input{inputs/fig_hc_alg.tex} Correlation-Clustering-Fusion (CCF) Moves 
+will be discussed in the following section.
 
 %------------------------------------------------------------------------
 \section{Correlation-Clustering-Fusion (CCF) Moves}\label{sec:cc_fm}
