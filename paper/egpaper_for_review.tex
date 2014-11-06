@@ -177,21 +177,16 @@ or social networks~\cite{Leskovec-2010},
 are not tractable, because the runtime explodes or the 
 approximations are far away from being useful.
 
-In the present work we present a novel approach that uses the concept of fusion for correlation clustering.
-Starting with an initial segmentation we fuse the current segmentations with a proposed one.
-Due to the ambiguity of node-labeling for unsupervised segmentations~\cite{} 
-original fusion moves~\cite{Lempinski-2010} are improper, see Sec.~\ref{sec:fusion} for discussion.
-To overcome this problem we suggest to use fusion moves on the edge-variables that indicates a cut and form a
-bijective representation of segmentations.
-The subproblem of fusing of segmentations reduce to a much smaller multicut problem which can be solved extremely efficiently.
 
 \textbf{Contribution:}
-\begin{inparaenum}[(i)]
-\item We propose a fast and scalable move making algorithm for correlation clustering,
-\item and give a polyhedral interpretation of this algorithm.
-\item We propose two versatile proposal generators, 
-\item and evaluate the proposed method on existing and new benchmark problems.
-\end{inparaenum}
+In the present work we present some novel approaches that are designed for large scale correlation clustering problems.
+First, we define a novel energy based agglomerative clustering algorithm that monotonically increase the energy.
+With this at hand we show how to improve the anytime performance of Cut, Clue \& Cut.
+Second, we introduce cluster-fusion moves, which extend the original fusion moves~\cite{Lempinski-2010} 
+used in supervised segmentation to the unsupervised case and give a polyhedral interpretation of this algorithm.
+We propose two versatile proposal generators, and evaluate the proposed methods on existing and new benchmark problems.
+That experiments show that we can improve the computation time by one to two magnitudes without worsening the segmentation 
+quality significantly.
 
 
 % Given an edge weighted graph, positive weights (\emph{attractive})
@@ -274,14 +269,9 @@ A segmentation of the graph $G$ can by either given by an
 node labeling $l \in \mathbb{N}^{|V|}$
 or an edge labeling $y \in\{0,1\}^{|E|}$.  
 An edge labeling is only consistent if it contains no dangling edges~\cite{Kappes-2013-multicut}.
-We denote the set of all consistent edge labelings by $P(G)$.
-The convex hull of this set is known as the \emph{multicut polytope} $MC(G)$.
+We denote the set of all consistent edge labelings by $P(G)\subset\{0,1\}^{|E|}$.
+The convex hull of this set is known as the \emph{multicut polytope} $MC(G) = \textrm{conv}(P(G))$.
 
-A consistent edge labeling $y$ defines a segmentation of $V$ by enumerating the connected components 
-in $G|_y=(V,\{e\in E|y_e=0\}$ by $l_v = \#(v)$, where $\#(v)$ denotes the number of the connected component of the node $v\in V$.
-
-We define the contradiction of graph $G_y=(V_y,E_y)$
-with $V_y=\{\#(v)|v\in V\}$ and $E_y=\{\#(v),\#(u)|uv\in E, y_{uv}=1\})$.
 
 %$\rho_y : P(G) \to P(G_y)$
 %$\rho_y^{-1} : P(G_y) \to P(G)$
@@ -296,14 +286,17 @@ with $V_y=\{\#(v)|v\in V\}$ and $E_y=\{\#(v),\#(u)|uv\in E, y_{uv}=1\})$.
 % Def: Graph, weighted graph, cut, multicut 
 
 Given a weighted graph $G=(V,E,w)$ we consider the problem of segmenting $G$ such that the costs
-of the edges between distinct segments is minimized. This can be formulated in the node~\ref{eq:nodeproblem} 
-or edge domain~\ref{eq:edgeproblem} 
-
-\begin{eqnarray}
-  l^* &=& \argmin_{L \in \mathbb{N}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{i} \neq l_{j}] \label{eq:nodeproblem}\\
-  % y_{ij}^* &=& [l_{u} \neq l_{v}] 
-  y^* &=& \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}%\\ 
-\end{eqnarray}
+of the edges between distinct segments is minimized. This can be formulated in the node domain
+by assigning each node $v$ a label $l_v \in \mathbb{N}$
+\begin{align}
+  l^* &= \argmin_{L \in \mathbb{N}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{i} \neq l_{j}], \label{eq:nodeproblem}
+\end{align}  % y_{ij}^* &=& [l_{u} \neq l_{v}] 
+or in the edge domain, by label each edge $e$ as cut $y_e=1$ or uncut $y_e=0$ 
+\begin{align}
+  y^* &= \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}.%\\ 
+\end{align}
+As shown in~\cite{Kappes-2013-multicut} both problems are equivalent, but formulation \ref{eq:nodeproblem}
+suffers from ambiguities in the formulation~\cite{Kappes-2011}.
 
 % The exist an surjective mapping from a node-label $l$ to edge-labeling $y$ and
 % a bijective mapping from a partitioning of $V$ to vertices of the multicut polytope $MC$.
@@ -343,18 +336,29 @@ or edge domain~\ref{eq:edgeproblem}
 %     \end{eqnarray}
 % \end{center}
 
-\section{Related Work}\label{sec:related_work}
+\section{Related Work}\label{sec:related_work}%
+%
+Due to the ambiguity of formulation~\ref{eq:nodeproblem},
+a major branch of research has focused on solving 
+relaxations of eq.~\ref{eq:edgeproblem}.
+To keep the objective and system of inequalities small, they 
+work on sparse graphs and
+use cutting plane methods
+in combination with (integer) linear programming and efficient 
+separation procedures~\cite{kappes_2011_emmcvpr,andres_2011_iccv,kappes_2013_arxiv}.
 
-\subsection{Correlation Clustering}\label{sec:cc}
-A major branch of research has focused on solving 
-relaxations of eq.~\ref{eq:edgeproblem} by linear programming
-or solving  eq.~\ref{eq:edgeproblem} directly to global optimality
-by using integer linear programming in a cutting plane fashion  \cite{kappes_2011_emmcvpr,andres_2011_iccv}.
+With no time restrictions and integer constraints these methods can solve the problem to global optimality.
+For huge problems both, separation and solving the ILP in each round, becomes very time consuming.
 
+For planar problems, Yarkony \etal~\cite{yarkony_2012_eccv} 
+suggested a column generating strategy for the LP-relaxation
+that includes all cycle-inequalities of problem \ref{eq:edgeproblem}.
+The column generation base on solving planar max cut instances.
+While this method is fast, 
+it only solve a relaxation of the problem and so requires additional rounding strategies,
+lacks of a practical stopping condition for the column generation,
+and most important  is restricted to planar problems.
 
-Yarkony et al ~\cite{yarkony_2012_eccv} uses 
-a dual decomposition based approach for planar graphs
-where the subproblems are planar max cut instances.
 
 An other branch of research uses move making algorithm 
 to optimize correlation clustering.
@@ -372,7 +376,7 @@ between adjacent connected components.
    % \item Cut Glue And Cut~\cite{beier_2014_cvpr}
    % \end{itemize}
 
-\subsection{Fusion Moves}\label{sec:fm}
+%\subsection{Fusion Moves}\label{sec:fm}
 Move making algorithms, in particular fusion moves, 
 have become increasingly popular for energy minimization~\cite{???,kappes_2014_ws}.
 For many large scale computer vision applications fusion moves lead to good approximations
@@ -425,6 +429,11 @@ will be discussed in the following section.
 \section{Correlation-Clustering-Fusion (CCF) Moves}\label{sec:cc_fm}
 Motivation Using Fusion moves -> problem ambiguity
 
+A consistent edge labeling $y$ defines a segmentation of $V$ by enumerating the connected components 
+in $G|_y=(V,\{e\in E|y_e=0\}$ by $l_v = \#(v)$, where $\#(v)$ denotes the number of the connected component of the node $v\in V$.
+
+We define the contradiction of graph $G_y=(V_y,E_y)$
+with $V_y=\{\#(v)|v\in V\}$ and $E_y=\{\#(v),\#(u)|uv\in E, y_{uv}=1\})$.
 
 %\input{inputs/fig_alg_graph.tex}
 
@@ -1176,6 +1185,10 @@ So far we only enforce must link constraints to obtain smaller problems.
 One can also enforce cannot link constraints to the problem. 
 If those are closed, they automatically lead to a decomposition of the problem, 
 which is a interesting property for very huge data.
+
+Improving proposals.
+
+
 
 
 \section{Conclusion}\label{sec:conclusion}
