@@ -129,8 +129,18 @@ anchor=north east}}
   width = 1.0\columnwidth,
   scaled ticks = false,
   every axis legend/.code={\let\addlegendentry\relax} 
-  ] 
-  \anytimeplot{socialnets} 
+  ]  
+  \addplot[color=brown,mark=x] table[x=time,y=HC]{data3/socialnets.data};              \addlegendentry{HC}
+  \addplot[color=black,mark=square] table[x=time,y=HC-CGC]{data3/socialnets.data};          \addlegendentry{HC-CGC}
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data3/socialnets.data};               \addlegendentry{CGC}
+  %\addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data3/normalizedsocialnets.data};          \addlegendentry{KL}
+  \addplot[color=purple,mark=o] table[x=time, y=MCR-CCFDB]{data3/socialnets.data};     \addlegendentry{MC-R}
+  \addplot[color=blue,mark=o] table[x=time, y=MCI-CCIFD]{data3/socialnets.data};       \addlegendentry{MC-I}
+  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data3/socialnets.data};    \addlegendentry{Fusion-HC-MC}
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data3/socialnets.data};    \addlegendentry{Fusion-HC-CGC}
+  %\addplot[color=orange,mark=o] table[x=time, y=DYNCC-WS-MC]{data3/normalizedsocialnets.data};  \addlegendentry{Fusion-WS-MC}
+  \addplot[color=pink,mark=x] table[x=time, y=DYNCC-WS-CGC]{data3/socialnets.data};  \addlegendentry{Fusion-WS-CGC}
+  %\anytimeplot{socialnets} 
   \end{semilogxaxis}
   \end{tikzpicture}
   \caption{social nets}
@@ -148,8 +158,18 @@ anchor=north east}}
   width = 1.0\columnwidth,
   scaled ticks = false,
   every axis legend/.code={\let\addlegendentry\relax} 
-  ]
-  \anytimeplot{normalizedsocialnets}
+  ] 
+  \addplot[color=brown,mark=x] table[x=time,y=HC]{data3/normalizedsocialnets.data};              \addlegendentry{HC}
+  %\addplot[color=black,mark=square] table[x=time,y=HC-CGC]{data3/normalizedsocialnets.data};          \addlegendentry{HC-CGC}
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data3/normalizedsocialnets.data};               \addlegendentry{CGC}
+  %\addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data3/normalizedsocialnets.data};          \addlegendentry{KL}
+  \addplot[color=purple,mark=o] table[x=time, y=MCR-CCFDB]{data3/normalizedsocialnets.data};     \addlegendentry{MC-R}
+  \addplot[color=blue,mark=o] table[x=time, y=MCI-CCIFD]{data3/normalizedsocialnets.data};       \addlegendentry{MC-I}
+  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data3/normalizedsocialnets.data};    \addlegendentry{Fusion-HC-MC}
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data3/normalizedsocialnets.data};    \addlegendentry{Fusion-HC-CGC}
+  %\addplot[color=orange,mark=o] table[x=time, y=DYNCC-WS-MC]{data3/normalizedsocialnets.data};  \addlegendentry{Fusion-WS-MC}
+  \addplot[color=pink,mark=x] table[x=time, y=DYNCC-WS-CGC]{data3/normalizedsocialnets.data};  \addlegendentry{Fusion-WS-CGC}
+ % \anytimeplot{normalizedsocialnets}
   \end{semilogxaxis}
   \end{tikzpicture}
   \caption{normalized social nets}
