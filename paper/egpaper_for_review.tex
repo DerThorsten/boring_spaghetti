@@ -143,28 +143,27 @@ First line of institution2 address\\
 \end{abstract}
 \section{Introduction}
 
-Segmentation is an important problem in computer vision and data mining as a first step
+Correlation clustering~\cite{Bansal-2004} also known as the multicut problem~\cite{chopra_1993_mp} 
+is a basic primitive in computer vision~\cite{andres_2011_iccv,alush_2013_simbad} and data mining~\cite{Chierichetti-2014} as a first step
 towards understanding an image or data in general. 
-Many algorithms start with an over-segmentation
-into superpixels (superregions), which are then clustered into ``perceptually meaningful''
-regions.
-Usually, the number of these regions is \emph{not} known beforehand.
+The correlation clustering problem is the following:
+Given an undirected edge weighted graph, 
+where positive weights (\emph{attractive}) encourage the adjacent nodes to be in the same cluster
+and negative weights (\emph{repulsive}) encourage the nodes to stay in different cluster, 
+find the clustering of nodes such that the sum over weights of edges between clusters is minimized.
+Note that this problem formulation does not included a predefined number of clusters.
 
-Recently, the multicut formulation~\cite{chopra_1993_mp, Kappes-2013-multicut}
-(sometimes called \emph{correlation clustering}, \cite{bansal_2004_ml})
-has become increasingly popular for unsupervised image segmentation.
-%
-Given an edge-weighted region adjacency graph,
-the problem is to find the segmentation which
-minimizes the cost of the cut edges.
+Despite the clear mathematical formulation and nice properties of correlation clustering
+to perform a one-shot agglomeration clustering,
+the main draw back of correlation clustering is scalability~\cite{nunez_iglesias_2013}
+which arise from the NP-hardness of the problem.
+
+For unsupervised image segmentation algorithms usually start with an over-segmentation
+into superpixels (superregions), which are then clustered into ``perceptually meaningful''
+regions by correlation clustering on sparse graphs.
 Such an approach has been shown to yield
 state-of-the-art results on the Berkeley Segmentation Database
 \cite{andres_2011_iccv,yarkony_2012_eccv,alush_2013_simbad}.
-
-Despite the clear mathematical formulation and nice properties of correlation clustering
-to perform a one-shot agglomeration of supervoxels,
-the main draw back of correlation clustering is scalability~\cite{nunez_iglesias_2013}
-which arise from the NP-hardness of the problem.
 
 Recently, Beier~\etal~\cite{Beier-2014} presented a promising 
 approximative method called Cut, Clue \& Cut.
@@ -176,6 +175,7 @@ huge volume images in computational neuroscience~\cite{kroeger_2012_eccv}
 or social networks~\cite{Leskovec-2010}, 
 are not tractable, because the runtime explodes or the 
 approximations are far away from being useful.
+
 
 
 \textbf{Contribution:}
@@ -398,28 +398,23 @@ Due to the ambiguity of a node-labeling, fusion moves can not be applied directl
 We will show how to overcome this point later.
 
 Outside computer vision greedy methods has been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
+A common greedy approach is to randomly permute the nodes and than assign 
+iteratively each node to an existing cluster or create a new cluster if costs cannot be decreased by assigning to a cluster.
+Common assigning strategies are:
+\emph{BEST}; assign to cluster which is linked by the most positive edge [Ng et al 2002 ACL],
+\emph{FIRST}; Assign to the cluster which is first linked by a positive edge [Soon et al 2001 CL], and
+\emph{VOTE}; Assign to cluster that minimizes objective function. [Elsner et al 08 ACL].
 
-Greedy Algorithms
-Step 1: Permute the nodes according a random
-Step 2: Assign record to the cluster that minimize the costs. Start a new cluster if costs positive
-\begin{itemize}
-\item BEST: Cluster containing the most positive edge [Ng et al 2002 ACL]
-\item FIRST: Cluster contains the first positive edge [Soon et al 2001 CL]
-\item VOTE: Assign to cluster that minimizes objective function. [Elsner et al 08 ACL]
-\end{itemize}
+The PIVOT Algorithm [Ailon et al 2008 JACM] iterate over all nodes in random order.
+If the node is not assigned it construct a cluster containing the node and all its 
+unassigned positively linked neighbors.  
 
-PIVOT Algorithm [Ailon et al 2008 JACM]: select pivot element and connect to all positiv neighbord nodes
+Typically these algorithms started for many random permutations, 
+and pick the clustering with best objective value.
 
-Run the algorithm for many random permutations , and pick the clustering with
-best objective value (better than average run)
-
-BOEM Algorithm [Gioniset al 2007 TKDD]
-\begin{itemize}
-\item Start with an initial clustering (e.g. output of greedy)
-\item Remove one random element from a cluster
-\item Make the Best One Element Move (BOEM)
-Move it to another cluster or Create a new cluster. 
-\end{itemize}
+A widely use post-processing method is  Best One Element Move (BOEM) [Gioniset al 2007 TKDD].
+Start with an initial clustering one node is removed from a cluster and reassigned to an existing or new cluster such that the costs are minimized.
+BEOM stops if no move can decrease the costs.
 
 % \subsection{Karger-Stein Algorithms}
 % Use randomized procedure to reduce the number of nodes / edges to a reasonable 
