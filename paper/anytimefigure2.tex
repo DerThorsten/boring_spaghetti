@@ -26,7 +26,7 @@ anchor=north east}}
     \centering
     \begin{tikzpicture}
     \begin{semilogxaxis}[
-    restrict y to domain=-6000:-4400,
+   % restrict y to domain=-6000:-4400,
     xlabel = {runtime},
     xmin = 0,
     xmax = 4100,
@@ -35,6 +35,7 @@ anchor=north east}}
     every axis legend/.code={\let\addlegendentry\relax} 
     ] 
     \anytimeplot{knott-3d-150}
+    \addplot[color=yellow,mark=square] table[x=time,y=PIVOT*]{data3/knott-3d-150.data};  
    
     \end{semilogxaxis}
     \end{tikzpicture}
@@ -168,6 +169,7 @@ anchor=north east}}
   every axis legend/.code={\let\addlegendentry\relax} 
   ] 
   \anytimeplot{modularity-clustering}
+    \addplot[color=yellow,mark=square] table[x=time,y=PIVOT*]{data3/modularity-clustering.data};
   \end{semilogxaxis}
   \end{tikzpicture}
   \caption{modularity clustering}
