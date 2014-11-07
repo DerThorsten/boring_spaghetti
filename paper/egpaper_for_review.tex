@@ -351,7 +351,7 @@ With no time restrictions and integer constraints these methods can solve the pr
 For huge problems both, separation and solving the ILP in each round, becomes very time consuming.
 
 For planar problems, Yarkony \etal~\cite{yarkony_2012_eccv} 
-suggested a column generating strategy for the LP-relaxation
+suggested a column generating strategy for the outer LP-relaxation
 that includes all cycle-inequalities of problem \ref{eq:edgeproblem}.
 The column generation base on solving planar max cut instances.
 While this method is fast, 
@@ -359,14 +359,26 @@ it only solve a relaxation of the problem and so requires additional rounding st
 lacks of a practical stopping condition for the column generation,
 and most important  is restricted to planar problems.
 
-
 An other branch of research uses move making algorithm 
-to optimize correlation clustering.
-Bansal and Bagon use a modified $\alpha-$expansion \cite{bansal_2004_ml} 
-algorithm suitable for correlation clustering,
-while the state of the art method from  Beier \etal~\cite{beier_2014_cvpr} iteratively re-optimizes the cuts
-between adjacent connected components.
+to optimize correlation clustering~\cite{bansal_2004_ml,beier_2014_cvpr,Kerninghan-1970}.
+Starting with an initial segmentation, auxiliary problems are solved that 
+strictly improve the segmentation.
 
+Bansal and Bagon propose a modified $\alpha-$expansion~\cite{bansal_2004_ml} 
+algorithm suitable for correlation clustering, that allows all variables to 
+change to cluster $\alpha$ in a single move. While the authors claim that this
+scales to large scale data, in~\cite{beier_2014_cvpr} it has been shown that 
+this is not the case in general. This is not surprising because the auxiliary 
+problems can have as many variables as the original problem. 
+ 
+A more efficient move making method has been presented by Beier \etal~\cite{beier_2014_cvpr}.
+Their Cut, Glue and Cut method iteratively re-optimizes the cuts between adjacent clusters of the current solution.
+While this method scales better then  modified $\alpha-$expansion, it still faces three problems:
+Firstly, the subproblems can be as large as the original problem,
+secondly, the subproblems are max-cut problems on non-planar graphs that are NP-hard 
+and even the used approximation has high polynomial complexity.
+This limits the method, to be applicable to huge problems. The same holds for the 
+method of Kerninghan and Lin~\cite{Kerninghan-1970}. 
 
    % \begin{itemize}
    % \item Multicut~\cite{kappes_2011_emmcvpr}
@@ -376,21 +388,38 @@ between adjacent connected components.
    % \item Cut Glue And Cut~\cite{beier_2014_cvpr}
    % \end{itemize}
 
-%\subsection{Fusion Moves}\label{sec:fm}
-Move making algorithms, in particular fusion moves, 
-have become increasingly popular for energy minimization~\cite{???,kappes_2014_ws}.
+For energy minimization problems fusion moves have become increasingly popular~\cite{Lepinsky-2010,kappes_2014_ws}.
 For many large scale computer vision applications fusion moves lead to good approximations
 with state of the art any time performance~\cite{kappes_2014_ws}.
-The fusion move algorithm works as follows:
-A current best solution is maintained and proposal solutions 
-are generated.
-Within each move, the variables can choose the label from the current best or from the 
-proposed solution. This problem can be formulated as an 
-optimization problem with a binary label space.
-Any optimal solution of this auxiliary problem is guaranteed
-to not worsen the current best solution.
 
+The fusion move algorithm iteratively fuse the current best solution with a proposal solutions
+by optimizing over the subspace spanned by the two labeling. 
+Due to the ambiguity of a node-labeling, fusion moves can not be applied directly for correlation clustering.
+We will show how to overcome this point later.
 
+Outside computer vision greedy methods has been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
+
+Greedy Algorithms
+Step 1: Permute the nodes according a random
+Step 2: Assign record to the cluster that minimize the costs. Start a new cluster if costs positive
+\begin{itemize}
+\item BEST: Cluster containing the most positive edge [Ng et al 2002 ACL]
+\item FIRST: Cluster contains the first positive edge [Soon et al 2001 CL]
+\item VOTE: Assign to cluster that minimizes objective function. [Elsner et al 08 ACL]
+\end{itemize}
+
+PIVOT Algorithm [Ailon et al 2008 JACM]: select pivot element and connect to all positiv neighbord nodes
+
+Run the algorithm for many random permutations , and pick the clustering with
+best objective value (better than average run)
+
+BOEM Algorithm [Gioniset al 2007 TKDD]
+\begin{itemize}
+\item Start with an initial clustering (e.g. output of greedy)
+\item Remove one random element from a cluster
+\item Make the Best One Element Move (BOEM)
+Move it to another cluster or Create a new cluster. 
+\end{itemize}
 
 % \subsection{Karger-Stein Algorithms}
 % Use randomized procedure to reduce the number of nodes / edges to a reasonable 
@@ -445,6 +474,15 @@ can improve performance drastically.
 
 
 \input{inputs/fig_hc_alg.tex}
+
+
+Common cluster distances
+\begin{itemize}
+\item Single-Link: Nearest Neighbor - their closest members.
+\item Complete-Link: Furthest Neighbor - their furthest members.
+\item Centroid: Distance between centroids
+\item Group Average: average of all cross-cluster pairs.
+\end{itemize}
 
 %------------------------------------------------------------------------
 \section{Correlation-Clustering-Fusion (CCF) Moves}\label{sec:cc_fm}
