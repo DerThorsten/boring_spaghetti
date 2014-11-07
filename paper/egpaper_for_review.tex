@@ -398,23 +398,28 @@ to not worsen the current best solution.
 % On the smaller graph, more expensive solvers are used.
 
 
-\section{Energy Based Hierarchical Clustering (EBHC)}
+\section{Energy Based Hierarchical Clustering (EHC)}
 
 Agglomerative hierarchical clustering (HC) is widely used
-in graph / energy segmentation
+in graph / image segmentation
 \cite{arbelaez_2006}.
 Hierarchical clustering is fast, and 
 due to the agglomeration of edge weights, 
 hierarchical clustering is robust against noise.
+In agglomerative clustering, weights of
+parallel edges are merged into single edges.
+For image segmentation, the length
+weighted mean is used to do this update.
 
-HC can be used to find approximate
+We propose to use EHC find
 solutions for correlation clustering.
 In each step, the edge with the highest weight $w$ is
 contracted (red edges in fig. ~\ref{fig:hc_alg}).
 Doing so, parallel edges edges can occur.
 Whenever there are multiple edges between 
 a pair of nodes, these edges are merged into a single edge
-by summing up their weights.
+by summing up their weights, since we 
+minimize the sum of the cut edges.
 The algorithm stops if the highest edge weight is
 smaller or equal to zero  (green edge in fig. ~\ref{fig:hc_alg}). Any further edge
 contraction leads to worse energies.
