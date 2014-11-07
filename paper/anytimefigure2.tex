@@ -1,0 +1,196 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pgfplotsset{every axis legend/.append style={
+at={(1.0,1.2)},
+anchor=north east}} 
+\begin{figure*}[p]
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=0:4620,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ]  
+  \anytimeplot{image-seg}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{image-seg}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  \begin{subfigure}[b]{0.33\textwidth}
+    \centering
+    \begin{tikzpicture}
+    \begin{semilogxaxis}[
+    restrict y to domain=-6000:-4400,
+    xlabel = {runtime},
+    xmin = 0,
+    xmax = 4100,
+    width = 1.0\columnwidth,
+    scaled ticks = false,
+    every axis legend/.code={\let\addlegendentry\relax} 
+    ] 
+    \anytimeplot{knott-3d-150}
+   
+    \end{semilogxaxis}
+    \end{tikzpicture}
+    \caption{knott-3d-150}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=-40000:-24000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  legend to name = named,
+  legend columns=6
+  ]  
+  \anytimeplot{knott-3d-300}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-300}
+  \end{subfigure}
+  \newline
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=-80000:-60000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ] 
+  \anytimeplot{knott-3d-450} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-450}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  restrict y to domain=-10000000:-100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ]
+  \anytimeplot{knott-3d-550} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-550}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\begin{subfigure}[H]
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:1200000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ] 
+  \anytimeplot{seg-3d} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{seg-3d}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ] 
+  \anytimeplot{socialnets} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{social nets}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ]
+  \anytimeplot{normalizedsocialnets}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{normalized social nets}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ] 
+  \anytimeplot{modularity-clustering}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{modularity clustering}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{center}
+  \hypersetup{linkcolor = black}
+  \ref{named}
+  \hypersetup{linkcolor = red}
+  \end{center}
+  \caption{
+    Among all tested solvers, the proposed method is the only
+    one scaling to large 3D data.
+    Except for the small 3D block, CC-Fusion finds very low
+    energies one to three magnitudes faster 
+    than any other method.
+    With increasing block size, is outperformed even more.
+    For the 2D datasets CGC is very fast, but our proposed
+    solver finds lower energies while still being faster
+    than the global optimal multicut solver.
+  }
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
