@@ -9,6 +9,7 @@
 \usepackage{amssymb}
 \usepackage{xspace}
 \usepackage{booktabs}
+\usepackage{placeins}
 
 
 % Include other packages here, before hyperref.
@@ -121,6 +122,7 @@ First line of institution2 address\\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
+  \color{red} \textbf{TODO:}
    We address the problem of partitioning a  graph
    into a previously unknown number of clusters.
    Among all partitions, the one with the minimal 
@@ -143,8 +145,8 @@ First line of institution2 address\\
 \end{abstract}
 \section{Introduction}
 
-Correlation clustering~\cite{Bansal-2004} also known as the multicut problem~\cite{chopra_1993_mp} 
-is a basic primitive in computer vision~\cite{andres_2011_iccv,alush_2013_simbad} and data mining~\cite{Chierichetti-2014} as a first step
+Correlation clustering~\cite{Bansal-2002} also known as the multicut problem~\cite{chopra_1993_mp} 
+is a basic primitive in computer vision~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad} and data mining~\cite{Chierichetti-2014,Arasu-2009,Sadikov-2010} as a first step
 towards understanding an image or data in general. 
 The correlation clustering problem is the following:
 Given an undirected edge weighted graph, 
@@ -156,16 +158,22 @@ Note that this problem formulation does not included a predefined number of clus
 Despite the clear mathematical formulation and nice properties of correlation clustering
 to perform a one-shot agglomeration clustering,
 the main draw back of correlation clustering is scalability~\cite{nunez_iglesias_2013}
-which arise from the NP-hardness of the problem.
+which arise from the NP-hardness of the problem~\cite{Bansal-2002}.
 
-For unsupervised image segmentation algorithms usually start with an over-segmentation
+In signed social networks, where positive and negative edges encodes friend and foe relationships, respectively,
+correlation clustering is a natural way to detect communities~\cite{Chierichetti-2014,Chen-2012}.
+Correlation clustering can also been used to cluster query refinements in web search~\cite{Sadikov-2010}.
+Because social and web-related networks are often very huge, heuristic methods, \eg the PIVOT-algorithm~\cite{Ailon-2008},
+are very popular~\cite{Chierichetti-2014}.
+
+In computer vision applications, unsupervised image segmentation algorithms usually start with an over-segmentation
 into superpixels (superregions), which are then clustered into ``perceptually meaningful''
 regions by correlation clustering on sparse graphs.
 Such an approach has been shown to yield
 state-of-the-art results on the Berkeley Segmentation Database
 \cite{andres_2011_iccv,yarkony_2012_eccv,alush_2013_simbad}.
 
-Recently, Beier~\etal~\cite{Beier-2014} presented a promising 
+Recently, Beier~\etal~\cite{beier_2014_cvpr} presented a promising 
 approximative method called Cut, Clue \& Cut.
 While this scales well for planar graphs, it does not for non planar graphs and has a bad any-time performance.
 A further inherent drawback of this method is that the subproblems are not limited in their size.
@@ -176,13 +184,16 @@ or social networks~\cite{Leskovec-2010},
 are not tractable, because the runtime explodes or the 
 approximations are far away from being useful.
 
+In the present work we will suggest some alternative approaches to deal with large scale correlation clustering problems.
+In the end we ill present a method that can be combined with any other correlation clustering method and 
+allows to reduce the overall problem to a sequence of correlation clustering problems which are by magnitudes smaller.
 
 
 \textbf{Contribution:}
 In the present work we present some novel approaches that are designed for large scale correlation clustering problems.
 First, we define a novel energy based agglomerative clustering algorithm that monotonically increase the energy.
 With this at hand we show how to improve the anytime performance of Cut, Clue \& Cut.
-Second, we introduce cluster-fusion moves, which extend the original fusion moves~\cite{Lempinski-2010} 
+Second, we introduce cluster-fusion moves, which extend the original fusion moves~\cite{Lempitsky-2010} 
 used in supervised segmentation to the unsupervised case and give a polyhedral interpretation of this algorithm.
 We propose two versatile proposal generators, and evaluate the proposed methods on existing and new benchmark problems.
 That experiments show that we can improve the computation time by one to two magnitudes without worsening the segmentation 
@@ -268,7 +279,7 @@ of nodes $A \subseteq V$ and edges $E_A := E\cap (A\times A)$.
 A segmentation of the graph $G$ can by either given by an 
 node labeling $l \in \mathbb{N}^{|V|}$
 or an edge labeling $y \in\{0,1\}^{|E|}$.  
-An edge labeling is only consistent if it contains no dangling edges~\cite{Kappes-2013-multicut}.
+An edge labeling is only consistent if it contains no dangling edges~\cite{kappes_2013_arxiv}.
 We denote the set of all consistent edge labelings by $P(G)\subset\{0,1\}^{|E|}$.
 The convex hull of this set is known as the \emph{multicut polytope} $MC(G) = \textrm{conv}(P(G))$.
 
@@ -295,8 +306,8 @@ or in the edge domain, by label each edge $e$ as cut $y_e=1$ or uncut $y_e=0$
 \begin{align}
   y^* &= \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}.%\\ 
 \end{align}
-As shown in~\cite{Kappes-2013-multicut} both problems are equivalent, but formulation \ref{eq:nodeproblem}
-suffers from ambiguities in the formulation~\cite{Kappes-2011}.
+As shown in~\cite{kappes_2013_arxiv} both problems are equivalent, but formulation \ref{eq:nodeproblem}
+suffers from ambiguities in the formulation~\cite{kappes_2011_emmcvpr}.
 
 % The exist an surjective mapping from a node-label $l$ to edge-labeling $y$ and
 % a bijective mapping from a partitioning of $V$ to vertices of the multicut polytope $MC$.
@@ -360,7 +371,7 @@ lacks of a practical stopping condition for the column generation,
 and most important  is restricted to planar problems.
 
 An other branch of research uses move making algorithm 
-to optimize correlation clustering~\cite{bansal_2004_ml,beier_2014_cvpr,Kerninghan-1970}.
+to optimize correlation clustering~\cite{bansal_2004_ml,beier_2014_cvpr,Kernighan-1970}.
 Starting with an initial segmentation, auxiliary problems are solved that 
 strictly improve the segmentation.
 
@@ -378,7 +389,7 @@ Firstly, the subproblems can be as large as the original problem,
 secondly, the subproblems are max-cut problems on non-planar graphs that are NP-hard 
 and even the used approximation has high polynomial complexity.
 This limits the method, to be applicable to huge problems. The same holds for the 
-method of Kerninghan and Lin~\cite{Kerninghan-1970}. 
+method of Kernighan and Lin~\cite{Kernighan-1970}. 
 
    % \begin{itemize}
    % \item Multicut~\cite{kappes_2011_emmcvpr}
@@ -388,7 +399,7 @@ method of Kerninghan and Lin~\cite{Kerninghan-1970}.
    % \item Cut Glue And Cut~\cite{beier_2014_cvpr}
    % \end{itemize}
 
-For energy minimization problems fusion moves have become increasingly popular~\cite{Lepinsky-2010,kappes_2014_ws}.
+For energy minimization problems fusion moves have become increasingly popular~\cite{Lempitsky-2010,kappes_2014_ws}.
 For many large scale computer vision applications fusion moves lead to good approximations
 with state of the art any time performance~\cite{kappes_2014_ws}.
 
@@ -397,22 +408,24 @@ by optimizing over the subspace spanned by the two labeling.
 Due to the ambiguity of a node-labeling, fusion moves can not be applied directly for correlation clustering.
 We will show how to overcome this point later.
 
+\input{inputs/fig_hc_alg.tex}
+
 Outside computer vision greedy methods has been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
 A common greedy approach is to randomly permute the nodes and than assign 
 iteratively each node to an existing cluster or create a new cluster if costs cannot be decreased by assigning to a cluster.
 Common assigning strategies are:
-\emph{BEST}; assign to cluster which is linked by the most positive edge [Ng et al 2002 ACL],
-\emph{FIRST}; Assign to the cluster which is first linked by a positive edge [Soon et al 2001 CL], and
-\emph{VOTE}; Assign to cluster that minimizes objective function. [Elsner et al 08 ACL].
-
-The PIVOT Algorithm [Ailon et al 2008 JACM] iterate over all nodes in random order.
+\emph{BEST}; assign to cluster which is linked by the most positive edge~\cite{Ng-2002},
+\emph{FIRST}; Assign to the cluster which is first linked by a positive edge~\cite{Soon-2001}, and
+\emph{VOTE}; Assign to cluster that minimizes objective function~\cite{Elsner-2008}.
+%
+The PIVOT Algorithm~\cite{Ailon-2008} iterate over all nodes in random order.
 If the node is not assigned it construct a cluster containing the node and all its 
 unassigned positively linked neighbors.  
-
+%
 Typically these algorithms started for many random permutations, 
 and pick the clustering with best objective value.
 
-A widely use post-processing method is  Best One Element Move (BOEM) [Gioniset al 2007 TKDD].
+A widely use post-processing method is  Best One Element Move (BOEM)~\cite{Gionis-2007}.
 Start with an initial clustering one node is removed from a cluster and reassigned to an existing or new cluster such that the costs are minimized.
 BEOM stops if no move can decrease the costs.
 
@@ -421,6 +434,8 @@ BEOM stops if no move can decrease the costs.
 % number.
 % On the smaller graph, more expensive solvers are used.
 
+
+%\input{inputs/fig_hc_alg.tex}
 
 \section{Energy Based Hierarchical Clustering (EHC)}
 
@@ -468,7 +483,7 @@ can improve performance drastically.
 
 
 
-\input{inputs/fig_hc_alg.tex}
+%\input{inputs/fig_hc_alg.tex}
 
 
 Common cluster distances
@@ -1266,6 +1281,7 @@ with increasing problem size.
 
 \newpage
 
+\FloatBarrier
 {\small
 \bibliographystyle{ieee}
 \bibliography{egbib}
