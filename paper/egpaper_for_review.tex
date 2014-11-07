@@ -403,6 +403,9 @@ to not worsen the current best solution.
 Agglomerative hierarchical clustering (HC) is widely used
 in graph / image segmentation
 \cite{arbelaez_2006}.
+
+\input{inputs/fig_hc_alg.tex}
+
 Hierarchical clustering is fast, and 
 due to the agglomeration of edge weights, 
 hierarchical clustering is robust against noise.
@@ -411,11 +414,13 @@ parallel edges are merged into single edges.
 For image segmentation, the length
 weighted mean is used to do this update.
 
-We propose to use EHC find
+We propose to use Energy Based Hierarchical Clustering (EHC) to find
 solutions for correlation clustering.
 In each step, the edge with the highest weight $w$ is
 contracted (red edges in fig. ~\ref{fig:hc_alg}).
 Doing so, parallel edges edges can occur.
+To make EHC follow the energy, we propose 
+the following update rule:
 Whenever there are multiple edges between 
 a pair of nodes, these edges are merged into a single edge
 by summing up their weights, since we 
@@ -425,17 +430,25 @@ smaller or equal to zero  (green edge in fig. ~\ref{fig:hc_alg}). Any further ed
 contraction leads to worse energies.
 
 Given the intrinsic greediness of hierarchical clustering, 
-we do not expect very good solutions, but still a good starting 
-point for move making algorithm as CGC \cite{beier_2014_cvpr}.
+and the fact that EHC does only local decisions, it is 
+sensitive against salt and paper noise 
+and we do not expect very good solutions.
+
+But EHC is very fast, and can be used to initialize
+CGC \cite{beier_2014_cvpr}. Plenty of the time in CGC
+is spend in the \emph{cut phase} to solve the 
+first 2 coloring on the complete graph.
+
+
+
 Therefore we propose to initialize  CGC with EBHC
 and hope to speedup of CGC with this starting point.
 
-Furthermore, we propose a algorithm to combine / fuse together
-multiple EBHC results from perpetuated energies.
-This algorithm, namely 
-
-\input{inputs/fig_hc_alg.tex} Correlation-Clustering-Fusion (CCF) Moves 
-will be discussed in the following section.
+%Furthermore, we propose a algorithm to combine / fuse together
+%multiple EBHC results from perpetuated energies.
+%This algorithm, namely 
+%Correlation-Clustering-Fusion (CCF) Moves 
+%will be discussed in the following section.
 
 %------------------------------------------------------------------------
 \section{Correlation-Clustering-Fusion (CCF) Moves}\label{sec:cc_fm}
