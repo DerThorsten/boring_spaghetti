@@ -261,13 +261,20 @@
 %\end{subfigure}\quad\quad
 
 
-\vspace{0.1cm}
-
-
-
-\quad\quad\quad
-
 \caption{
-        Describe Method here
-}
+    To fuse a current best segmentation $y'$  (\textcolor{red}{\ref{fig:move_graph}a})  with a proposal
+    segmentation $y''$ (\textcolor{red}{\ref{fig:move_graph}b}) we propose the following algorithm:
+    $\hat{y}$ is defined as $y'+y''$ as in \textcolor{red}{\ref{fig:move_graph}c}.
+    The contraction graph (\textcolor{red}{\ref{fig:move_graph}d}) $G_{\hat{y}}$ is constructed by
+    contracting of all uncut edges in $\hat{y}$.
+    The actual fusion move is solving  ~\ref{eq:edgeproblem} for  
+    $G_{\hat{y}}$  as in  \textcolor{red}{\ref{fig:move_graph}e}  and project the result back
+    to $G$ as in  \textcolor{red}{\ref{fig:move_graph}f}.
+    The result of the fusion move is guaranteed to be not worse than $y'$ and $y''$.
+    Therefore the current best solution can be updated from the result of
+    the fusion move.
+    %
+    The correlation clustering fusion move algorithm iteratively fuses the current 
+    best solution with different proposals.
+}\label{fig:move_graph}
 \end{figure*}
