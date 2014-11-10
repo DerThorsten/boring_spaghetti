@@ -631,32 +631,7 @@ with $V_y=\{\#(v)|v\in V\}$ and $E_y=\{\#(v),\#(u)|uv\in E, y_{uv}=1\})$.
 \input{inputs/fig_contraction.tex}
 \input{inputs/fig_projection.tex}
 
-\subsection{Define Fusion on Segmentations}
 
-Given two proposal solutions $y'$ and $y''$
-the fusion move between those solutions is defined
-as follows:
-
-Let the $\bar{y}$ be the edge wise or of  $y'$ and $y''$.
-\begin{equation}
-\breve{y} =  y' \cup y''.
-\end{equation}
-Contraction of all edges in $G$ where $\bar{y}=0$ defines
-a smaller graph $G_{\bar{y}}$ and the corresponding
-edge weights $W_{\hat{y}}$.
-Any cut $\bar{y}$ on $G_{\hat{y}}$ induces a cut $y$ on $G$.
-The function 
-$\rho_y^{-1}$ maps a cut from $G_{\hat{y}}$  to $G$ 
-
-\begin{equation}
-   \rho_y^{-1} : P(G_y) \to P(G)
-\end{equation}
-
-Therefore solving eq. \ref{eq:edgeproblem} 
-on $G_{\hat{y}}$
-leads to a cut on $G$ which is guaranteed to 
-to have a better or equal energy
-then any of the two proposal solutions.
 
 \input{inputs/fig_move_graph.tex}
 
@@ -806,22 +781,22 @@ then any of the two proposal solutions.
 
 
 
-\begin{center}
-    \begin{eqnarray}
-        y 
-        &=& 
-        \rho_{\hat{y}}^{-1}(
-        \argmin_{y \in MC(G_{\hat{y}})\cap \{0,1\}^{|E_{\hat{y}}|}} 
-        \sum_{ (i,j) \in E_{\hat{y}} } 
-        w^{\hat{y}}_{ij} \cdot \bar{y}_{ij} 
-    \end{eqnarray}
-\end{center}
+% \begin{center}
+%     \begin{eqnarray}
+%         y 
+%         &=& 
+%         \rho_{\hat{y}}^{-1}(
+%         \argmin_{y \in MC(G_{\hat{y}})\cap \{0,1\}^{|E_{\hat{y}}|}} 
+%         \sum_{ (i,j) \in E_{\hat{y}} } 
+%         w^{\hat{y}}_{ij} \cdot \bar{y}_{ij} 
+%     \end{eqnarray}
+% \end{center}
 
-\begin{center}
-    \begin{eqnarray}
-      y \cdot w \leq \min(y'\cdot w,  y'' \cdot w) 
-    \end{eqnarray}
-\end{center}
+% \begin{center}
+%     \begin{eqnarray}
+%       y \cdot w \leq \min(y'\cdot w,  y'' \cdot w) 
+%     \end{eqnarray}
+% \end{center}
 
 
 %-------------------------------------------------------------------------
