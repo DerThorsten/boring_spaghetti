@@ -480,12 +480,14 @@ BEOM stops if no move can decrease the costs.
 
 %\input{inputs/fig_hc_alg.tex}
 
-\section{Energy Based Hierarchical Clustering (EHC)}\label{sec:ehc}
+\section{Energy Based Hierarchical Clustering}\label{sec:ehc}
 
 Agglomerative hierarchical clustering (HC) is widely used
 in graph / image segmentation
 \cite{arbelaez_2006}.
-
+In each step, the edge with the highest weight $w$ is
+contracted (red edges in Fig.~\ref{fig:hc_alg}).
+Doing so, parallel edges edges can occur.
 
 
 
@@ -505,10 +507,6 @@ weighted mean is used to do this update [ref].
 We propose to use Energy Based Hierarchical Clustering (EHC) to find
 solutions for correlation clustering.
 
-\textit{move this up} [ In each step, the edge with the highest weight $w$ is
-contracted (red edges in fig. ~\ref{fig:hc_alg}).
-Doing so, parallel edges edges can occur.
-]
 
 To make EHC follow the energy, we propose 
 the following update rule:
