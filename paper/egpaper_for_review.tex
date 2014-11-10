@@ -29,7 +29,6 @@
 \usepackage{pgfplotstable}
 \usepackage{filecontents}
 %\usepackage{scrextend}
-
 \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
 
 \newcommand{\footlabel}[2]{%
@@ -45,7 +44,6 @@
 \newcommand{\footref}[1]{%
     $^{\ref{#1}}$%
 }
-
 \usetikzlibrary{arrows,positioning,automata,shadows,fit,shapes}
 \usetikzlibrary{arrows,petri,topaths}
 \usetikzlibrary{positioning,fit,calc}
@@ -482,45 +480,54 @@ BEOM stops if no move can decrease the costs.
 
 %\input{inputs/fig_hc_alg.tex}
 
-\section{Energy Based Hierarchical Clustering (EHC)}\label{sec:ehc}
-
+\section{Energy Based Hierarchical Clustering}\label{sec:ehc}
 Agglomerative hierarchical clustering (HC) is widely used
-in graph / image segmentation
-\cite{arbelaez_2006}.
-
-
-
-
-
-
-
-Hierarchical clustering is fast, and 
-due to the agglomeration of edge weights, 
-{\color{red} hierarchical clustering is robust against noise}.
-{\color{yellow} [ First most similar nodes are merged...]
-In agglomerative clustering, weights of
-parallel edges are merged into single edges.}
-For image segmentation, the length
-weighted mean is used to do this update [ref].
-
-[We contrary on those works work directly on energy functions and that why ...]
-We propose to use Energy Based Hierarchical Clustering (EHC) to find
-solutions for correlation clustering.
-
-\textit{move this up} [ In each step, the edge with the highest weight $w$ is
-contracted (red edges in fig. ~\ref{fig:hc_alg}).
+in graph / image segmentation~\cite{arbelaez_2006}.
+In each step, the edge with the highest weight $w$ is
+contracted (red edges in Fig.~\ref{fig:hc_alg}).
 Doing so, parallel edges edges can occur.
-]
+In agglomerative clustering, weights of
+parallel edges are merged into single edges.
+For image segmentation, the length
+weighted mean is used to do this update~\cite{arbelaez_2006}.
 
-To make EHC follow the energy, we propose 
-the following update rule:
+While we, contrary to~\cite{arbelaez_2006}, directly work on energies, we are interesting in an 
+agglomeration with respect to our energy function.
+For this we propose to use energy based agglomeration
+withe the following update rule:
 Whenever there are multiple edges between 
 a pair of nodes, these edges are merged into a single edge
 by summing up their weights, since we 
 minimize the sum of the cut edges.
-The algorithm stops if the highest edge weight is
-smaller or equal to zero  (green edge in fig. ~\ref{fig:hc_alg}). Any further edge
+We call HC with this update method Energy base Hierarchical Clustering (EHC).
+
+We stop EHC if the highest edge weight is
+smaller or equal to zero  (green edge in Fig.~\ref{fig:hc_alg}). Any further edge
 contraction leads to worse energies.
+
+% Hierarchical clustering is fast, and 
+% due to the agglomeration of edge weights, 
+% {\color{red} hierarchical clustering is robust against noise}.
+% {\color{yellow} [ First most similar nodes are merged...]
+% In agglomerative clustering, weights of
+% parallel edges are merged into single edges.}
+% For image segmentation, the length
+% weighted mean is used to do this update [ref].
+
+% [We contrary on those works work directly on energy functions and that why ...]
+% We propose to use Energy Based Hierarchical Clustering (EHC) to find
+% solutions for correlation clustering.
+
+
+% To make EHC follow the energy, we propose 
+% the following update rule:
+% Whenever there are multiple edges between 
+% a pair of nodes, these edges are merged into a single edge
+% by summing up their weights, since we 
+% minimize the sum of the cut edges.
+% The algorithm stops if the highest edge weight is
+% smaller or equal to zero  (green edge in fig. ~\ref{fig:hc_alg}). Any further edge
+% contraction leads to worse energies.
 
 Given the intrinsic greediness of hierarchical clustering, 
 and the fact that EHC does only local decisions, it is 
@@ -528,28 +535,25 @@ sensitive against salt and paper noise
 and we do not expect very good solutions.
 
 But EHC is very fast, and can be used to initialize
-CGC \cite{beier_2014_cvpr}. Excessive time in CGC
+CGC~\cite{beier_2014_cvpr}. Excessive time in CGC
 is spend in the \emph{cut phase} to solve the 
 first 2 coloring on the complete graph.
-As shown in ~\ref{sec:exp},
+As shown in Sec.~\ref{sec:exp},
 allowing CGC to start from the EHC solution
 can improve performance drastically.
 
 
 
-%\input{inputs/fig_hc_alg.tex}
-
-
-Common cluster distances
-\begin{itemize}
-\item Single-Link: Nearest Neighbor - their closest members.
-\item Complete-Link: Furthest Neighbor - their furthest members.
-\item Centroid: Distance between centroids
-\item Group Average: average of all cross-cluster pairs.
-\end{itemize}
+% Common cluster distances
+% \begin{itemize}
+% \item Single-Link: Nearest Neighbor - their closest members.
+% \item Complete-Link: Furthest Neighbor - their furthest members.
+% \item Centroid: Distance between centroids
+% \item Group Average: average of all cross-cluster pairs.
+% \end{itemize}
 
 %------------------------------------------------------------------------
-\section{Correlation-Clustering-Fusion (CCF) Moves}\label{sec:cc_fm}
+\section{Correlation-Clustering-Fusion Moves}\label{sec:cc_fm}
 Motivation Using Fusion moves -> problem ambiguity
 
 A consistent edge labeling $y$ defines a segmentation of $V$ by enumerating the connected components 
@@ -790,19 +794,57 @@ meaningful moves (??? this last sentence needs to be rewritten).
 
 
 
+%\begin{algorithm}
+%    \begin{scriptsize}
+%        \caption{Proposal Generators}\label{alg:proposal_gen}   
+%        \begin{algorithmic}[1]
+%            %\Require $J(x) \leq J(x')$
+%            %\Ensure $J(\hat{x}) \leq J(x)$
+%            %\vspace{0.3cm}
+%            \Procedure{Rand2Coloring}{$x,G=(E,V),W$}
+%            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
+%            \State $x'= \argmin\limits_{\bar{x}} \sum\limits_{e_{ij} \in E } \tilde{w}_{ij}[\bar{x}_i \neq \bar{x}_j]  [x_i = x_j]   $
+%
+%            $ \quad\quad s.t.\quad x_i \in \{0, 1\} \forall i $
+%            \State \textbf{return} $x'$
+%            \EndProcedure
+%            %
+%            %
+%            \vspace{0.3cm}
+%            \Procedure{RandEdgeWeightedWatersheds}{$x,G=(E,V),W$}
+%            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
+%            \State $ getRandomSeeds$
+%            \State $ runEdgeWeightedWs$
+%            \EndProcedure   
+%            %
+%            %
+%            \vspace{0.3cm}
+%            \Procedure{RandHierarchicalClustering}{$x,G=(E,V),W$}
+%            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
+%            \State $\hat{G}=(\hat{E},\hat{V}) \gets G=(E,V)$
+%            \State $\hat{W} \gets W$
+%            \While{$|\hat{V}|>\gamma$ \textbf{and}  $\max(\hat{W})>\theta$ }
+%                \State $\hat{G}=(\hat{E},\hat{V}),\hat{W} \gets 
+%                    \textbf{\scriptsize{contract}}(\hat{G},\hat{W},  \argmax\limits_{\hat{E}}(\hat{W}) )$
+%            \EndWhile
+%            \State $x' \gets \textbf{\scriptsize{getClusterResults}}(???) $ 
+%            \EndProcedure
+%        \end{algorithmic}
+%    \end{scriptsize}
+%\end{algorithm}
 
-\subsubsection{Randomized Energy Based Hierarchical Clustering (REHC)}\label{sec:prop:hc}
 
-To generate fast energy aware proposals we can use energy
-based hierarchical clustering (EHC) as defined in sec.~\ref{sec:ehc}.
-EHC follows the energy function, therefore the \emph{quality}
-of the proposals is high.
-To get \emph{diversity} among the different proposal,
-we add normal distributed noise with a standard deviation of $\sigma_{ehc}$
-to each edge weight.
-To get proposals of the desired \emph{size}, we can use a 
-different stop condition in EHC, and stop when a certain number of connected 
-components is reached.
+
+\subsubsection{Randomized HierarchicalClustering (RHC)}
+
+To generate proposals cut we can use bottom up hierarchical clustering.
+In each step we contract the edge with the highest weight.
+Parallel edges are merged into single edges by summing their weights.
+We stop when a certain number of nodes is reached, or the
+largest edge weight among the not yet contracted edges is smaller then a certain threshold.
+To get versatile proposals we either add noise 
+to the edge weighs or permute a certain number of weights.
+
 
 %\subsubsection{Randomized MaxCut  (RMC)}
 %
@@ -820,19 +862,17 @@ components is reached.
 %In addition we either add noise permute a certain number of weights.
 
 
-\subsubsection{Randomized Watersheds (RWS)}\label{sec:prop:ws}
+\subsubsection{Randomized Watersheds (RWS)}
 
 The edge weighted watershed algorithm \cite{meyer_2013}
 with random seeds can be used to get 
-cheap proposals. 
-
-To improve \emph{quality} we do not use $n$ seeds distributed uniformly
-over all nodes but use the following.
+cheap proposals. Instead of $n$ seeds distributed uniformly
+over all nodes we use the following.
 Draw $n/k$ random edges only the negative edges, 
-and give the two nodes of each ``seed-edge'' a different seed.
+and give the two nodes of each random edge different seeds.
 Doing so, a random subset of negative edges is forced
 to be cut within each proposal.
-For additional \emph{diversity} randomness, noise can be added to
+For additional randomness, noise can be added to
 the edge weighs.
 
 
@@ -915,7 +955,7 @@ If the optimal solution $y^*$ lies in $P(G_{y' \OR y''})$ than a optimal fusion 
 
 Within all experiments we used the following existing solvers 
 with public available implementation.
-\begin{compactitem}
+\begin{itemize}
     \item 
     \textbf{CGC} \cite{beier_2014_cvpr} we used the public available 
     implementation\footnote{\label{opengm-cvpr2014}\url{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}.
@@ -930,26 +970,22 @@ with public available implementation.
             %\label{opengm-master}
         }
     \item \textbf{MC-R,MC-I}\cite{kappes_2011_emmcvpr}  where we used a  modified 
+
     version of a public available implementation implementation \footref{opengm-master}.
+
     We replace a highly used queue with a more suitable and
     fast \emph{index-min-heap}\cite{???}.
     MC-R indicates that only the LP is solved, while MC-I solves
     the ILP.
     \item non vision solvers here TODO
-\end{compactitem}
+\end{itemize}
 And the following proposed solvers:
-\begin{compactitem}
+\begin{itemize}
 \item \textbf{EHC}: Energy Based Based Hierarchical Clustering 
 as described in sec.~\ref{sec:ehc}.
 \item \textbf{EHC-CGC}: As CGC but warm started 
 with the solution from EHC.
-
-\item \textbf{Fusion-EHC-MC}
-\item \textbf{Fusion-EHC-GCG}
-\item \textbf{Fusion-WS-MC}
-\item \textbf{Fusion-WS-GCG}
-
-\end{compactitem}
+\end{itemize}
 
 \subsection{Parameter Choice}
 \begin{figure}
@@ -961,7 +997,7 @@ with the solution from EHC.
 }
 \end{figure}
 
-%\subsection{Synthetic Models}
+\subsection{Synthetic Models}
 
 \subsection{Social Networks}
 A application for large scale correlation clustering are social networks.
