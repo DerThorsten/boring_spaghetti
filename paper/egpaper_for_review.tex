@@ -28,6 +28,7 @@
 \usepackage{tikz,pgfplots}
 \usepackage{pgfplotstable}
 \usepackage{filecontents}
+\usepackage{scrextend}
 \usetikzlibrary{arrows,positioning,automata,shadows,fit,shapes}
 \usetikzlibrary{arrows,petri,topaths}
 \usetikzlibrary{positioning,fit,calc}
@@ -465,7 +466,7 @@ BEOM stops if no move can decrease the costs.
 
 %\input{inputs/fig_hc_alg.tex}
 
-\section{Energy Based Hierarchical Clustering (EHC)}
+\section{Energy Based Hierarchical Clustering (EHC)}\label{sec:ehc}
 
 Agglomerative hierarchical clustering (HC) is widely used
 in graph / image segmentation
@@ -932,6 +933,36 @@ If the optimal solution $y^*$ lies in $P(G_{y' \OR y''})$ than a optimal fusion 
 
 \section{Experiments}\label{sec:exp}
 
+Within all experiments we used the following existing solvers 
+with public available implementation.
+\begin{itemize}
+    \item 
+    \textbf{CGC} \cite{beier_2014_cvpr} we used the public available 
+    implementation\footnote{\label{opengm-cvpr2014}\url{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}.
+    As reported in \cite{beier_2014_cvpr}, CGC is faster and gives better energies then \cite{yarkony_2012_eccv} and \cite{bagon_2011_arxiv}.
+    Therefore we exclude those in our experiments.
+    \item \textbf{KL}\cite{???}  and a public available 
+        implementation \footnote{
+            \label{opengm-master} 
+            \url{https://github.com/opengm/opengm}
+            %\label{opengm-master}
+        }
+    \item \textbf{MC-R,MC-I}\cite{kappes_2011_emmcvpr}  where we used a  modified 
+    version of a public available implementation implementation\footref{opengm-master}.
+    We replace a highly used queue with a more suitable and
+    fast \emph{index-min-heap}\cite{???}.
+    MC-R indicates that only the LP is solved, while MC-I solves
+    the ILP.
+    \item non vision solvers here TODO
+\end{itemize}
+And the following proposed solvers:
+\begin{itemize}
+\item \textbf{EHC}: Energy Based Based Hierarchical Clustering 
+as described in sec.~\ref{sec:ehc}.
+\item \textbf{EHC-CGC}: As CGC but warm started 
+with the solution from EHC.
+\end{itemize}
+
 \subsection{Parameter Choice}
 \begin{figure}
 \centering
@@ -946,7 +977,7 @@ If the optimal solution $y^*$ lies in $P(G_{y' \OR y''})$ than a optimal fusion 
 
 \subsection{Social Networks}
 A application for large scale correlation clustering are social networks.
-We consider two of those networks from the Stanford Large Network Dataset Collection\footnote{http://snap.stanford.edu/data/index.html}.
+We consider two of those networks from the Stanford Large Network Dataset Collection\footnote{\url{http://snap.stanford.edu/data/index.html}}.
 Both networks are given by weighted directed graphs with edge weights $-1$ and $1$. 
 %
 The first network is called \emph{Epinions}. 
