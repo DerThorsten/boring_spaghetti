@@ -28,7 +28,22 @@
 \usepackage{tikz,pgfplots}
 \usepackage{pgfplotstable}
 \usepackage{filecontents}
-\usepackage{scrextend}
+%\usepackage{scrextend}
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\newcommand{\footlabel}[2]{%
+    \addtocounter{footnote}{1}%
+    \footnotetext[\thefootnote]{%
+        \addtocounter{footnote}{-1}%
+        \refstepcounter{footnote}\label{#1}%
+        #2%
+    }%
+    $^{\ref{#1}}$%
+}
+
+\newcommand{\footref}[1]{%
+    $^{\ref{#1}}$%
+}
 \usetikzlibrary{arrows,positioning,automata,shadows,fit,shapes}
 \usetikzlibrary{arrows,petri,topaths}
 \usetikzlibrary{positioning,fit,calc}
@@ -61,7 +76,6 @@
 % If you comment hyperref and then uncomment it, you should delete
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
 % run, let it finish, and you should be clear).
-\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
 \usepackage{bm}% ändert \boldsymbol
 \def\arraystretch{0.8}
 \renewcommand{\tabcolsep}{2pt}
@@ -942,8 +956,10 @@ with public available implementation.
     As reported in \cite{beier_2014_cvpr}, CGC is faster and gives better energies then \cite{yarkony_2012_eccv} and \cite{bagon_2011_arxiv}.
     Therefore we exclude those in our experiments.
     \item \textbf{KL}\cite{???}  and a public available 
-        implementation \footnote{
-            \label{opengm-master} 
+        implementation 
+        \footlabel{opengm-master}{%
+        %\footnote{
+        %    \label{opengm-master} 
             \url{https://github.com/opengm/opengm}
             %\label{opengm-master}
         }
