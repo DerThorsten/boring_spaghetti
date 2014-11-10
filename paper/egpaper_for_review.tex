@@ -1018,33 +1018,40 @@ If the optimal solution $y^*$ lies in $P(G_{y' \OR y''})$ than a optimal fusion 
 \section{Experiments}\label{sec:exp}
 In our experiments we compare to the following methods withpublic available implementation.
 
-Cut, Clue \& Cut~\cite{beier_2014_cvpr} (\textbf{CGC}): We used the public available implementation\footnote{\label{opengm-cvpr2014}\url{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}
-of the original authors.
-\textbf{KL}~\cite{Kerninghan-1970}: We use the the  public available 
-        implementation 
-        \footlabel{opengm-master}{%
-        %\footnote{
-        %    \label{opengm-master} 
-            \url{https://github.com/opengm/opengm}
-            %\label{opengm-master}
-        }
-    \item \textbf{MC-R,MC-I}\cite{kappes_2011_emmcvpr}  where we used a  modified 
+For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}\url{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}
+of the Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{https://github.com/opengm/opengm}}.
+For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we try the public available implementation in OpenGM\footref{opengm-master}
+of Kappes~\etal. We realize that their implementation has some limitations on large problems and make the following modifications.
+Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
+Secondly, we follow~\cite{kroeger_2012_eccv}. and search for shortest paths and add those only if they are non-chordal instead of searching for the shortest non-chordal path
+during the separation procedure.
+This procedure is one magnitude faster, but might cause a few extra outer iterations.
+In~\cite{kroeger_2012_eccv}. this has been used for MC-I only. 
+For MC-R this search procedure is not sufficient and need to be followed by a search for a shortest non-chordal paths.
+From the field of data-mining we compare to the PIVOT-algorithm~\cite{Ailon-2008} followed by a round of BOEM~\cite{Gionis-2007} denoted by \textbf{PIVOT-BOEM}.
+We use the public available code of Micha Elsner\footnote{\url{http://www.ling.ohio-state.edu/~melsner/resources/correlation-readme.html}}.
+While this implementation uses full adjacency matrixes it does not scale as well as the algorithm can and therefor can not be applied on all datasets.
+We also run classical fusion moves~\cite{Lempinsky-2010} (\textbf{Fusion}) and select distinct labels for the two candidate segmentations.
 
-    version of a public available implementation implementation \footref{opengm-master}.
+As reported in~\cite{beier_2014_cvpr}, CGC is faster and gives better energies then PlanarCC~\cite{yarkony_2012_eccv} and Expand \& Explore~\cite{bagon_2011_arxiv}.
+Therefore we exclude those in our experiments.
 
-    We replace a highly used queue with a more suitable and
-    fast \emph{index-min-heap}\cite{???}.
-    MC-R indicates that only the LP is solved, while MC-I solves
-    the ILP.
-    \item non vision solvers here TODO
-\end{itemize}
-And the following proposed solvers:
-\begin{itemize}
-\item \textbf{EHC}: Energy Based Based Hierarchical Clustering 
+We compare this methods to the following methods suggested in the present paper.
+%
+Energy Based Based Hierarchical Clustering (\textbf{EHC})
 as described in sec.~\ref{sec:ehc}.
-\item \textbf{EHC-CGC}: As CGC but warm started 
-with the solution from EHC.
-\end{itemize}
+%
+CGC warm started with the solution from EHC denoted by \textbf{EHC-CGC}.
+%
+The proposed correlation cluster fusion algorithm with EHC-based and watershed-based proposals
+ and MC-I and CGC as subproblem solvers denoted by 
+\textbf{fusionCC-HC-MC},
+\textbf{fusionCC-HC-CGC},
+\textbf{fusionCC-WS-MC}, and 
+\textbf{fusionCC-WS-CGC}, respectively.
+We set the size of the proposals fix to $10\%$ of the original problem size
+and the standard derivation of the random edge noise to $1.5$.
+
 
  \begin{figure}[t]
     \centering
@@ -1082,8 +1089,6 @@ with the solution from EHC.
   \end{figure}
 
 
-As reported in \cite{beier_2014_cvpr}, CGC is faster and gives better energies then \cite{yarkony_2012_eccv} and \cite{bagon_2011_arxiv}.
-    Therefore we exclude those in our experiments.
 
 \subsection{Parameter Choice}
 \begin{figure}
@@ -1150,11 +1155,11 @@ For 3D volume segmentation we took the models from
 Andres \etal \cite{kroeger_2012_eccv}.
 We use models with the cube sizes $150^3$, $300^3$, $450^3$, $550^3$ and $900^3$.
 Both, the 2D and 3D models are available in a recent graphical model
-benchmark of Kappes \etal ~\cite{kappes_2013_benchmark_cvpr}.
+benchmark of Kappes \etal~\cite{kappes_2013_benchmark_cvpr}.
 We use the same names for the datasets as in the benchmark,
 \emph{image-seg} for the models from  \cite{andres_2011_iccv} and \emph{knott-150 - knott-550} and \emph{3d-seg}
 for the models from \cite{kroeger_2012_eccv}.
-The size of instances is given in tab. ~\ref{tab:instance_sizes}.
+The size of instances is given in Tab.~\ref{tab:instance_sizes}.
 
 
 \begin{table}[H]
@@ -1171,8 +1176,33 @@ The size of instances is given in tab. ~\ref{tab:instance_sizes}.
          knott-300        &     3846 - 5896     & ???        & 2            & $\times$ \\
          knott-450        &     15150-17070     & ???        & 2            & $\times$ \\
          knott-550        &     27286 - 31249   & ???        & 2            & $\times$ \\
-         3d-seg           &     7958 - 101220   & ???        & 2            & $\times$ \\
+         3d-seg           &     101220   & ???        & 1            & $\times$ \\
          slashdot         &     ???             & ???        & ???          & $\times$ \\     
+      \bottomrule
+   \end{tabular}
+\end{table}
+
+\begin{table}[H]
+   \tiny
+   \centering
+   \caption{Eval}
+   \label{tab:eval}
+   \begin{tabular}{lllllll}
+      \toprule
+         Dataset          &  image-seg &  knott-3d-150 &knott-3d-300 &knott-3d-450 &knott-3d-550 &3d-seg\\
+      \midrule 
+         PIVOT-BOEM       &      \\ 
+         HC               &\\
+         HC-CGC           &    \\
+         CGC              &   \\
+         KL               & \\
+         FUSION           &  \\
+         MC-R             &  \\   
+         MC-I             &  \\  
+         FusionCC-HC-MC   &  \\  
+         FusionCC-HC-CGC  &  \\  
+         FusionCC-WS-MC   &  \\  
+         FusionCC-WS-CGC  &  \\      
       \bottomrule
    \end{tabular}
 \end{table}
