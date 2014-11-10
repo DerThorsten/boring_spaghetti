@@ -17,20 +17,73 @@
 }
 
 \begin{center}
-\begin{figure}[ht]
+\begin{figure*}[ht]
 \resizebox{\linewidth}{!}{
     \begin{tikzpicture}[scale=1]%[x=1 cm, y=1 cm]
 
-            \draw (2,2-2) node[nS,fill=red!60] (n0) {$0$}; 
-            \draw (4,2-2) node[nS,fill=red!60] (n1) {$1$};
-            \draw (2,0-2) node[nS,fill=green!60] (n3) {$2$}; 
-            \draw (4,0-2) node[nS,fill=green!60] (n4) {$3$};
+            \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
+            (1-2,3.5) -- (1-2,6.5) node [black,midway,xshift=-1.2cm,rotate=90,align=left] 
+            {proposal edge \\ labeling $\bm{x'}$};
+
+            \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
+            (1-2,3-3.5) -- (1-2,6.5-4) node [black,midway,xshift=-1.2cm, rotate=90,align=left] 
+            {proposal edge \\ labeling $\bm{x''}$};
+
+
+            \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
+            (5,3.5) -- (5,6.5) node [black,midway,xshift=-1.2cm,rotate=90,align=left] 
+            {proposal node \\ labeling $\bm{l'}$};
+
+            \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
+            (5,3-3.5) -- (5,6.5-4) node [black,midway,xshift=-1.2cm, rotate=90,align=left] 
+            {proposal node \\ labeling $\bm{l''}$};
+
+
+            \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
+            (5,-4.5) -- (5,-1.5) node [black,midway,xshift=-1.2cm, rotate=90,align=left] 
+            {Binary fusion \\ move problem};
+
+
+
+            \draw (2-2,2+4) node[nS] (n0) {$0$}; 
+            \draw (4-2,2+4) node[nS] (n1) {$1$};
+            \draw (2-2,0+4) node[nS] (n3) {$2$}; 
+            \draw (4-2,0+4) node[nS] (n4) {$3$};
+            \path
+                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eCC] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eCC] node[eNS]{$w_{13}$} (n4)
+            ;
+
+            \draw (2-2,2) node[nS] (n0) {$0$}; 
+            \draw (4-2,2) node[nS] (n1) {$1$};
+            \draw (2-2,0) node[nS] (n3) {$2$}; 
+            \draw (4-2,0) node[nS] (n4) {$3$};
+            \path
+                (n0) edge[eCC] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eCC] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+            ;
+
+
+
+
+
+
+            % first segmentation as coloring
+            \draw (2+4,2+4) node[nS,fill=red!60] (n0) {$0$}; 
+            \draw (4+4,2+4) node[nS,fill=red!60] (n1) {$1$};
+            \draw (2+4,0+4) node[nS,fill=green!60] (n3) {$2$}; 
+            \draw (4+4,0+4) node[nS,fill=green!60] (n4) {$3$};
             \path
                 (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
                 (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
                 (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
                 (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
             ;
+
 
             % 1. FUSION
             \draw (2+4,2) node[nS,fill=red!60] (n0) {$0$}; 
@@ -117,9 +170,9 @@
             ;
 
             \draw (2+16,2-4) node[nD, circle split part fill={red!60, green!60}] (n0) {$ $}; 
-            \draw (4+16,2-4) node[nD, circle split part fill={red!60, red!60}] (n1) {$ $};
+            \draw (4+16,2-4) node[nD, circle split part fill={red!60, blue!60}] (n1) {$ $};
             \draw (2+16,0-4) node[nD, circle split part fill={green!60, green!60}] (n3) {$ $}; 
-            \draw (4+16,0-4) node[nD, circle split part fill={green!60, red!60}] (n4) {$ $};
+            \draw (4+16,0-4) node[nD, circle split part fill={green!60, blue!60}] (n4) {$ $};
             \path
                 (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
                 (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
@@ -200,15 +253,27 @@
                 (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
             ;
 
-           
+            \draw [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=0.8cm]
+            (5,-6) -- (33,-6) node [black,midway,xshift=0cm,yshift=-1cm] 
+            {
+                For all different colorings $l''$, the binary fusion move subproblem is different.
+            };
 
+
+            \draw [decorate,decoration={brace,amplitude=10pt,raise=4pt},yshift=0.8cm]
+            (5,2) -- (33,2) node [black,midway,xshift=0cm,yshift=1cm] 
+            {
+                All these node labelings encode the same partition
+            };
+
+            \draw[black] (5,-1) -- (33,-1);
 
     \end{tikzpicture}
 }
 \caption{
 w
 }\label{fig:fusion_abiguty}
-\end{figure}
+\end{figure*}
 \end{center}
 
 
