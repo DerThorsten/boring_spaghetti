@@ -1,0 +1,148 @@
+%!TEX root = ../egpaper_for_review.tex
+
+\tikzstyle{nS}=[circle,minimum size = 0.6cm,inner sep = 0pt,draw, font=\small,align=left]
+\tikzstyle{nD}=[shape = circle split,rotate=45,minimum size = 0.6cm,inner sep = 0pt,draw, font=\small,align=left]
+
+\tikzstyle{eS}=[thick,minimum size = 0.5cm,inner sep = 0pt,draw, font=\small,align=left]
+\tikzstyle{eC}=[very thick,minimum size = 0.5cm,inner sep = 0pt,draw=red, font=\small,align=left]
+\tikzstyle{eNC}=[very thick,minimum size = 0.5cm,inner sep = 0pt,draw=green!70!black, font=\small,align=left, line width=1mm]
+\tikzstyle{eNS}=[fill=white,minimum size = 0.5cm,inner sep = 0pt, font=\tiny,align=left]
+\tikzstyle{eCC}=[very thick,dotted,minimum size = 0.5cm,inner sep = 0pt,draw=black, font=\small,align=left, draw=red!70!black, line width=1mm]
+
+\tikzset{
+  head/.style = {fill = orange!90!blue,
+                 label = center:\textsf{\Large H}},
+  tail/.style = {fill = blue!70!yellow, text = black,
+                 label = center:\textsf{\Large T}}
+}
+
+\begin{center}
+\begin{figure}[ht]
+\begin{tiny}
+
+
+\begin{subfigure}[t]{0.7\linewidth}
+    \resizebox{\linewidth}{!}{
+        \begin{tikzpicture}[scale=1]%[x=1 cm, y=1 cm]
+
+                \draw (2,2-2) node[nS,fill=red!60] (n0) {$0$}; 
+                \draw (4,2-2) node[nS,fill=red!60] (n1) {$1$};
+                \draw (2,0-2) node[nS,fill=green!60] (n3) {$2$}; 
+                \draw (4,0-2) node[nS,fill=green!60] (n4) {$3$};
+                \path
+                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                    (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
+                    (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
+                    (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                ;
+
+                % 1. FUSION
+                \draw (2+4,2) node[nS,fill=red!60] (n0) {$0$}; 
+                \draw (4+4,2) node[nS,fill=green!60] (n1) {$1$};
+                \draw (2+4,0) node[nS,fill=red!60] (n3) {$2$}; 
+                \draw (4+4,0) node[nS,fill=green!60] (n4) {$3$};
+                \path
+                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                    (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
+                    (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
+                    (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                ;
+
+                \draw (2+4,2-4) node[nD, circle split part fill={red!60, red!60}] (n0) {$ $}; 
+                \draw (4+4,2-4) node[nD, circle split part fill={red!60, green!60}] (n1) {$ $};
+                \draw (2+4,0-4) node[nD, circle split part fill={green!60, red!60}] (n3) {$ $}; 
+                \draw (4+4,0-4) node[nD, circle split part fill={green!60, green!60}] (n4) {$ $};
+                \path
+                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                    (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
+                    (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
+                    (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                ;
+
+                % 2. FUSION
+                \draw (2+8,2) node[nS,fill=blue!60] (n0) {$0$}; 
+                \draw (4+8,2) node[nS,fill=green!60] (n1) {$1$};
+                \draw (2+8,0) node[nS,fill=blue!60] (n3) {$2$}; 
+                \draw (4+8,0) node[nS,fill=green!60] (n4) {$3$};
+                \path
+                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                    (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
+                    (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
+                    (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                ;
+
+                \draw (2+8,2-4) node[nD, circle split part fill={red!60, blue!60}] (n0) {$ $}; 
+                \draw (4+8,2-4) node[nD, circle split part fill={red!60, green!60}] (n1) {$ $};
+                \draw (2+8,0-4) node[nD, circle split part fill={green!60, blue!60}] (n3) {$ $}; 
+                \draw (4+8,0-4) node[nD, circle split part fill={green!60, green!60}] (n4) {$ $};
+                \path
+                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                    (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
+                    (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
+                    (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                ;
+
+                % 3. FUSION
+                \draw (2+12,2) node[nS,fill=red!60] (n0) {$0$}; 
+                \draw (4+12,2) node[nS,fill=blue!60] (n1) {$1$};
+                \draw (2+12,0) node[nS,fill=red!60] (n3) {$2$}; 
+                \draw (4+12,0) node[nS,fill=blue!60] (n4) {$3$};
+                \path
+                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                    (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
+                    (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
+                    (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                ;
+
+                \draw (2+12,2-4) node[nD, circle split part fill={red!60, red!60}] (n0) {$ $}; 
+                \draw (4+12,2-4) node[nD, circle split part fill={red!60, blue!60}] (n1) {$ $};
+                \draw (2+12,0-4) node[nD, circle split part fill={green!60, red!60}] (n3) {$ $}; 
+                \draw (4+12,0-4) node[nD, circle split part fill={green!60, green!60}] (n4) {$ $};
+                \path
+                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                    (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
+                    (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
+                    (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                ;
+
+                % 4. FUSION
+                \draw (2+16,2) node[nS,fill=magenta!60] (n0) {$0$}; 
+                \draw (4+16,2) node[nS,fill=blue!60] (n1) {$1$};
+                \draw (2+16,0) node[nS,fill=magenta!60] (n3) {$2$}; 
+                \draw (4+16,0) node[nS,fill=blue!60] (n4) {$3$};
+                \path
+                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                    (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
+                    (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
+                    (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                ;
+
+                \draw (2+16,2-4) node[nD, circle split part fill={red!60, magenta!60}] (n0) {$ $}; 
+                \draw (4+16,2-4) node[nD, circle split part fill={red!60, blue!60}] (n1) {$ $};
+                \draw (2+16,0-4) node[nD, circle split part fill={green!60, magenta!60}] (n3) {$ $}; 
+                \draw (4+16,0-4) node[nD, circle split part fill={green!60, blue!60}] (n4) {$ $};
+                \path
+                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                    (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
+                    (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
+                    (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                ;
+
+
+        \end{tikzpicture}
+    }
+\caption{b}
+\label{fig:f_b}
+\end{subfigure}
+
+
+
+\end{tiny}
+\caption{
+w
+}\label{fig:fusion_abiguty}
+\end{figure}
+\end{center}
+
+
+

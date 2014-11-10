@@ -65,6 +65,23 @@
   scaled ticks = false,
 }}
 
+% Two Colored Circle Split 
+\makeatletter
+\tikzset{circle split part fill/.style  args={#1,#2}{%
+ alias=tmp@name, 
+  postaction={%
+    insert path={
+     \pgfextra{% 
+     \pgfpointdiff{\pgfpointanchor{\pgf@node@name}{center}}%
+                  {\pgfpointanchor{\pgf@node@name}{east}}%            
+     \pgfmathsetmacro\insiderad{\pgf@x}
+      \fill[#1] (\pgf@node@name.base) ([xshift=-\pgflinewidth]\pgf@node@name.east) arc
+                          (0:180:\insiderad-\pgflinewidth)--cycle;
+      \fill[#2] (\pgf@node@name.base) ([xshift=\pgflinewidth]\pgf@node@name.west)  arc
+                           (180:360:\insiderad-\pgflinewidth)--cycle;            
+         }}}}}  
+ \makeatother  
+
 %\usepackage{tkz-berge}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
