@@ -1016,16 +1016,11 @@ If the optimal solution $y^*$ lies in $P(G_{y' \OR y''})$ than a optimal fusion 
 
 
 \section{Experiments}\label{sec:exp}
+In our experiments we compare to the following methods withpublic available implementation.
 
-Within all experiments we used the following existing solvers 
-with public available implementation.
-\begin{itemize}
-    \item 
-    \textbf{CGC} \cite{beier_2014_cvpr} we used the public available 
-    implementation\footnote{\label{opengm-cvpr2014}\url{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}.
-    As reported in \cite{beier_2014_cvpr}, CGC is faster and gives better energies then \cite{yarkony_2012_eccv} and \cite{bagon_2011_arxiv}.
-    Therefore we exclude those in our experiments.
-    \item \textbf{KL}\cite{???}  and a public available 
+Cut, Clue \& Cut~\cite{beier_2014_cvpr} (\textbf{CGC}): We used the public available implementation\footnote{\label{opengm-cvpr2014}\url{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}
+of the original authors.
+\textbf{KL}~\cite{Kerninghan-1970}: We use the the  public available 
         implementation 
         \footlabel{opengm-master}{%
         %\footnote{
@@ -1051,18 +1046,21 @@ as described in sec.~\ref{sec:ehc}.
 with the solution from EHC.
 \end{itemize}
 
- \begin{figure}[ht]
+ \begin{figure}[t]
     \centering
     \begin{tikzpicture}
     \begin{semilogxaxis}[  mark size=1pt,
-   % restrict y to domain=-6000:-4400,
+     height= 4cm, 
+    restrict y to domain=-80000:1000,
    %   restrict x to domain=10:4000,
     xlabel = {runtime},
-    xmin = 0,
+    xmin = 10,
     xmax = 4100,
+    ymax = 0,
+    ymin = -80000,
     legend to name = ledgendPositionMC,
     legend columns=4,
-    width = 1.0\columnwidth,
+    width = 0.9\columnwidth,
     scaled ticks = false
     ] 
     \addplot[color=red,mark=x] table[x=time, y=MC-CCFDB-o*]{data3/knott-3d-450b.data};          \addlegendentry{MCR-old}
@@ -1077,10 +1075,15 @@ with the solution from EHC.
   \ref{ledgendPositionMC}
   \hypersetup{linkcolor = red}
   \end{center}
-    \caption{knott-3d-450b}\label{fig:at:knott-450b}
+    \caption{Comparison of the Multicut implementation of OpenGM and 
+    our modified implementation, which can deal better with large scale problems. 
+    However, for large scale problems it still does not scale.}
+    \label{fig:at:knott-450b}
   \end{figure}
 
 
+As reported in \cite{beier_2014_cvpr}, CGC is faster and gives better energies then \cite{yarkony_2012_eccv} and \cite{bagon_2011_arxiv}.
+    Therefore we exclude those in our experiments.
 
 \subsection{Parameter Choice}
 \begin{figure}
