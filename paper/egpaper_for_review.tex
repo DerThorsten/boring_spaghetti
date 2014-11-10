@@ -556,6 +556,7 @@ can improve performance drastically.
 \section{Correlation-Clustering-Fusion Moves}\label{sec:cc_fm}
 
 
+\input{inputs/fig_fusion.tex}
 
 \textbf{new}
 
@@ -569,25 +570,25 @@ clustering which works on the edge domain.
 Given two proposal solutions $y'$ and $y''$,
 $\mathcal{C}$ is the set of edges
 which are uncut in $y'$ and $y''$.
-
+%
 \begin{align}
 \breve{y}    & =  y' \cup y'' \\
 \mathcal{C}  & =  \{ (i, j) \quad | \quad \breve{y}_{ij} = 0 \}
 \end{align}
-
+%
 The fusion move for correlation clustering is solving Eq.~\ref{eq:edgeproblem}
 with additional \emph{must-link constraints} for all edges in $\mathcal{C}$.
-
+%
 \begin{align}
   y^* &=& \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:fusion_move_a}.\\ 
   s.t & &  y_{ij} = 0 \quad \forall (i, j) \in \mathcal{C} \nonumber
 \end{align}
-
+%
 By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy:
 \begin{align}
   \sum  w_{ij} \cdot y^*_{ij}  \leq \min \left( \sum  w_{ij} \cdot y'_{ij} ,  \sum   w_{ij} \cdot y''_{ij} \right)
 \end{align}
-
+%
 Eq.~\ref{eq:fusion_move_a} can be solved efficiently, since 
 we can work on a coarser graph, where all nodes which are connected
 via must-link constraints are merged into single nodes.
