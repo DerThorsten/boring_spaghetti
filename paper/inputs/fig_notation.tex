@@ -3,9 +3,9 @@
 \tikzstyle{nS}=[circle,minimum size = 0.6cm,inner sep = 0pt,draw, font=\small,align=left]
 \tikzstyle{eS}=[thick,minimum size = 0.5cm,inner sep = 0pt,draw, font=\small,align=left]
 \tikzstyle{eC}=[very thick,minimum size = 0.5cm,inner sep = 0pt,draw=red, font=\small,align=left]
-\tikzstyle{eNC}=[very thick,minimum size = 0.5cm,inner sep = 0pt,draw=green, font=\small,align=left]
+\tikzstyle{eNC}=[very thick,minimum size = 0.5cm,inner sep = 0pt,draw=green!70!black, font=\small,align=left, line width=1mm]
 \tikzstyle{eNS}=[fill=white,minimum size = 0.5cm,inner sep = 0pt, font=\tiny,align=left]
-\tikzstyle{eCC}=[very thick,dotted,minimum size = 0.5cm,inner sep = 0pt,draw=black, font=\small,align=left]
+\tikzstyle{eCC}=[very thick,dotted,minimum size = 0.5cm,inner sep = 0pt,draw=black, font=\small,align=left, draw=red!70!black, line width=1mm]
 
 \begin{center}
 \begin{figure}[h]
@@ -68,12 +68,12 @@
                 \draw (4,0) node[nS] (n4) {$4$};
                 \draw (6,0) node[nS] (n5) {$5$};
                 \path
-                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                    (n0) edge[eNC] node[eNS]{$w_{01}$} (n1) 
                     (n1) edge[eCC] node[eNS]{$w_{12}$} (n2) 
-                    (n3) edge[eS] node[eNS]{$w_{34}$} (n4) 
+                    (n3) edge[eNC] node[eNS]{$w_{34}$} (n4) 
                     (n4) edge[eCC] node[eNS]{$w_{45}$} (n5)
-                    (n0) edge[eS] node[eNS]{$w_{03}$} (n3)
-                    (n1) edge[eS] node[eNS]{$w_{14}$} (n4)
+                    (n0) edge[eNC] node[eNS]{$w_{03}$} (n3)
+                    (n1) edge[eNC] node[eNS]{$w_{14}$} (n4)
                     (n2) edge[eCC] node[eNS]{$w_{25}$} (n5)
                 ;
         \end{tikzpicture}
@@ -92,11 +92,11 @@
                 \draw (4,0) node[nS] (n4) {$4$};
                 \draw (6,0) node[nS] (n5) {$5$};
                 \path
-                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
+                    (n0) edge[eNC] node[eNS]{$w_{01}$} (n1) 
                     (n1) edge[eCC] node[eNS]{$w_{12}$} (n2) 
-                    (n3) edge[eS] node[eNS]{$w_{34}$} (n4) 
+                    (n3) edge[eNC] node[eNS]{$w_{34}$} (n4) 
                     (n4) edge[eCC] node[eNS]{$w_{45}$} (n5)
-                    (n0) edge[eS] node[eNS]{$w_{03}$} (n3)
+                    (n0) edge[eNC] node[eNS]{$w_{03}$} (n3)
                     (n1) edge[eCC] node[eNS]{$w_{14}$} (n4)
                     (n2) edge[eCC] node[eNS]{$w_{25}$} (n5)
                 ;

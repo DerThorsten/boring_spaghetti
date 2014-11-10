@@ -480,17 +480,22 @@ in graph / image segmentation
 
 Hierarchical clustering is fast, and 
 due to the agglomeration of edge weights, 
-hierarchical clustering is robust against noise.
+{\color{red} hierarchical clustering is robust against noise}.
+{\color{yellow} [ First most similar nodes are merged...]
 In agglomerative clustering, weights of
-parallel edges are merged into single edges.
+parallel edges are merged into single edges.}
 For image segmentation, the length
-weighted mean is used to do this update.
+weighted mean is used to do this update [ref].
 
+[We contrary on those works work directly on energy functions and that why ...]
 We propose to use Energy Based Hierarchical Clustering (EHC) to find
 solutions for correlation clustering.
-In each step, the edge with the highest weight $w$ is
+
+\textit{move this up} [ In each step, the edge with the highest weight $w$ is
 contracted (red edges in fig. ~\ref{fig:hc_alg}).
 Doing so, parallel edges edges can occur.
+]
+
 To make EHC follow the energy, we propose 
 the following update rule:
 Whenever there are multiple edges between 
