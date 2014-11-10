@@ -19,7 +19,7 @@ anchor=north east}}
   \anytimeplot{image-seg}
   \end{semilogxaxis}
   \end{tikzpicture}
-  \caption{image-seg}
+  \caption{image-seg}\label{fig:at:image-seg}
   \end{subfigure}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
   \begin{subfigure}[b]{0.33\textwidth}
@@ -39,7 +39,7 @@ anchor=north east}}
    
     \end{semilogxaxis}
     \end{tikzpicture}
-    \caption{knott-3d-150}
+    \caption{knott-3d-150}\label{fig:at:knott-150}
   \end{subfigure}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{subfigure}[b]{0.33\textwidth}
@@ -58,7 +58,7 @@ anchor=north east}}
   \anytimeplot{knott-3d-300}
   \end{semilogxaxis}
   \end{tikzpicture}
-  \caption{knott-3d-300}
+  \caption{knott-3d-300}\label{fig:at:knott-300}
   \end{subfigure}
   \newline
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,7 +77,7 @@ anchor=north east}}
   \anytimeplot{knott-3d-450} 
   \end{semilogxaxis}
   \end{tikzpicture}
-  \caption{knott-3d-450}
+  \caption{knott-3d-450}\label{fig:at:knott-450}
   \end{subfigure}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{subfigure}[b]{0.33\textwidth}
@@ -95,7 +95,7 @@ anchor=north east}}
   \anytimeplot{knott-3d-550} 
   \end{semilogxaxis}
   \end{tikzpicture}
-  \caption{knott-3d-550}
+  \caption{knott-3d-550}\label{fig:at:knott-550}
   \end{subfigure}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\begin{subfigure}[H]
   \begin{subfigure}[b]{0.33\textwidth}
@@ -114,7 +114,7 @@ anchor=north east}}
   \anytimeplot{seg-3d} 
   \end{semilogxaxis}
   \end{tikzpicture}
-  \caption{seg-3d}
+  \caption{seg-3d}\label{fig:at:seg3d}
   \end{subfigure}
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{subfigure}[b]{0.33\textwidth}
@@ -143,7 +143,7 @@ anchor=north east}}
   %\anytimeplot{socialnets} 
   \end{semilogxaxis}
   \end{tikzpicture}
-  \caption{social nets}
+  \caption{social nets}\label{fig:at:socialnets}
   \end{subfigure}
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{subfigure}[b]{0.33\textwidth}
@@ -172,7 +172,7 @@ anchor=north east}}
  % \anytimeplot{normalizedsocialnets}
   \end{semilogxaxis}
   \end{tikzpicture}
-  \caption{normalized social nets}
+  \caption{normalized social nets}\label{fig:at:nsocialnets}
   \end{subfigure}
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{subfigure}[b]{0.33\textwidth}
@@ -192,7 +192,7 @@ anchor=north east}}
     \addplot[color=yellow,mark=square] table[x=time,y=PIVOT*]{data3/modularity-clustering.data};
   \end{semilogxaxis}
   \end{tikzpicture}
-  \caption{modularity clustering}
+  \caption{modularity clustering}\label{fig:at:modularity}
   \end{subfigure}
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -202,16 +202,42 @@ anchor=north east}}
   \hypersetup{linkcolor = red}
   \end{center}
   \caption{
-    FOO
-    Among all tested solvers, the proposed method is the only
-    one scaling to large 3D data.
-    Except for the small 3D block, CC-Fusion finds very low
-    energies one to three magnitudes faster 
-    than any other method.
-    With increasing block size, is outperformed even more.
-    For the 2D datasets CGC is very fast, but our proposed
-    solver finds lower energies while still being faster
-    than the global optimal multicut solver.
+    % image seg
+    For the image-seg instances in fig.~\ref{fig:at:image-seg} 
+    Fusion-EHC-MC has performs best and Fusion-WS-MC gives 
+    almost the same results, but a bit slower then with EHC proposals.
+    Using the same proposals but approximate moves (Fusion-EHC-CGC Fusion-WS-CGC )
+    leads to suboptimal results.
+    The warm EHC started version of GCG (EHC-CGC) performs better then GCG itself,
+    but both are outperformed by the proposed algorithms.
+    Global optimal methods (MC-I) and the relaxed version (MC-R) are 
+    still usable fast for these instances.
+    % 3d 
+    For the smallest 3D instances (\ref{fig:at:knott-150}) all solvers
+    except ??? and EHC perform equally, and the proposed fusion algorithms
+    give the best any time performance.
+    With increasing problem size (\ref{fig:at:knott-150}-\ref{fig:at:knott-550} and \ref{fig:at:seg3d})
+    the runtime of MC-I, MC-R and CGC increases drastically, while
+    the proposed solvers still scale well.
+    For these instances, the EHC started version of CGC outperforms 
+    GCG in terms of runtime and energy.
+    % social nets
+    For the social net instances (\ref{fig:at:socialnets},\ref{fig:at:nsocialnets})
+    Fusion-HC-MC and Fusion-HC-CGC perform equally.
+    Only CGC and EHC-CGC leads to better energies after $10^3 sec$, while global optimal methods (MC-I)
+    fail to converge within this time limit.
+    % modularity clustering 
+    For the modularity clustering instances in fig.~\ref{fig:at:modularity} we see
+    an interesting behavior. On these complete graphs, Kernighan Lin (KL) has the 
+    best performance.
+    The proposed methods perform reasonable, but  KL is faster and leads to better energies.
+    %%%
+    %% summary
+    Overall, energy hierarchical clustering based proposals work better
+    then watershed based proposals. They converge to similar energies
+    but the clustering based approach is faster on all tested instances.
+    On all instances except for modularity clustering, it is better
+    to solve the fusion move to optimality (Fusion-HC-MC) then using approximations (FUSION-HC-GCG).
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
