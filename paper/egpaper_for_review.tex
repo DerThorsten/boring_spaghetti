@@ -29,6 +29,7 @@
 \usepackage{pgfplotstable}
 \usepackage{filecontents}
 %\usepackage{scrextend}
+
 \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
 
 \newcommand{\footlabel}[2]{%
@@ -44,6 +45,7 @@
 \newcommand{\footref}[1]{%
     $^{\ref{#1}}$%
 }
+
 \usetikzlibrary{arrows,positioning,automata,shadows,fit,shapes}
 \usetikzlibrary{arrows,petri,topaths}
 \usetikzlibrary{positioning,fit,calc}
@@ -786,57 +788,19 @@ meaningful moves (??? this last sentence needs to be rewritten).
 
 
 
-%\begin{algorithm}
-%    \begin{scriptsize}
-%        \caption{Proposal Generators}\label{alg:proposal_gen}   
-%        \begin{algorithmic}[1]
-%            %\Require $J(x) \leq J(x')$
-%            %\Ensure $J(\hat{x}) \leq J(x)$
-%            %\vspace{0.3cm}
-%            \Procedure{Rand2Coloring}{$x,G=(E,V),W$}
-%            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
-%            \State $x'= \argmin\limits_{\bar{x}} \sum\limits_{e_{ij} \in E } \tilde{w}_{ij}[\bar{x}_i \neq \bar{x}_j]  [x_i = x_j]   $
-%
-%            $ \quad\quad s.t.\quad x_i \in \{0, 1\} \forall i $
-%            \State \textbf{return} $x'$
-%            \EndProcedure
-%            %
-%            %
-%            \vspace{0.3cm}
-%            \Procedure{RandEdgeWeightedWatersheds}{$x,G=(E,V),W$}
-%            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
-%            \State $ getRandomSeeds$
-%            \State $ runEdgeWeightedWs$
-%            \EndProcedure   
-%            %
-%            %
-%            \vspace{0.3cm}
-%            \Procedure{RandHierarchicalClustering}{$x,G=(E,V),W$}
-%            \State $\tilde{W} \gets \textbf{\scriptsize{randomize}}(W) $
-%            \State $\hat{G}=(\hat{E},\hat{V}) \gets G=(E,V)$
-%            \State $\hat{W} \gets W$
-%            \While{$|\hat{V}|>\gamma$ \textbf{and}  $\max(\hat{W})>\theta$ }
-%                \State $\hat{G}=(\hat{E},\hat{V}),\hat{W} \gets 
-%                    \textbf{\scriptsize{contract}}(\hat{G},\hat{W},  \argmax\limits_{\hat{E}}(\hat{W}) )$
-%            \EndWhile
-%            \State $x' \gets \textbf{\scriptsize{getClusterResults}}(???) $ 
-%            \EndProcedure
-%        \end{algorithmic}
-%    \end{scriptsize}
-%\end{algorithm}
 
+\subsubsection{Randomized Energy Based Hierarchical Clustering (REHC)}\label{sec:prop:hc}
 
-
-\subsubsection{Randomized HierarchicalClustering (RHC)}
-
-To generate proposals cut we can use bottom up hierarchical clustering.
-In each step we contract the edge with the highest weight.
-Parallel edges are merged into single edges by summing their weights.
-We stop when a certain number of nodes is reached, or the
-largest edge weight among the not yet contracted edges is smaller then a certain threshold.
-To get versatile proposals we either add noise 
-to the edge weighs or permute a certain number of weights.
-
+To generate fast energy aware proposals we can use energy
+based hierarchical clustering (EHC) as defined in sec.~\ref{sec:ehc}.
+EHC follows the energy function, therefore the \emph{quality}
+of the proposals is high.
+To get \emph{diversity} among the different proposal,
+we add normal distributed noise with a standard deviation of $\sigma_{ehc}$
+to each edge weight.
+To get proposals of the desired \emph{size}, we can use a 
+different stop condition in EHC, and stop when a certain number of connected 
+components is reached.
 
 %\subsubsection{Randomized MaxCut  (RMC)}
 %
@@ -854,17 +818,19 @@ to the edge weighs or permute a certain number of weights.
 %In addition we either add noise permute a certain number of weights.
 
 
-\subsubsection{Randomized Watersheds (RWS)}
+\subsubsection{Randomized Watersheds (RWS)}\label{sec:prop:ws}
 
 The edge weighted watershed algorithm \cite{meyer_2013}
 with random seeds can be used to get 
-cheap proposals. Instead of $n$ seeds distributed uniformly
-over all nodes we use the following.
+cheap proposals. 
+
+To improve \emph{quality} we do not use $n$ seeds distributed uniformly
+over all nodes but use the following.
 Draw $n/k$ random edges only the negative edges, 
-and give the two nodes of each random edge different seeds.
+and give the two nodes of each ``seed-edge'' a different seed.
 Doing so, a random subset of negative edges is forced
 to be cut within each proposal.
-For additional randomness, noise can be added to
+For additional \emph{diversity} randomness, noise can be added to
 the edge weighs.
 
 
@@ -947,7 +913,7 @@ If the optimal solution $y^*$ lies in $P(G_{y' \OR y''})$ than a optimal fusion 
 
 Within all experiments we used the following existing solvers 
 with public available implementation.
-\begin{itemize}
+\begin{compactitem}
     \item 
     \textbf{CGC} \cite{beier_2014_cvpr} we used the public available 
     implementation\footnote{\label{opengm-cvpr2014}\url{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}.
@@ -962,20 +928,26 @@ with public available implementation.
             %\label{opengm-master}
         }
     \item \textbf{MC-R,MC-I}\cite{kappes_2011_emmcvpr}  where we used a  modified 
-    version of a public available implementation implementation\footref{opengm-master}.
+    version of a public available implementation implementation %\footref{opengm-master}.
     We replace a highly used queue with a more suitable and
     fast \emph{index-min-heap}\cite{???}.
     MC-R indicates that only the LP is solved, while MC-I solves
     the ILP.
     \item non vision solvers here TODO
-\end{itemize}
+\end{compactitem}
 And the following proposed solvers:
-\begin{itemize}
+\begin{compactitem}
 \item \textbf{EHC}: Energy Based Based Hierarchical Clustering 
 as described in sec.~\ref{sec:ehc}.
 \item \textbf{EHC-CGC}: As CGC but warm started 
 with the solution from EHC.
-\end{itemize}
+
+\item \textbf{Fusion-EHC-MC}
+\item \textbf{Fusion-EHC-GCG}
+\item \textbf{Fusion-WS-MC}
+\item \textbf{Fusion-WS-GCG}
+
+\end{compactitem}
 
 \subsection{Parameter Choice}
 \begin{figure}
@@ -987,7 +959,7 @@ with the solution from EHC.
 }
 \end{figure}
 
-\subsection{Synthetic Models}
+%\subsection{Synthetic Models}
 
 \subsection{Social Networks}
 A application for large scale correlation clustering are social networks.
