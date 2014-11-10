@@ -1033,6 +1033,37 @@ as described in sec.~\ref{sec:ehc}.
 with the solution from EHC.
 \end{itemize}
 
+ \begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+    \begin{semilogxaxis}[  mark size=1pt,
+   % restrict y to domain=-6000:-4400,
+   %   restrict x to domain=10:4000,
+    xlabel = {runtime},
+    xmin = 0,
+    xmax = 4100,
+    legend to name = ledgendPositionMC,
+    legend columns=4,
+    width = 1.0\columnwidth,
+    scaled ticks = false
+    ] 
+    \addplot[color=red,mark=x] table[x=time, y=MC-CCFDB-o*]{data3/knott-3d-450b.data};          \addlegendentry{MCR-old}
+    \addplot[color=orange,mark=o] table[x=time, y=MC-CCFDB-n*]{data3/knott-3d-450b.data};          \addlegendentry{MCR-new}
+    \addplot[color=blue,mark=x] table[x=time, y=MC-CCIFD-o*]{data3/knott-3d-450b.data};          \addlegendentry{MCI-old}
+    \addplot[color=cyan,mark=o] table[x=time, y=MC-CCIFD-n*]{data3/knott-3d-450b.data};          \addlegendentry{MCI-new}
+
+    \end{semilogxaxis}
+    \end{tikzpicture}
+  \begin{center}
+  \hypersetup{linkcolor = black}
+  \ref{ledgendPositionMC}
+  \hypersetup{linkcolor = red}
+  \end{center}
+    \caption{knott-3d-450b}\label{fig:at:knott-450b}
+  \end{figure}
+
+
+
 \subsection{Parameter Choice}
 \begin{figure}
 \centering
