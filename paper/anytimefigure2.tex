@@ -15,10 +15,12 @@ anchor=north east}}
   width = 1.0\columnwidth,
   scaled ticks = false,
   every axis legend/.code={\let\addlegendentry\relax} 
-  ]  
+  ]
+  \addplot[color=yellow,mark=o] table[x=time, y=PIVOT*]{data3/image-seg.data};    \addlegendentry{PIVOT-BOEM}  
   \anytimeplot{image-seg}
   \end{semilogxaxis}
   \end{tikzpicture}
+  
   \caption{image-seg}\label{fig:at:image-seg}
   \end{subfigure}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -34,9 +36,9 @@ anchor=north east}}
     scaled ticks = false,
     every axis legend/.code={\let\addlegendentry\relax} 
     ] 
+    \addplot[color=yellow,mark=o] table[x=time, y=PIVOT*]{data3/knott-3d-150.data};          \addlegendentry{PIVOT-BOEM}
     \anytimeplot{knott-3d-150}
-    \addplot[color=yellow,mark=square] table[x=time,y=PIVOT*]{data3/knott-3d-150.data};  
-   
+  
     \end{semilogxaxis}
     \end{tikzpicture}
     \caption{knott-3d-150}\label{fig:at:knott-150}
@@ -52,8 +54,9 @@ anchor=north east}}
   xmax = 4100,
   width = 1.0\columnwidth,
   scaled ticks = false,
-  legend to name = ledgendPosition,
-  legend columns=6
+  %legend to name = ledgendPosition,
+  legend columns=6,
+  every axis legend/.code={\let\addlegendentry\relax} 
   ]  
   \anytimeplot{knott-3d-300}
   \end{semilogxaxis}
@@ -130,17 +133,7 @@ anchor=north east}}
   scaled ticks = false,
   every axis legend/.code={\let\addlegendentry\relax} 
   ]  
-  \addplot[color=brown,mark=x] table[x=time,y=HC]{data3/socialnets.data};              \addlegendentry{HC}
-  \addplot[color=black,mark=square] table[x=time,y=HC-CGC]{data3/socialnets.data};          \addlegendentry{HC-CGC}
-  \addplot[color=red,mark=x] table[x=time,y=CGC]{data3/socialnets.data};               \addlegendentry{CGC}
-  %\addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data3/normalizedsocialnets.data};          \addlegendentry{KL}
-  \addplot[color=purple,mark=o] table[x=time, y=MCR-CCFDB]{data3/socialnets.data};     \addlegendentry{MC-R}
-  \addplot[color=blue,mark=o] table[x=time, y=MCI-CCIFD]{data3/socialnets.data};       \addlegendentry{MC-I}
-  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data3/socialnets.data};    \addlegendentry{Fusion-HC-MC}
-  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data3/socialnets.data};    \addlegendentry{Fusion-HC-CGC}
-  %\addplot[color=orange,mark=o] table[x=time, y=DYNCC-WS-MC]{data3/normalizedsocialnets.data};  \addlegendentry{Fusion-WS-MC}
-  \addplot[color=pink,mark=x] table[x=time, y=DYNCC-WS-CGC]{data3/socialnets.data};  \addlegendentry{Fusion-WS-CGC}
-  %\anytimeplot{socialnets} 
+  \anytimeplot{socialnets} 
   \end{semilogxaxis}
   \end{tikzpicture}
   \caption{social nets}\label{fig:at:socialnets}
@@ -159,17 +152,7 @@ anchor=north east}}
   scaled ticks = false,
   every axis legend/.code={\let\addlegendentry\relax} 
   ] 
-  \addplot[color=brown,mark=x] table[x=time,y=HC]{data3/normalizedsocialnets.data};              \addlegendentry{HC}
-  %\addplot[color=black,mark=square] table[x=time,y=HC-CGC]{data3/normalizedsocialnets.data};          \addlegendentry{HC-CGC}
-  \addplot[color=red,mark=x] table[x=time,y=CGC]{data3/normalizedsocialnets.data};               \addlegendentry{CGC}
-  %\addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data3/normalizedsocialnets.data};          \addlegendentry{KL}
-  \addplot[color=purple,mark=o] table[x=time, y=MCR-CCFDB]{data3/normalizedsocialnets.data};     \addlegendentry{MC-R}
-  \addplot[color=blue,mark=o] table[x=time, y=MCI-CCIFD]{data3/normalizedsocialnets.data};       \addlegendentry{MC-I}
-  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data3/normalizedsocialnets.data};    \addlegendentry{Fusion-HC-MC}
-  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data3/normalizedsocialnets.data};    \addlegendentry{Fusion-HC-CGC}
-  %\addplot[color=orange,mark=o] table[x=time, y=DYNCC-WS-MC]{data3/normalizedsocialnets.data};  \addlegendentry{Fusion-WS-MC}
-  \addplot[color=pink,mark=x] table[x=time, y=DYNCC-WS-CGC]{data3/normalizedsocialnets.data};  \addlegendentry{Fusion-WS-CGC}
- % \anytimeplot{normalizedsocialnets}
+  \anytimeplot{normalizedsocialnets}
   \end{semilogxaxis}
   \end{tikzpicture}
   \caption{normalized social nets}\label{fig:at:nsocialnets}
@@ -185,11 +168,13 @@ anchor=north east}}
   xmin = 0,
   xmax = 4100,
   width = 1.0\columnwidth,
-  scaled ticks = false,
-  every axis legend/.code={\let\addlegendentry\relax} 
-  ] 
+  legend to name = ledgendPosition,
+  legend columns=6,
+  scaled ticks = false%,
+  %every axis legend/.code={\let\addlegendentry\relax} 
+  ]
+  \addplot[color=yellow,mark=o] table[x=time, y=PIVOT*]{data3/modularity-clustering.data};    \addlegendentry{PIVOT-BOEM} 
   \anytimeplot{modularity-clustering}
-    \addplot[color=yellow,mark=square] table[x=time,y=PIVOT*]{data3/modularity-clustering.data};
   \end{semilogxaxis}
   \end{tikzpicture}
   \caption{modularity clustering}\label{fig:at:modularity}
