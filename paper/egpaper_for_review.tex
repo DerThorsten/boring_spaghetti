@@ -473,19 +473,19 @@ We will show how to overcome this point later.
 \input{inputs/fig_hc_alg.tex}
 
 Outside computer vision greedy methods has been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
-A common greedy approach is to randomly permute the nodes and than assign 
+A common greedy approach~\cite{Soon-2001,Ng-2002,Elsner-2008} is to randomly permute the nodes and than assign 
 iteratively each node to an existing cluster or create a new cluster if costs cannot be decreased by assigning to a cluster.
-Common assigning strategies are:
-\emph{BEST}; assign to cluster which is linked by the most positive edge~\cite{Ng-2002},
-\emph{FIRST}; Assign to the cluster which is first linked by a positive edge~\cite{Soon-2001}, and
-\emph{VOTE}; Assign to cluster that minimizes objective function~\cite{Elsner-2008}.
+%Common assigning strategies are:
+%\emph{BEST}; assign to cluster which is linked by the most positive edge~\cite{Ng-2002},
+%\emph{FIRST}; Assign to the cluster which is first linked by a positive edge~\cite{Soon-2001}, and
+%\emph{VOTE}; Assign to cluster that minimizes objective function~\cite{Elsner-2008}.
 %
 The PIVOT Algorithm~\cite{Ailon-2008} iterate over all nodes in random order.
 If the node is not assigned it construct a cluster containing the node and all its 
 unassigned positively linked neighbors.  
 %
-Typically these algorithms started for many random permutations, 
-and pick the clustering with best objective value.
+%Typically these algorithms started for many random permutations, 
+%and pick the clustering with best objective value.
 
 A widely use post-processing method is  Best One Element Move (BOEM)~\cite{Gionis-2007}.
 Start with an initial clustering one node is removed from a cluster and reassigned to an existing or new cluster such that the costs are minimized.
