@@ -1,0 +1,101 @@
+
+\section{Introduction}
+
+
+Correlation clustering~\cite{Bansal-2002} also known as the multicut problem~\cite{chopra_1993_mp} 
+is a basic primitive in computer vision~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad} and data mining~\cite{Chierichetti-2014,Arasu-2009,Sadikov-2010,Chen-2012}. Its value is, firstly, that it accommodates both positive / attractive \emph{and} negative / repulsive edge weights. Importantly, this allows doing justice to evidence in the data that two nodes or pixels do \emph{not} wish to end up in the same cluster or segment. This is in contrast to the submodular potentials so popularized by the graph cut algorithm, which only allow two nodes to be attracted to each other, or at most be agnostic about membership in the same cluster. Secondly, the algorithm does not require a specification of the number of clusters. This is in contrast to methods such as normalized cut \cite{} that can only accommodate attractive interactions and hence need the number of clusters to be specified. 
+
+\paragraph{Contribution.} The evident usefulness of correlation clustering and its clean and compact formulation in terms of an optimization problem, together with its unfortunate NP-hardness, are an invitation to develop fast approximate solvers. The basic idea of the move making algorithm proposed here is to maintain, at all times, a best current partitioning; and to iteratively improve it (as we show, monotonously) by considering diverse and cheaply generated proposal partitionings. Any two nodes that are in one cluster in both the current and the proposal partitioning are contracted. Edges to contracted nodes are equally combined and reweighted, and the correlation clustering problem is then solved on this reduced graph. We offer a polyhedral characterization of this strategy, and evaluate it in conjunction with two versatile proposal generators.   We conduct experiments on a broad range of data sets ranging from 2D and 3D segmentation problems to clustering in signed social networks. The results suggest that this simple move making algorithm is the fastest technique known today, reaching close to globally optimal solutions in a tenth or a hundredth of the time required by the most efficient exact solvers. 
+ 
+
+\paragraph{Related Work.}
+A natural approach is to solve the integer linear programming problem directly. To this end, efficient separation procedures have been found \cite{} that allow to iteratively augment the set of constraints until a valid partitioning is found. 
+Alternatively, it is possible to relax the integrality constraints of the integer linear programming formulation. Such an outer relaxation can be iteratively tightened. However, intermediate solutions are fractional and so rounding is required to obtain a valid partitioning. The latter approach works best on planar \cite{yarkony_2012_eccv} or almost planar \cite{yarkony-andres-2013} graphs. 
+
+Another line of work maintains valid partitionings throughout, either by using a cluster representation in terms of labels \cite{bagon_2011_arxiv} or in terms of cut edges \cite{kroeger_2014_cvpr}. The former suffers \cite{beier} from the degeneracy of a label presentation \cite{kappes}, while the latter is highly efficient only for planar graphs. Working on contracted nodes has previously been explored in \cite{kroeger_2013_miccai}. 
+
+Finally, there are heuristic methods such as ... 
+
+\section{Notation and Problem Formulation}\label{sec:problem_formulation}
+Let $G=(V,E, w)$ be a weighted graph of nodes $V$ and edges $E$.
+%
+The function $w : E \rightarrow \mathbb{R}$ assigns a weight to each edge.
+A positive weight expresses the desire that two adjacent nodes should
+be merged, whereas a negative weight indicates
+that these nodes should be separated into two different regions.
+%
+A \emph{subgraph} $G_A = \{A, E_A, w\}$ consists
+of nodes $A \subseteq V$ and edges $E_A := E\cap (A\times A)$.
+%
+A segmentation of the graph $G$ can by either given by an 
+node labeling $l \in \mathbb{N}^{|V|}$
+or an edge labeling $y \in\{0,1\}^{|E|}$.  
+An edge labeling is only consistent if it contains no dangling edges~\cite{kappes_2013_arxiv}.
+We denote the set of all consistent edge labelings by $P(G)\subset\{0,1\}^{|E|}$.
+The convex hull of this set is known as the \emph{multicut polytope} $MC(G) = \textrm{conv}(P(G))$.
+
+
+%$\rho_y : P(G) \to P(G_y)$
+%$\rho_y^{-1} : P(G_y) \to P(G)$
+
+
+% \begin{itemize}
+%   \item Multicut in computer vision, applications, sparse segmentation -> IMPORTANT PROBLEM
+%   \item Problem: Existing Methods does not scale, even CGC. - Large scale 3d problems
+%   \item Contribution: Fast scalable method using novel fusion moves for correlation clustering
+% \end{itemize}
+
+% Def: Graph, weighted graph, cut, multicut 
+
+Given a weighted graph $G=(V,E,w)$ we consider the problem of segmenting $G$ such that the costs
+of the edges between distinct segments is minimized. This can be formulated in the node domain
+by assigning each node $v$ a label $l_v \in \mathbb{N}$
+\begin{align}
+  l^* &= \argmin_{L \in \mathbb{N}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{i} \neq l_{j}], \label{eq:nodeproblem}
+\end{align}  % y_{ij}^* &=& [l_{u} \neq l_{v}] 
+or in the edge domain, by label each edge $e$ as cut $y_e=1$ or uncut $y_e=0$ 
+\begin{align}
+  y^* &= \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}.%\\ 
+\end{align}
+As shown in~\cite{kappes_2013_arxiv} both problems are equivalent, but formulation \ref{eq:nodeproblem}
+suffers from ambiguities in the formulation~\cite{kappes_2011_emmcvpr}.
+
+% The exist an surjective mapping from a node-label $l$ to edge-labeling $y$ and
+% a bijective mapping from a partitioning of $V$ to vertices of the multicut polytope $MC$.
+% Consequently, 
+% (i) problems \ref{eq:nodeproblem} and \ref{eq:edgeproblem} are equivalent
+% and (ii) the node-labeling is not unique for a given partitioning and introduce some
+% ambiguities.
+
+% \subsubsection{Multicut Objective}
+
+% The multicut / correlation clustering objective 
+% can be formulated in different ways.
+
+
+
+% \paragraph{Edge Indicator Variables:}
+% \begin{center}
+%     \begin{eqnarray}
+%         y^* &=& \argmin_{y} \sum_{ e_{ij} \in E } w_{ij} \cdot y_{ij} \\
+%         s.t.:& & y \in \textit{Multicut Polytope} \nonumber
+%     \end{eqnarray}
+% \end{center}
+
+% \paragraph{Fully Connected Graph:}
+% \begin{center}
+%     \begin{eqnarray}
+%         y^*   & = & \argmin_{y} \sum_{ i<j \in V } w_{ij} \cdot y_{ij} \\
+%         s.t.: &  & y_{ij} + y_{jk} < y_{i,k} \quad \forall i, j, k   \nonumber
+%     \end{eqnarray}
+% \end{center}
+
+% \paragraph{Node Coloring:}
+% \begin{center}
+%     \begin{eqnarray}
+%         l^* &=& \argmin_{L} \sum_{ e_{ij} \in E } w_{ij} \cdot [l_{u} \neq l_{v}] \\
+%         y_{ij}^* &=& [l_{u} \neq l_{v}]  
+%     \end{eqnarray}
+% \end{center}
+
+\input{inputs/fig_notation.tex}
