@@ -100,6 +100,8 @@
 \usepackage{xargs} 
 \newtheorem{theorem}{Theorem}
 \newtheorem{remark}{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
 
 % If you comment hyperref and then uncomment it, you should delete
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
@@ -364,6 +366,41 @@ This coarser graph is constructed by contracting all must-link edges
 (see Fig.~\ref{fig:move_graph}).
 
 
+\begin{definition}\emph{(Contradicted Graph)}
+Given a weighted graph $G=V,E,w)$ segmentation of $G$ given by $y\in P(G)$,
+we denote by $S: V \to \mathbb{N}$ a mapping from the nodes to the segments.
+We define the contradiction of graph $G_y=(V_y,E_y, \bar{w})$
+by $V_y=\{S(v)|v\in V\}$, $E_y=\{S(u)S(v)|uv\in E\}$, and 
+$\forall \bar{u}\bar{v}\in E_y: \bar{w}_{\bar{u}\bar{v}}=\sum_{uv\in E, S(u)=\bar{u},S(v)=\bar{v}}w_{uv}$ 
+\end{definition}
+
+\begin{definition}\emph{(Back Projection)}
+Given a segmentation $\bar{y}$ of a contradicted graph $G_y=(V_y,E_y)$.
+We define the back projection $\rho^G$ from $\bar{y}$ to a segmentation of original graph  $G=(V,E)$
+by 
+\begin{align}
+\rho^G_{uv}(\bar{y})=\left\{ 
+\begin{array}{ll}
+\bar{y}_{S(u)S(v)}& \textrm{ if }S(u) \neq S(v)\\
+0                & \textrm{ else}
+\end{array}
+\right.
+\end{align}
+\end{definition}
+
+\begin{theorem}[Equivalence]
+The optimal multicut $\bar{y}^*$ on the contracted graph $G_y$
+is equivalent to the optimal multicut $y^*$ in the original graph $G$ 
+with additional must link constraints ($y^* \leq y$).
+%
+\begin{proof}
+Since $y^*$ fulfills all  must link constraints, we have  $y^*\cdot w = \rho^{-1}_y(y^*)\cdot \bar{w}$.
+Consequently, $y^*\cdot w = \rho_y(\bar{y}) \cdot w$ and  $\rho^{-1}_y(y^*)\cdot \bar{w}= \bar{y}\cdot\bar{w}$.
+\end{proof}
+%
+\end{theorem}
+
+
 TODO:
 Here we need to proof that it is equivalent 
 to optimize the contracted graph !
@@ -540,33 +577,21 @@ When optimizing over the green polytope we find $y_2$ which we will never leaf a
 \end{figure}
 
 
-\begin{theorem}[Equivalence]
-The optimal multicut $\bar{y}^*$ on the contracted graph $G_y$
-is equivalent to the optimal multicut $y^*$ in the original graph $G$ 
-with additional must link constraints ($y^* \leq y$).
-%
-\begin{proof}
-Since $y^*$ fulfills all  must link constraints, we have  $y^*\cdot w = \rho^{-1}_y(y^*)\cdot \bar{w}$.
-Consequently, $y^*\cdot w = \rho_y(\bar{y}) \cdot w$ and  $\rho^{-1}_y(y^*)\cdot \bar{w}= \bar{y}\cdot\bar{w}$.
-\end{proof}
-%
-\end{theorem}
 
 
 
-
-\begin{theorem}[Monotone]
-Let $y'$ and $y''$ be two proposal solutions and  $y^*$ the optimal fused segmentation.
-Than $y^*$  will never decrease the energy:
-$y^* \cdot w \leq  \min( y'\cdot w,  y''\cdot w) $ 
-%
-\begin{proof}
-The feasible set of the fusion move includes per definition  $y'$ and $y''$.
-If $y'$ or $y''$ would have lower multicut cost than $y^*$, $y^*$ would not be optimal 
-and that why not the propose segmentation of a fusion.
-\end{proof}
-%
-\end{theorem}
+% \begin{theorem}[Monotone]
+% Let $y'$ and $y''$ be two proposal solutions and  $y^*$ the optimal fused segmentation.
+% Than $y^*$  will never decrease the energy:
+% $y^* \cdot w \leq  \min( y'\cdot w,  y''\cdot w) $ 
+% %
+% \begin{proof}
+% The feasible set of the fusion move includes per definition  $y'$ and $y''$.
+% If $y'$ or $y''$ would have lower multicut cost than $y^*$, $y^*$ would not be optimal 
+% and that why not the propose segmentation of a fusion.
+% \end{proof}
+% %
+% \end{theorem}
 
 
 %\begin{remark}[Fix-point (pointless to me)]
