@@ -635,7 +635,8 @@ By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy:
 Eq.~\ref{eq:fusion_move_a} can be solved efficiently, since 
 we can work on a coarser graph, where all nodes which are connected
 via must-link constraints are merged into single nodes.
-This coarser graph is constructed by contracting all must-link edges.
+This coarser graph is constructed by contracting all must-link edges
+(see Fig.~\ref{fig:move_graph}).
 
 
 \input{inputs/fig_fusion.tex}
@@ -837,7 +838,7 @@ fusing it with proposal solutions.
 The inherent difference is how we define the fusion.
 We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}
 and optimize the subproblems as described in 
-Sec.\ref{sec:fast_optimization}.
+Sec.~\ref{sec:fast_optimization} (see Fig. \ref{fig:move_graph}).
 
 
 %-------------------------------------------------------------------------
