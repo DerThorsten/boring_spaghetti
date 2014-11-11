@@ -77,14 +77,14 @@
 
 }
 \caption{
-     To use hierarchical clustering as an approximator for
-    the multicut objective we contract the edge with the highest weight
-    in each step (to be contracted edge is shown in green).
-    Whenever multiple edges are merged into a single edge,
-    we use the sum of the weight as a new weight, since
-    we have to pay for all edges which are cut in the uncontracted
-    graph.
-    We stop when the highest edge weight is smaller
+    Hierarchical clustering can be used to optimize
+    Eq.~\ref{eq:edgeproblem}.
+    In each step, the two nodes connected via the edge with 
+    the highest weight are merged by contracting this edge.
+    (to be contracted edge is shown in green).
+    Due to edge contraction parallel edges can occur which 
+    are merged into single ones, and their weights are summed up.
+    The algorithm stops when the highest edge weight is smaller
     or equal to zero (edge shown in blue).
 }\label{fig:hc_alg}
 \end{center}

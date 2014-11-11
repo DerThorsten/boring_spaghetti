@@ -326,11 +326,18 @@ By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy:
   \sum  w_{ij} \cdot y^*_{ij}  \leq \min \left( \sum  w_{ij} \cdot y'_{ij} ,  \sum   w_{ij} \cdot y''_{ij} \right)
 \end{align}
 %
-Eq.~\ref{eq:fusion_move_a} can be solved efficiently, since 
-we can work on a coarser graph, where all nodes which are connected
-via must-link constraints are merged into single nodes.
-This coarser graph is constructed by contracting all must-link edges
-(see Fig.~\ref{fig:move_graph}).
+
+
+Once we know how to fuse segmentations, the actual algorithm 
+for correlation clustering 
+is simple and similar to the fusion move algorithm of Lempitsky \etal~\cite{bagon_2011_arxiv}.
+We iteratively improve the best solution by
+fusing it with proposal solutions.
+The inherent difference is how we define the fusion.
+We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}.
+%
+How to optimize  Eq.~\ref{eq:fusion_move_a} in an more efficient way is
+described in the following section.
 
 
 \input{inputs/fig_fusion.tex}
@@ -349,6 +356,14 @@ This coarser graph is constructed by contracting all must-link edges
 
 
 \subsection{Fast Optimization} \label{sec:fast_optimization}
+
+Eq.~\ref{eq:fusion_move_a} can be solved efficiently, since 
+we can work on a coarser graph, where all nodes which are connected
+via must-link constraints are merged into single nodes.
+This coarser graph is constructed by contracting all must-link edges
+(see Fig.~\ref{fig:move_graph}).
+
+
 TODO:
 Here we need to proof that it is equivalent 
 to optimize the contracted graph !
@@ -363,176 +378,18 @@ to optimize the contracted graph !
 \input{inputs/fig_move_graph.tex}
 
 
-% Global optimal solvers for multicut do not scale beyond ??? \cite{???}.
-% Good approximate solvers for planar graphs exist \cite{beier_2014_cvpr,yarkony_2012_eccv} 
-% but have difficulties to find good solutions for non planar graphs \cite{beier_2014_cvpr}.
-
-% To make multicuts scalable, it is desirable to replace the graph $G$
-% with a graph $\hat{G}$, which is smaller in the number of nodes and edges. 
-% If $\hat{G}$ is small enough, it is feasible to use global optimal solvers.
-
-% A trivial way to reduce the size of the graph  is edge contraction.
-% Until a desirable size is reached, one might contract the edge with
-% the highest weight. A cut on the contracted graph  $\hat{G}$ is always
-% a valid cut on $\hat{G}$.
-
-% On the other hand, if an edge $e$ is contracted, it will never be cut.
-% If $e$ is part of the cut in a global optimal solution, we cannot find
-% this cut.
-
-% To overcome this problem  we can randomize the edge contraction,
-% and repeat this multiple times and remember the best solution.
-
-% But this would throw away all the ``not the best'' solutions (rewrite me).
-% Within this work we propose the following nifty trick.
-% Instead of throwing away solutions, we intersect them with the 
-% best solution, and solve the multicut on the resulting
-% graph.
-% Therefore we fuse multiple solutions,
-
-
-
-%\begin{algorithm}
-%\begin{scriptsize}
-%\caption{Fusion Based Algorithms}\label{alg:fusion}
-%
-%
-%
-%
-%\begin{algorithmic}[1]
-%\Procedure{Intersection-Based-Inference}{GEN,$J$,$X$}
-%\State $x^0 \gets \textrm{initial state form } X$
-%\State $n \gets 0 $                                 \Comment{Number of moves}
-%\State $m \gets 0 $                                 \Comment{Number of moves without progress}
-%\While{$m < m_{\max}$ and $n < n_{\max}$ }
-%\State $n \gets n+1$ 
-% \State $x'\gets GEN(x^{n-1},J,X)$                    \Comment{Generate proposal}
-% \If{$J(x^{n-1}) \leq J(x')$}                       
-%   \State $x^{n} \gets Fuse(x^{n-1},x',J)$             
-% \Else
-%   \State $x^{n} \gets Fuse(x',x^{n-1},J)$
-% \EndIf
-% \If{$J(x^{n}) \leq J(x^{n-1})$}
-%   \State $m \gets 0$                                 \Comment{Reset counter}
-% \Else
-%   \State $m \gets m+1$                               \Comment{Increment counter}
-% \EndIf
-%\EndWhile
-%\State \textbf{return} $x^n$
-%\EndProcedure
-%\end{algorithmic}
-%\end{scriptsize}
-%\end{algorithm}
-
-
-
-
-%\begin{algorithm}
-%\begin{scriptsize}
-%\caption{Fusion Moves}\label{alg:fusion_moves}
-%\scriptsize
-%\begin{algorithmic}[1]
-%\Require $J(x) \leq J(x')$
-%\Ensure $J(\hat{x}) \leq J(x)$
-%\vspace{0.2cm}
-%\Procedure{Fuse}{$x,x',J$}
-%\State $\bar{x} \gets \textbf{\scriptsize{Intersect}}(x,x')$  
-%    \Comment{
-%        \begin{minipage}{0.4\linewidth} 
-%            \begin{tiny}
-%            \begin{singlespace}
-%                intersect
-%                uncut edges in $x$ and $x'$,
-%                return  
-%                connected component labeling
-%            \end{singlespace}
-%            \end{tiny}
-%        \end{minipage}
-%    }
-%\vspace{0.1cm}
-%\State $ \tilde{G}=(\tilde{E},\tilde{V}),\tilde{W} 
-%    \gets \textbf{\scriptsize{Contract}}(G,W,\bar{x})$  
-%    \Comment{ 
-%        \begin{minipage}{0.2\linewidth} 
-%            \begin{tiny}
-%            \begin{singlespace}
-%                Contract all edges 
-%                which are uncut in $\bar{x}$ 
-%            \end{singlespace}
-%            \end{tiny}
-%        \end{minipage}
-%    }
-%\vspace{0.1cm}
-%\State $\tilde{x}^*= \argmin\limits_{\tilde{x}} \sum\limits_{e_{ij} \in \tilde{E}} \tilde{w}_{ij}[\tilde{x}_i \neq \tilde{x}_j]$
-%    \Comment{ 
-%        \begin{minipage}{0.3\linewidth} 
-%            \begin{tiny}
-%            \begin{singlespace}
-%                Solve the multicut objective
-%                on smaller graph $\tilde{G}=(\tilde{V},\tilde{E})$
-%            \end{singlespace}
-%            \end{tiny}
-%        \end{minipage}
-%    }
-%
-%\State $\hat{x} \gets \textbf{\scriptsize{ProjectBack}}(\tilde{x}^*)$
-%    \Comment{ 
-%        \begin{minipage}[\textheight]{0.4\linewidth} 
-%            \begin{tiny}
-%            \begin{singlespace}
-%                Translate the connected component
-%                labeling $\tilde{x}^*$ of $\tilde{G}$ 
-%                to a connected component labeling of $G$
-%            \end{singlespace}
-%            \end{tiny}
-%        \end{minipage}
-%    }
-%\State \textbf{return} $\hat{x}$
-%\EndProcedure
-%\vspace{0.3cm}
-%\Procedure{FUSE$_{\textrm{BASE}}$}{$x,x',J$}
-%\State \textbf{return} ${\arg\min}_{\bar{x} \in \{x,x'\}}J(\bar{x})$
-%\EndProcedure
-%\end{algorithmic}
-%\end{scriptsize}
-%\end{algorithm}
-
 
 
 
 
 
 %-------------------------------------------------------------------------
-\subsection{Fusion Move Solver}
+%\subsection{Fusion Move Solver}
 
 
 
 
-% \begin{center}
-%     \begin{eqnarray}
-%         y 
-%         &=& 
-%         \rho_{\hat{y}}^{-1}(
-%         \argmin_{y \in MC(G_{\hat{y}})\cap \{0,1\}^{|E_{\hat{y}}|}} 
-%         \sum_{ (i,j) \in E_{\hat{y}} } 
-%         w^{\hat{y}}_{ij} \cdot \bar{y}_{ij} 
-%     \end{eqnarray}
-% \end{center}
 
-% \begin{center}
-%     \begin{eqnarray}
-%       y \cdot w \leq \min(y'\cdot w,  y'' \cdot w) 
-%     \end{eqnarray}
-% \end{center}
-Once we know how to fuse segmentations, the actual algorithm 
-for correlation clustering 
-is simple and similar to the fusion move algorithm of Lempitsky \etal~\cite{bagon_2011_arxiv}.
-We iteratively improve the best solution by
-fusing it with proposal solutions.
-The inherent difference is how we define the fusion.
-We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}
-and optimize the subproblems as described in 
-Sec.~\ref{sec:fast_optimization} (see Fig. \ref{fig:move_graph}).
 
 
 %-------------------------------------------------------------------------
