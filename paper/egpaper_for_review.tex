@@ -154,10 +154,10 @@
   \addplot[color=yellow!50!black,mark=square] table[x=time, y=ogm-mcfusion-HC-CF*]{data3/#1.data};  \addlegendentry{Fusion}
   \addplot[color=purple,mark=o] table[x=time, y=MCR-CCFDB]{data3/#1.data};     \addlegendentry{MC-R}
   \addplot[color=blue,mark=o] table[x=time, y=MCI-CCIFD]{data3/#1.data};       \addlegendentry{MC-I}
-  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data3/#1.data};    \addlegendentry{Fusion-HC-MC}
-  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data3/#1.data};    \addlegendentry{Fusion-HC-CGC}
-  \addplot[color=orange,mark=o] table[x=time, y=DYNCC-WS-MC]{data3/#1.data};  \addlegendentry{Fusion-WS-MC}
-  \addplot[color=pink,mark=x] table[x=time, y=DYNCC-WS-CGC]{data3/#1.data};  \addlegendentry{Fusion-WS-CGC}
+  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data3/#1.data};    \addlegendentry{CCFusion-HC-MC}
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data3/#1.data};    \addlegendentry{CCFusion-HC-CGC}
+  \addplot[color=orange,mark=o] table[x=time, y=DYNCC-WS-MC]{data3/#1.data};  \addlegendentry{CCFusion-WS-MC}
+  \addplot[color=pink,mark=x] table[x=time, y=DYNCC-WS-CGC]{data3/#1.data};  \addlegendentry{CCFusion-WS-CGC}
 }
 %  \addplot[color=yellow!50!black,mark=o] table[x=time, y=ogm-mcfusion-HC-CF*]{data3/#1.data};  \addlegendentry{Fusion}
   %\addplot[color=green!50,mark=o] table[x=time, y=PIVOT*]{data3/#1.data};          \addlegendentry{PIVOT-BOEM}
@@ -502,19 +502,19 @@ We will show how to overcome this point later.
 \input{inputs/fig_hc_alg.tex}
 
 Outside computer vision greedy methods has been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
-A common greedy approach is to randomly permute the nodes and than assign 
+A common greedy approach~\cite{Soon-2001,Ng-2002,Elsner-2008} is to randomly permute the nodes and than assign 
 iteratively each node to an existing cluster or create a new cluster if costs cannot be decreased by assigning to a cluster.
-Common assigning strategies are:
-\emph{BEST}; assign to cluster which is linked by the most positive edge~\cite{Ng-2002},
-\emph{FIRST}; Assign to the cluster which is first linked by a positive edge~\cite{Soon-2001}, and
-\emph{VOTE}; Assign to cluster that minimizes objective function~\cite{Elsner-2008}.
+%Common assigning strategies are:
+%\emph{BEST}; assign to cluster which is linked by the most positive edge~\cite{Ng-2002},
+%\emph{FIRST}; Assign to the cluster which is first linked by a positive edge~\cite{Soon-2001}, and
+%\emph{VOTE}; Assign to cluster that minimizes objective function~\cite{Elsner-2008}.
 %
 The PIVOT Algorithm~\cite{Ailon-2008} iterate over all nodes in random order.
 If the node is not assigned it construct a cluster containing the node and all its 
 unassigned positively linked neighbors.  
 %
-Typically these algorithms started for many random permutations, 
-and pick the clustering with best objective value.
+%Typically these algorithms started for many random permutations, 
+%and pick the clustering with best objective value.
 
 A widely use post-processing method is  Best One Element Move (BOEM)~\cite{Gionis-2007}.
 Start with an initial clustering one node is removed from a cluster and reassigned to an existing or new cluster such that the costs are minimized.
@@ -1028,15 +1028,15 @@ of the Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation 
 For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we try the public available implementation in OpenGM\footref{opengm-master}
 of Kappes~\etal. We realize that their implementation has some limitations on large problems and make the following modifications.
 Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
-Secondly, we follow~\cite{kroeger_2012_eccv}. and search for shortest paths and add those only if they are non-chordal instead of searching for the shortest non-chordal path
-during the separation procedure.
+Secondly, we follow~\cite{kroeger_2012_eccv} and search for shortest paths and add those only if they are non-chordal instead of searching for the shortest non-chordal path
+during the separation procedure. Fig.~\ref{fig:at:knott-450b} show the improvements with our modifications compared to the implementation in OpenGM for the knott-3d-450 dataset.
 This procedure is one magnitude faster, but might cause a few extra outer iterations.
 In~\cite{kroeger_2012_eccv}. this has been used for MC-I only. 
 For MC-R this search procedure is not sufficient and need to be followed by a search for a shortest non-chordal paths.
 From the field of data-mining we compare to the PIVOT-algorithm~\cite{Ailon-2008} followed by a round of BOEM~\cite{Gionis-2007} denoted by \textbf{PIVOT-BOEM}.
 We use the public available code of Micha Elsner\footnote{\url{http://www.ling.ohio-state.edu/~melsner/resources/correlation-readme.html}}.
 While this implementation uses full adjacency matrixes it does not scale as well as the algorithm can and therefor can not be applied on all datasets.
-We also run classical fusion moves~\cite{Lempinsky-2010} (\textbf{Fusion}) and select distinct labels for the two candidate segmentations.
+We also run classical fusion moves~\cite{Lempitsky-2010} (\textbf{Fusion}) and select distinct labels for the two candidate segmentations.
 
 As reported in~\cite{beier_2014_cvpr}, CGC is faster and gives better energies then PlanarCC~\cite{yarkony_2012_eccv} and Expand \& Explore~\cite{bagon_2011_arxiv}.
 Therefore we exclude those in our experiments.
@@ -1051,9 +1051,9 @@ CGC warm started with the solution from EHC denoted by \textbf{EHC-CGC}.
 The proposed correlation cluster fusion algorithm with EHC-based and watershed-based proposals
  and MC-I and CGC as subproblem solvers denoted by 
 \textbf{fusionCC-HC-MC},
-\textbf{fusionCC-HC-CGC},
-\textbf{fusionCC-WS-MC}, and 
-\textbf{fusionCC-WS-CGC}, respectively.
+\textbf{-HC-CGC},
+\textbf{-WS-MC}, and 
+\textbf{-WS-CGC}, respectively.
 We set the size of the proposals fix to $10\%$ of the original problem size
 and the standard derivation of the random edge noise to $1.5$.
 
@@ -1093,19 +1093,32 @@ and the standard derivation of the random edge noise to $1.5$.
     \label{fig:at:knott-450b}
   \end{figure}
 
+All experiments were run on Intel Core i5-4570 CPUs
+with 3.20 GHz, equipped with 32 GB of RAM.
+In our evaluation we make not use of multiple threads.
+The methods were stopped if they exceed 30 minutes at the next possible interrupt point.
 
-
-\subsection{Parameter Choice}
-\begin{figure}
+\subsection{Parameter Choice for CCFusion}
+Beside the choice of the proposal generator and fusion method CCFusion has some more parameters, which need to be set.
+The most crucial one is the number of segments in the proposal. For HC we also have to set the noise which is use to generate diversity.
+Fig.~\ref{fig:parameterchoice} shows a evaluation of the impact of this parameters for a single instance of knott-3d-450 averaged over several random seeds.
+The runtime many depend on the number of clusters in the proposal (Fig.~\ref{fig:parameterchoice} left), which controls the size of the auxiliary move problems.
+The level of noise has no major impact on the runtime.
+The energy of the final solution improves with finer proposals since this increase the search-space of the moves.
+Although the level of noise has to be large enough to generate diverse proposals but also not to large to generate proposals with low energy.
+As shown in Fig.~\ref{fig:parameterchoice} right the useful parameter set is quite large. This allows us to use the same parameters for \emph{all}
+experiments. However we would like to note, that in practice we can improve the performance by adjust these parameters for the specific problem setting.
+%
+%
+\begin{figure}[th]
 \centering
 \fbox{\includegraphics[width=0.45\columnwidth,trim=3.5cm 8cm 4.5cm 8cm,clip]{images/grid-time2.pdf}}
 \fbox{\includegraphics[width=0.45\columnwidth,trim=3.5cm 8cm 4.5cm 8cm,clip]{images/grid-value2.pdf}}
 \caption{Empirical evaluation of the impact of noise used for proposal generation and proposal size.
   Proposals with many segments causes longer runtime. Noise seemed not to be a critical parameter but should be selected large enough.
 }
+\label{fig:parameterchoice}
 \end{figure}
-
-\subsection{Synthetic Models}
 
 \subsection{Social Networks and Network Clustering}
 A application for large scale correlation clustering are social networks.
@@ -1239,13 +1252,13 @@ More information of the size of instances is given in Tab.~\ref{tab:instance_siz
 \input{anytimefigure2.tex}
 
 
-\begin{figure}
-\input{scatterplots/knott-3d-450.tex}
-\caption{Values and runtime for the 8 knott-3d-450 instances. Note that we use for DYNCC a defensive stopping condition.
-A more aggressive one would lead to much faster runtime with only a bit worse values.
-DYNCC find solutions with less than distance 100 to the optimum a magnitude faster than the state of the art, which produce poor results on hard instances with a 1 hour time limit.
-}
-\end{figure}
+% \begin{figure}
+% \input{scatterplots/knott-3d-450.tex}
+% \caption{Values and runtime for the 8 knott-3d-450 instances. Note that we use for DYNCC a defensive stopping condition.
+% A more aggressive one would lead to much faster runtime with only a bit worse values.
+% DYNCC find solutions with less than distance 100 to the optimum a magnitude faster than the state of the art, which produce poor results on hard instances with a 1 hour time limit.
+% }
+% \end{figure}
 
 
 
@@ -1293,18 +1306,18 @@ with increasing problem size.
 \bibliography{egbib}
 }
 
-\newpage
+% \newpage
 
-\onecolumn
-\section{Appendix}
+% \onecolumn
+% \section{Appendix}
 
-\input{tables/anytime/image-seg.tex}
-\input{tables/anytime/knott-3d-150.tex}
-\input{tables/knott-3d-300.tex}
-\input{tables/anytime/knott-3d-450.tex}
-\input{tables/knott-3d-550.tex}
-\input{tables/anytime/seg-3d.tex}
-\input{tables/modularity-clustering.tex}
+% \input{tables/anytime/image-seg.tex}
+% \input{tables/anytime/knott-3d-150.tex}
+% \input{tables/knott-3d-300.tex}
+% \input{tables/anytime/knott-3d-450.tex}
+% \input{tables/knott-3d-550.tex}
+% \input{tables/anytime/seg-3d.tex}
+% \input{tables/modularity-clustering.tex}
 
 
 
