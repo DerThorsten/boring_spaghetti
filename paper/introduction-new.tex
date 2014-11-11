@@ -45,10 +45,47 @@ quality significantly.
  
 \vspace{0.1cm}
 \noindent \textbf{Related Work.}
-A natural approach is to solve the integer linear programming problem directly. To this end, efficient separation procedures have been found \cite{} that allow to iteratively augment the set of constraints until a valid partitioning is found. 
-Alternatively, it is possible to relax the integrality constraints of the integer linear programming formulation. Such an outer relaxation can be iteratively tightened. However, intermediate solutions are fractional and so rounding is required to obtain a valid partitioning. The latter approach works best on planar \cite{yarkony_2012_eccv} or almost planar \cite{yarkony-andres-2013} graphs. 
+A natural approach is to solve the integer linear programming problem directly. 
+To this end, efficient separation procedures have been found~\cite{kappes_2011_emmcvpr,kappes_2013_arxiv} that allow to iteratively augment the set of constraints until a valid partitioning is found. 
+Alternatively, it is possible to relax the integrality constraints of the integer linear programming formulation~\cite{kappes_2013_arxiv}. 
+Such an outer relaxation can be iteratively tightened. However, intermediate solutions are fractional and so rounding is required to obtain a valid partitioning.
+For the latter approach column generating methods exits, that works best on planar \cite{yarkony_2012_eccv} or almost planar \cite{yarkony-andres-2013} graphs. 
 
-Another line of work maintains valid partitionings throughout, either by using a cluster representation in terms of labels \cite{bagon_2011_arxiv} or in terms of cut edges \cite{kroeger_2014_cvpr}. The former suffers \cite{beier} from the degeneracy of a label presentation \cite{kappes}, while the latter is highly efficient only for planar graphs. Working on contracted nodes has previously been explored in \cite{kroeger_2013_miccai}. 
+Another line of work maintains valid partitionings throughout, either by using a cluster representation in terms of labels \cite{bagon_2011_arxiv} or in terms of cut edges \cite{beier_2014_cvpr}. 
+The former suffers \cite{beier} from the degeneracy of a label presentation \cite{kappes}, while the latter is highly efficient only for planar graphs.
+% Working on contracted nodes has previously been explored in \cite{kroeger_2013_miccai}. 
+An other branch of research uses move making algorithm 
+to optimize correlation clustering~\cite{bansal_2004_ml,beier_2014_cvpr,Kernighan-1970}.
+Starting with an initial segmentation, auxiliary problems are solved that 
+strictly improve the segmentation.
+
+Bansal and Bagon propose a modified $\alpha-$expansion~\cite{bansal_2004_ml} 
+algorithm suitable for correlation clustering, that allows all variables to 
+change to cluster $\alpha$ in a single move. While the authors claim that this
+scales to large scale data, in~\cite{beier_2014_cvpr} it has been shown that 
+this is not the case in general. This is not surprising because the auxiliary 
+problems can have as many variables as the original problem. 
+ 
+A more efficient move making method has been presented by Beier \etal~\cite{beier_2014_cvpr}.
+Their Cut, Glue and Cut method iteratively re-optimizes the cuts between adjacent clusters of the current solution.
+While this method scales better then  modified $\alpha-$expansion, it still faces three problems:
+Firstly, the subproblems can be as large as the original problem,
+secondly, the subproblems are max-cut problems on non-planar graphs that are NP-hard 
+and even the used approximation has high polynomial complexity.
+This limits the method, to be applicable to huge problems. The same holds for the 
+method of Kernighan and Lin~\cite{Kernighan-1970}. 
+
+   % \begin{itemize}
+   % \item Multicut~\cite{kappes_2011_emmcvpr}
+   % \item Expand and Explorer~\cite{bagon_2011_arxiv}
+   % \item Fast Planar CC~\cite{yarkony_2012_eccv}
+   % \item Break and Conquer \cite{alush_2013_simbad}.
+   % \item Cut Glue And Cut~\cite{beier_2014_cvpr}
+   % \end{itemize}
+
+For energy minimization problems fusion moves have become increasingly popular~\cite{Lempitsky-2010,kappes_2014_ws}.
+For many large scale computer vision applications fusion moves lead to good approximations
+with state of the art any time performance~\cite{kappes_2014_ws}.
 
 Finally, there are heuristic methods such as ... 
 
