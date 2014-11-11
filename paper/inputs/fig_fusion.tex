@@ -51,10 +51,10 @@
             \draw (2-2,0+4) node[nS] (n3) {$2$}; 
             \draw (4-2,0+4) node[nS] (n4) {$3$};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eCC] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eCC] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eNotCut] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eNotCut] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eCut] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eCut] node[eNS]{$w_{13}$} (n4)
             ;
 
             \draw (2-2,2) node[nS] (n0) {$0$}; 
@@ -62,10 +62,10 @@
             \draw (2-2,0) node[nS] (n3) {$2$}; 
             \draw (4-2,0) node[nS] (n4) {$3$};
             \path
-                (n0) edge[eCC] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eCC] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eCut] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eCut] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eNotCut] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eNotCut] node[eNS]{$w_{13}$} (n4)
             ;
 
 
@@ -79,10 +79,10 @@
             \draw (2+4,0+4) node[nS,fill=green!60] (n3) {$2$}; 
             \draw (4+4,0+4) node[nS,fill=green!60] (n4) {$3$};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
 
@@ -92,10 +92,10 @@
             \draw (2+4,0) node[nS,fill=red!60] (n3) {$2$}; 
             \draw (4+4,0) node[nS,fill=green!60] (n4) {$3$};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
             \draw (2+4,2-4) node[nD, circle split part fill={red!60, red!60}] (n0) {$ $}; 
@@ -103,10 +103,10 @@
             \draw (2+4,0-4) node[nD, circle split part fill={green!60, red!60}] (n3) {$ $}; 
             \draw (4+4,0-4) node[nD, circle split part fill={green!60, green!60}] (n4) {$ $};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
             % 2. FUSION
@@ -115,10 +115,10 @@
             \draw (2+8,0) node[nS,fill=red!60] (n3) {$2$}; 
             \draw (4+8,0) node[nS,fill=blue!60] (n4) {$3$};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
             \draw (2+8,2-4) node[nD, circle split part fill={red!60, red!60}] (n0) {$ $}; 
@@ -126,10 +126,10 @@
             \draw (2+8,0-4) node[nD, circle split part fill={green!60, red!60}] (n3) {$ $}; 
             \draw (4+8,0-4) node[nD, circle split part fill={green!60, blue!60}] (n4) {$ $};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
 
@@ -140,10 +140,10 @@
             \draw (2+12,0) node[nS,fill=green!60] (n3) {$2$}; 
             \draw (4+12,0) node[nS,fill=red!60] (n4) {$3$};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
             \draw (2+12,2-4) node[nD, circle split part fill={red!60, green!60}] (n0) {$ $}; 
@@ -151,10 +151,10 @@
             \draw (2+12,0-4) node[nD, circle split part fill={green!60, green!60}] (n3) {$ $}; 
             \draw (4+12,0-4) node[nD, circle split part fill={green!60, red!60}] (n4) {$ $};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
 
@@ -164,10 +164,10 @@
             \draw (2+16,0) node[nS,fill=green!60] (n3) {$2$}; 
             \draw (4+16,0) node[nS,fill=blue!60] (n4) {$3$};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
             \draw (2+16,2-4) node[nD, circle split part fill={red!60, green!60}] (n0) {$ $}; 
@@ -175,10 +175,10 @@
             \draw (2+16,0-4) node[nD, circle split part fill={green!60, green!60}] (n3) {$ $}; 
             \draw (4+16,0-4) node[nD, circle split part fill={green!60, blue!60}] (n4) {$ $};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
             % 5. FUSION
@@ -187,10 +187,10 @@
             \draw (2+20,0) node[nS,fill=blue!60] (n3) {$2$}; 
             \draw (4+20,0) node[nS,fill=red!60] (n4) {$3$};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
             \draw (2+20,2-4) node[nD, circle split part fill={red!60, blue!60}] (n0) {$ $}; 
@@ -198,10 +198,10 @@
             \draw (2+20,0-4) node[nD, circle split part fill={green!60, blue!60}] (n3) {$ $}; 
             \draw (4+20,0-4) node[nD, circle split part fill={green!60, red!60}] (n4) {$ $};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
 
@@ -212,10 +212,10 @@
             \draw (2+24,0) node[nS,fill=blue!60] (n3) {$2$}; 
             \draw (4+24,0) node[nS,fill=green!60] (n4) {$3$};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
             \draw (2+24,2-4) node[nD, circle split part fill={red!60, blue!60}] (n0) {$ $}; 
@@ -223,10 +223,10 @@
             \draw (2+24,0-4) node[nD, circle split part fill={green!60, blue!60}] (n3) {$ $}; 
             \draw (4+24,0-4) node[nD, circle split part fill={green!60, green!60}] (n4) {$ $};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
 
@@ -237,10 +237,10 @@
             \draw (2+28,0) node[nS,fill=blue!60] (n3) {$2$}; 
             \draw (4+28,0) node[nS,fill=yellow!60] (n4) {$3$};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
             \draw (2+28,2-4) node[nD, circle split part fill={red!60, blue!60}] (n0) {$ $}; 
@@ -248,10 +248,10 @@
             \draw (2+28,0-4) node[nD, circle split part fill={green!60, blue!60}] (n3) {$ $}; 
             \draw (4+28,0-4) node[nD, circle split part fill={green!60, yellow!60}] (n4) {$ $};
             \path
-                (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                (n3) edge[eS] node[eNS]{$w_{23}$} (n4) 
-                (n0) edge[eS] node[eNS]{$w_{02}$} (n3)
-                (n1) edge[eS] node[eNS]{$w_{13}$} (n4)
+                (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
+                (n3) edge[eBlack] node[eNS]{$w_{23}$} (n4) 
+                (n0) edge[eBlack] node[eNS]{$w_{02}$} (n3)
+                (n1) edge[eBlack] node[eNS]{$w_{13}$} (n4)
             ;
 
             \draw [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=0.8cm]
