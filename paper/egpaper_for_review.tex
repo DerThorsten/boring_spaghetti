@@ -297,15 +297,10 @@ can improve performance drastically.
 %------------------------------------------------------------------------
 \section{Correlation-Clustering-Fusion Moves}\label{sec:cc_fm}
 
-
-\input{inputs/fig_fusion.tex}
-
-\textbf{new}
-
 Fusion moves as defined in \cite{Lempitsky-2010} work
 in the node domain and do not work properly for 
 objective functions as Eq.~\ref{eq:nodeproblem} since
-the node coloring is ambiguous and has no semantic meaning.
+the node coloring is ambiguous and has no semantic meaning (see Fig.~\ref{fig:fusion_abiguty}).
 In the following, we propose a more suitable fusion move for correlation
 clustering which works on the edge domain.
 %
@@ -334,22 +329,31 @@ By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy:
 Eq.~\ref{eq:fusion_move_a} can be solved efficiently, since 
 we can work on a coarser graph, where all nodes which are connected
 via must-link constraints are merged into single nodes.
-This coarser graph is constructed by contracting all must-link edges.
+This coarser graph is constructed by contracting all must-link edges
+(see Fig.~\ref{fig:move_graph}).
 
 
+\input{inputs/fig_fusion.tex}
 
-
-\textbf{old}
-
-Motivation Using Fusion moves -> problem ambiguity
-
-A consistent edge labeling $y$ defines a segmentation of $V$ by enumerating the connected components 
-in $G|_y=(V,\{e\in E|y_e=0\}$ by $l_v = \#(v)$, where $\#(v)$ denotes the number of the connected component of the node $v\in V$.
-
-We define the contradiction of graph $G_y=(V_y,E_y)$
-with $V_y=\{\#(v)|v\in V\}$ and $E_y=\{\#(v),\#(u)|uv\in E, y_{uv}=1\})$.
+%\textbf{old}
+%
+%Motivation Using Fusion moves -> problem ambiguity
+%
+%A consistent edge labeling $y$ defines a segmentation of $V$ by enumerating the connected components 
+%in $G|_y=(V,\{e\in E|y_e=0\}$ by $l_v = \#(v)$, where $\#(v)$ denotes the number of the connected component of the %node $v\in V$.
+%
+%We define the contradiction of graph $G_y=(V_y,E_y)$
+%with $V_y=\{\#(v)|v\in V\}$ and $E_y=\{\#(v),\#(u)|uv\in E, y_{uv}=1\})$.
 
 %\input{inputs/fig_alg_graph.tex}
+
+
+\subsection{Fast Optimization} \label{sec:fast_optimization}
+TODO:
+Here we need to proof that it is equivalent 
+to optimize the contracted graph !
+
+
 
 \input{inputs/fig_contraction.tex}
 \input{inputs/fig_projection.tex}
@@ -520,12 +524,20 @@ with $V_y=\{\#(v)|v\in V\}$ and $E_y=\{\#(v),\#(u)|uv\in E, y_{uv}=1\})$.
 %       y \cdot w \leq \min(y'\cdot w,  y'' \cdot w) 
 %     \end{eqnarray}
 % \end{center}
+Once we know how to fuse segmentations, the actual algorithm 
+for correlation clustering 
+is simple and similar to the fusion move algorithm of Lempitsky \etal~\cite{bagon_2011_arxiv}.
+We iteratively improve the best solution by
+fusing it with proposal solutions.
+The inherent difference is how we define the fusion.
+We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}
+and optimize the subproblems as described in 
+Sec.~\ref{sec:fast_optimization} (see Fig. \ref{fig:move_graph}).
 
 
 %-------------------------------------------------------------------------
 \subsection{Proposal Generators}
 
-\noindent \textbf{Desired Properties:}
 As discussed in \cite{Lempitsky-2010}, proposals
 should have two properties: \emph{quality} 
 and \emph{diversity}.
@@ -700,10 +712,10 @@ and that why not the propose segmentation of a fusion.
 \end{theorem}
 
 
-\begin{remark}[Fix-point (pointless to me)]
-Let $Y$ be the set of possible proposals, than
-$y'$ is a fix-point if $y'=\arg\max_{y\in P(G_{y'\OR y''})} y\cdot w$ for all $y''\in Y$
-\end{remark}
+%\begin{remark}[Fix-point (pointless to me)]
+%Let $Y$ be the set of possible proposals, than
+%$y'$ is a fix-point if $y'=\arg\max_{y\in P(G_{y'\OR y''})} y\cdot w$ for all $y''\in Y$
+%\end{remark}
 
 
 

@@ -11,45 +11,53 @@
 
 \tikzset{
   head/.style = {fill = orange!90!blue,
-                 label = center:\textsf{\Large H}},
+                 label = center:\textsf{\Huge H}},
   tail/.style = {fill = blue!70!yellow, text = black,
-                 label = center:\textsf{\Large T}}
+                 label = center:\textsf{\Huge T}}
 }
 
 \begin{center}
-\begin{figure*}[ht]
+\begin{figure}[ht]
 \resizebox{\linewidth}{!}{
     \begin{tikzpicture}[scale=1]%[x=1 cm, y=1 cm]
 
-            \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
-            (1-1.5,3.5) -- (1-1.5,6.5) node [black,midway,xshift=-1.2cm,rotate=90,align=left] 
-            {\Large{proposal edge} \\ \Large{labeling \quad $\bm{x'}$}};
+
+            \draw (-3.25,3) node[rotate=90] (dummy){
+                \huge{proposal edge labeling}
+            };
 
             \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
-            (1-1.5,3-3.5) -- (1-1.5,6.5-4) node [black,midway,xshift=-1.2cm, rotate=90,align=left] 
-            {\Large{proposal edge} \\ \Large{labeling \quad $\bm{x''}$}};
+            (1-2,3.5) -- (1-2,6.5) node [black,midway,xshift=-1.2cm,rotate=90,align=left] 
+            {\huge{$\bm{y'}$}};
 
+            \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
+            (1-2,3-3.5) -- (1-2,6.5-4) node [black,midway,xshift=-1.2cm, rotate=90,align=left] 
+            {\huge{$\bm{y''}$}};
+
+            \draw (2.75,3) node[rotate=90] (dummy){
+                \huge{proposal node labeling}
+            };
 
             \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
             (5,3.5) -- (5,6.5) node [black,midway,xshift=-1.2cm,rotate=90,align=left] 
-            {\Large{proposal node} \\ \Large{labeling \quad $\bm{l'}$}};
+            {\huge{$\bm{l'}$}};
 
             \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
             (5,3-3.5) -- (5,6.5-4) node [black,midway,xshift=-1.2cm, rotate=90,align=left] 
-            {\Large{proposal node} \\ \Large{labeling \quad $\bm{l''}$}};
+            {\huge{$\bm{l''}$}};
 
 
             \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
             (5,-4.5) -- (5,-1.5) node [black,midway,xshift=-1.2cm, rotate=90,align=left] 
-            {\Large{Binary fusion} \\ \Large{move problem}};
+            {\huge{Fusion Move} \\ \huge{Problem}};
 
 
 
 
-            \draw (2-2,2+4) node[nS] (n0) {$0$}; 
-            \draw (4-2,2+4) node[nS] (n1) {$1$};
-            \draw (2-2,0+4) node[nS] (n3) {$2$}; 
-            \draw (4-2,0+4) node[nS] (n4) {$3$};
+            \draw (2-2.5,2+4) node[nS] (n0) {$0$}; 
+            \draw (4-2.5,2+4) node[nS] (n1) {$1$};
+            \draw (2-2.5,0+4) node[nS] (n3) {$2$}; 
+            \draw (4-2.5,0+4) node[nS] (n4) {$3$};
             \path
                 (n0) edge[eNotCut] node[eNS]{$w_{01}$} (n1) 
                 (n3) edge[eNotCut] node[eNS]{$w_{23}$} (n4) 
@@ -57,10 +65,10 @@
                 (n1) edge[eCut] node[eNS]{$w_{13}$} (n4)
             ;
 
-            \draw (2-2,2) node[nS] (n0) {$0$}; 
-            \draw (4-2,2) node[nS] (n1) {$1$};
-            \draw (2-2,0) node[nS] (n3) {$2$}; 
-            \draw (4-2,0) node[nS] (n4) {$3$};
+            \draw (2-2.5,2) node[nS] (n0) {$0$}; 
+            \draw (4-2.5,2) node[nS] (n1) {$1$};
+            \draw (2-2.5,0) node[nS] (n3) {$2$}; 
+            \draw (4-2.5,0) node[nS] (n4) {$3$};
             \path
                 (n0) edge[eCut] node[eNS]{$w_{01}$} (n1) 
                 (n3) edge[eCut] node[eNS]{$w_{23}$} (n4) 
@@ -245,7 +253,7 @@
 
             \draw (2+24.5,2-4) node[nD, circle split part fill={red!60, blue!60}] (n0) {$ $}; 
             \draw (4+24.5,2-4) node[nD, circle split part fill={red!60, yellow!60}] (n1) {$ $};
-            \draw (2+24.5,0-4) node[nD, circle split part fill={green!60, blue!60}] (n3) {$ $}; 
+            \draw (2.+24.5,0-4) node[nD, circle split part fill={green!60, blue!60}] (n3) {$ $}; 
             \draw (4+24.5,0-4) node[nD, circle split part fill={green!60, yellow!60}] (n4) {$ $};
             \path
                 (n0) edge[eBlack] node[eNS]{$w_{01}$} (n1) 
@@ -257,14 +265,14 @@
             \draw [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=0.8cm]
             (5,-6) -- (29,-6) node [black,midway,xshift=0cm,yshift=-1cm] 
             {
-                \Large{For all different colorings $\bm{l''}$, the binary fusion move subproblem is different.}
+                \huge{For all different colorings $\bm{l''}$, the binary fusion move subproblem is different.}
             };
 
 
             \draw [decorate,decoration={brace,amplitude=10pt,raise=4pt},yshift=0.8cm]
             (5,2) -- (29,2) node [black,midway,xshift=0cm,yshift=1cm] 
             {
-                \Large{All these node labelings encode the same partition}
+                \huge{All these node labelings encode the same partition}
             };
 
             \draw[black] (5,-1) -- (29,-1);
@@ -272,9 +280,18 @@
     \end{tikzpicture}
 }
 \caption{
-todo: write me (why normal fusion does not work)
+To fuse two edge labelings $y'$ and $y''$ with fusion moves
+as defined by Lempitsky \etal~\cite{Lempitsky-2010} 
+$y'$ and $y''$ need to be transfered to the node domain.
+The mapping from edge labels to node labels is ambiguous and
+even for this small graph there are seven node labels
+which result in different binary fusion move problems.
+Enumerating all labelings for a graph of non trival size
+becomes intractable and choosing one labeling is complexity arbitrary.
+%
+%Furthermore it should be noted that 
 }\label{fig:fusion_abiguty}
-\end{figure*}
+\end{figure}
 \end{center}
 
 
