@@ -188,41 +188,46 @@ anchor=north east}}
   \end{center}
   \caption{
     % image seg
-    For the image-seg instances in fig.~\ref{fig:at:image-seg} 
-    Fusion-EHC-MC has performs best and Fusion-WS-MC gives 
-    almost the same results, but a bit slower then with EHC proposals.
-    Using the same proposals but approximate moves (Fusion-EHC-CGC Fusion-WS-CGC )
-    leads to suboptimal results.
-    The warm EHC started version of GCG (EHC-CGC) performs better then GCG itself,
-    but both are outperformed by the proposed algorithms.
-    Global optimal methods (MC-I) and the relaxed version (MC-R) are 
-    still usable fast for these instances.
-    % 3d 
-    For the smallest 3D instances (\ref{fig:at:knott-150}) all solvers
-    except ??? and EHC perform equally, and the proposed fusion algorithms
-    give the best any time performance.
+    %For the image-seg instances in fig.~\ref{fig:at:image-seg} 
+    %Fusion-EHC-MC has performs best and Fusion-WS-MC gives 
+    %almost the same results, but a bit slower then with EHC proposals.
+    %Using the same proposals but approximate moves (Fusion-EHC-CGC Fusion-WS-CGC )
+    %leads to suboptimal results.
+  %
+    %Global optimal methods (MC-I) and the relaxed version (MC-R) are 
+    %still usable fast for these instances.
+    %% 3d 
+    %For the smallest 3D instances (\ref{fig:at:knott-150}) all solvers
+    %except ??? and EHC perform equally, and the proposed fusion algorithms
+    %give the best any time performance.
+    %
+    %% social nets
+    %For the social net instances (\ref{fig:at:socialnets},\ref{fig:at:nsocialnets})
+    %Fusion-HC-MC and Fusion-HC-CGC perform equally.
+    %Only CGC and EHC-CGC leads to better energies after $10^3 sec$, while global optimal methods (MC-I)
+    %fail to converge within this time limit.
+    %%%%%
+    Among all proposed solvers, Fusion-HC-MC has the best
+    overall anytime performance.
+    %
     With increasing problem size (\ref{fig:at:knott-150}-\ref{fig:at:knott-550} and \ref{fig:at:seg3d})
     the runtime of MC-I, MC-R and CGC increases drastically, while
     the proposed solvers still scale well.
     For these instances, the EHC started version of CGC outperforms 
     GCG in terms of runtime and energy.
-    % social nets
-    For the social net instances (\ref{fig:at:socialnets},\ref{fig:at:nsocialnets})
-    Fusion-HC-MC and Fusion-HC-CGC perform equally.
-    Only CGC and EHC-CGC leads to better energies after $10^3 sec$, while global optimal methods (MC-I)
-    fail to converge within this time limit.
-    % modularity clustering 
-    For the modularity clustering instances in fig.~\ref{fig:at:modularity} we see
-    an interesting behavior. On these complete graphs, Kernighan Lin (KL) has the 
-    best performance.
-    The proposed methods perform reasonable, but  KL is faster and leads to better energies.
-    %%%
     %% summary
     Overall, energy hierarchical clustering based proposals work better
     then watershed based proposals. They converge to similar energies
     but the clustering based approach is faster on all tested instances.
     On all instances except for modularity clustering, it is better
     to solve the fusion move to optimality (Fusion-HC-MC) then using approximations (FUSION-HC-GCG).
+    The warm EHC started version of GCG (EHC-CGC) performs better then GCG itself,
+    but both are outperformed by the proposed algorithms w.r.t. any time performance.
+    % modularity clustering 
+    For the modularity clustering instances in fig.~\ref{fig:at:modularity} we see
+    an interesting behavior. On these complete graphs, Kernighan Lin (KL) has the 
+    best performance.
+    The proposed methods perform reasonable, but  KL is faster and leads to better energies.
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
