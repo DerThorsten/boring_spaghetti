@@ -20,13 +20,13 @@
                 %\draw (4,0) node[nS] (n4) {$4$};
                 %\draw (6,0) node[nS] (n5) {$5$};
                 \path
-                    (n0) edge[eS] node[eNS]{$w_{01}+$\\$w_{34}$} (n1) 
-                    (n1) edge[eCC] node[eNS]{$w_{12}+$\\$w_{45}$} (n2) 
-                    %(n3) edge[eCC] node[eNS]{$w_{34}$} (n4) 
-                    %(n4) edge[eCC] node[eNS]{$w_{45}$} (n5)
-                    %(n0) edge[eS] node[eNS]{$w_{03}$} (n3)
-                    %(n1) edge[eS] node[eNS]{$w_{14}$} (n4)
-                    %(n2) edge[eS] node[eNS]{$w_{25}$} (n5)
+                    (n0) edge[eNotCut] node[eNS]{$w_{01}+$\\$w_{34}$} (n1) 
+                    (n1) edge[eCut] node[eNS]{$w_{12}+$\\$w_{45}$} (n2) 
+                    %(n3) edge[eCut] node[eNS]{$w_{34}$} (n4) 
+                    %(n4) edge[eCut] node[eNS]{$w_{45}$} (n5)
+                    %(n0) edge[eNotCut] node[eNS]{$w_{03}$} (n3)
+                    %(n1) edge[eNotCut] node[eNS]{$w_{14}$} (n4)
+                    %(n2) edge[eNotCut] node[eNS]{$w_{25}$} (n5)
                 ;
         \end{tikzpicture}
     }
@@ -44,13 +44,13 @@
                 \draw (4,0) node[nS] (n4) {$4$};
                 \draw (6,0) node[nS] (n5) {$5$};
                 \path
-                    (n0) edge[eS] node[eNS]{$w_{01}$} (n1) 
-                    (n1) edge[eCC] node[eNS]{$w_{12}$} (n2) 
-                    (n3) edge[eS] node[eNS]{$w_{34}$} (n4) 
-                    (n4) edge[eCC] node[eNS]{$w_{45}$} (n5)
-                    (n0) edge[eS] node[eNS]{$w_{03}$} (n3)
-                    (n1) edge[eS] node[eNS]{$w_{14}$} (n4)
-                    (n2) edge[eS] node[eNS]{$w_{25}$} (n5)
+                    (n0) edge[eNotCut] node[eNS]{$w_{01}$} (n1) 
+                    (n1) edge[eCut] node[eNS]{$w_{12}$} (n2) 
+                    (n3) edge[eNotCut] node[eNS]{$w_{34}$} (n4) 
+                    (n4) edge[eCut] node[eNS]{$w_{45}$} (n5)
+                    (n0) edge[eNotCut] node[eNS]{$w_{03}$} (n3)
+                    (n1) edge[eNotCut] node[eNS]{$w_{14}$} (n4)
+                    (n2) edge[eNotCut] node[eNS]{$w_{25}$} (n5)
                 ;
         \end{tikzpicture}
     }
