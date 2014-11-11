@@ -103,22 +103,16 @@
 \label{fig:not_d}
 \end{subfigure}
 \end{tiny}
+\vspace{-0.1cm}
 \caption{
 Node labels suffers from ambiguities.
-The node labels in
-~\ref{fig:not_a} and ~\ref{fig:not_b} are
-different, but encode the same partition.
-The edge labels in ~\ref{fig:not_c}
-encodes the same partition. Edge
-labels do not suffer from ambiguities, but only
-edge labels without \emph{any dangling edges}
-encode a valid partition. In ~\ref{fig:not_d}
-there are dangling edges. Node $1$ and $4$
+\ref{fig:not_a} and~\ref{fig:not_b} encode the same partition.
+Edge labels as in~\ref{fig:not_c} do not suffer from these 
+ambiguities, but can have \emph{dangling edges} as in~\ref{fig:not_d}.
+Node $1$ and $4$
 are in the same connected component,
-and at the same time $w_{14}$ wants to keep
-them in separate connected components.
-Therefore this does
-not correspond to a valid partitioning.
+and at the same time $e_{14}$ is cut.
+Therefore~\ref{fig:not_d} this is not a valid partition.
 }\label{fig:notation}
 \end{figure}
 \end{center}
