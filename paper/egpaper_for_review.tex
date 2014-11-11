@@ -18,7 +18,7 @@
 \usepackage{my_macros}
 \usepackage{paralist}
 \usepackage{amsthm}
-\usepackage{dirtytalk}
+% \usepackage{dirtytalk} fah: my miktex didn't like this; and we don't need it here. 
 %\usepackage{framed}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -185,27 +185,46 @@ First line of institution2 address\\
 %%%%%%%%% ABSTRACT
 \begin{abstract}
   \color{red} \textbf{TODO:}
-   We address the problem of partitioning a  graph
-   into a previously unknown number of clusters.
-   Among all partitions, the one with the minimal 
-   sum of of cut edge weights is chosen. 
-   This problem is known as correlation clustering 
-   or multicut.
-   We propose a general framework to find
-   high quality approximate solutions for 
-   this NP-hard problem based on a move making algorithm:
-   We use candidate solutions from a proposal generator
-   to iteratively improve the best observed solution similar
-   to fusion moves.
-   The proposed solver outperforms any other solver
-   w.r.t. to any time performance.
-   The solutions found by this solver are close
-   to global optimal solutions w.r.t. energy
-   and problem specific measurements as VI for
-   image segmentation problems.
+Correlation clustering, or multicut partitioning, is the NP-hard problem of partitioning an undirected graph or image with positive / attractive and negative / repulsive edge weights such that the sum of cut edge weights is minimized. We here present a move-making heuristic that uses cheaply generated proposal clusterings to iteratively and monotonously improve upon the best previously found clustering. A valid partitioning is maintained at all times, and solutions close to the global optimum are obtained faster than with any published technique. 
+    
+%We address the problem of partitioning a  graph
+%   into a previously unknown number of clusters.
+%   Among all partitions, the one with the minimal 
+%   sum of of cut edge weights is chosen. 
+%   This problem is known as correlation clustering 
+%   or multicut.
+%   We propose a general framework to find
+%   high quality approximate solutions for 
+%   this NP-hard problem based on a move making algorithm:
+%   We use candidate solutions from a proposal generator
+%   to iteratively improve the best observed solution similar
+%   to fusion moves.
+%   The proposed solver outperforms any other solver
+%   w.r.t. to any time performance.
+%   The solutions found by this solver are close
+%   to global optimal solutions w.r.t. energy
+%   and problem specific measurements as VI for
+%   image segmentation problems.
 
 \end{abstract}
 \section{Introduction}
+
+
+Correlation clustering~\cite{Bansal-2002} also known as the multicut problem~\cite{chopra_1993_mp} 
+is a basic primitive in computer vision~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad} and data mining~\cite{Chierichetti-2014,Arasu-2009,Sadikov-2010,Chen-2012}. Its value is, firstly, that it accommodates both positive / attractive \emph{and} negative / repulsive edge weights. Importantly, this allows doing justice to evidence in the data that two nodes or pixels do \emph{not} wish to end up in the same cluster or segment. This is in contrast to the submodular potentials so popularized by the graph cut algorithm, which only allow two nodes to be attracted to each other, or at most be agnostic about membership in the same cluster. Secondly, the algorithm does not require a specification of the number of clusters. This is in contrast to methods such as normalized cut \cite{} that can only accommodate attractive interactions and hence need the number of clusters to be specified. 
+
+\paragraph{Contribution.} The evident usefulness of correlation clustering and its clean and compact formulation in terms of an optimization problem, together with its unfortunate NP-hardness, are an invitation to develop fast approximate solvers. The basic idea of the move making algorithm proposed here is to maintain, at all times, a best current partitioning; and to iteratively improve it (as we show, monotonously) by considering diverse and cheaply generated proposal partitionings. Any two nodes that are in one cluster in both the current and the proposal partitioning are contracted. Edges to contracted nodes are equally combined and reweighted, and the correlation clustering problem is then solved on this reduced graph. We offer a polyhedral characterization of this strategy, and evaluate it in conjunction with two versatile proposal generators.   We conduct experiments on a broad range of data sets ranging from 2D and 3D segmentation problems to clustering in signed social networks. The results suggest that this simple move making algorithm is the fastest technique known today, reaching close to globally optimal solutions in a tenth or a hundredth of the time required by the most efficient exact solvers. 
+ 
+
+\paragraph{Related Work.}
+A natural approach is to solve the integer linear programming problem directly. To this end, efficient separation procedures have been found \cite{} that allow to iteratively augment the set of constraints until a valid partitioning is found. 
+Alternatively, it is possible to relax the integrality constraints of the integer linear programming formulation. Such an outer relaxation can be iteratively tightened. However, intermediate solutions are fractional and so rounding is required to obtain a valid partitioning. The latter approach works best on planar \cite{yarkony_2012_eccv} or almost planar \cite{yarkony-andres-2013} graphs. 
+
+Another line of work maintains valid partitionings throughout, either by using a cluster representation in terms of labels \cite{bagon_2011_arxiv} or in terms of cut edges \cite{kroeger_2014_cvpr}. The former suffers \cite{beier} from the degeneracy of a label presentation \cite{kappes}, while the latter is highly efficient only for planar graphs. Working on contracted nodes has previously been explored in \cite{kroeger_2013_miccai}. 
+
+Finally, there are heuristic methods such as ... 
+
+---------------END OF SUGGESTION ----------------------------------
 
 Correlation clustering~\cite{Bansal-2002} also known as the multicut problem~\cite{chopra_1993_mp} 
 is a basic primitive in computer vision~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad} and data mining~\cite{Chierichetti-2014,Arasu-2009,Sadikov-2010} as a first step
@@ -312,7 +331,7 @@ quality significantly.
 % \item We show state of the art any time performance on those instances.
 % \end{inparaenum}[(i)]
 
-\textbf{Outline:}
+\textbf{Outline:} {\bf If we are short of space, the following can be ommited:}
 In sec.~\ref{sec:problem_formulation} we will give a 
 detailed problem definition where we introduce 
 the correlation clustering objective.
