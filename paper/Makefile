@@ -14,3 +14,6 @@ bib:	egpaper_for_review.tex
 view:	
 	okular egpaper_for_review.pdf & 
 
+supmat:	
+	pdflatex supmat.tex 
+

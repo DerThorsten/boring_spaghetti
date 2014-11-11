@@ -874,8 +874,9 @@ meaningful moves (??? this last sentence needs to be rewritten).
 
 
 
-\subsubsection{Randomized HierarchicalClustering (RHC)}
-
+\noindent \textbf{Randomized HierarchicalClustering (RHC):}
+%\subsubsection{Randomized HierarchicalClustering (RHC)}
+%
 To generate proposals cut we can use bottom up hierarchical clustering.
 In each step we contract the edge with the highest weight.
 Parallel edges are merged into single edges by summing their weights.
@@ -900,9 +901,9 @@ to the edge weighs or permute a certain number of weights.
 %different form the current best. 
 %In addition we either add noise permute a certain number of weights.
 
-
-\subsubsection{Randomized Watersheds (RWS)}
-
+\noindent \textbf{Randomized Watersheds (RWS):}
+%\subsubsection{Randomized Watersheds (RWS)}
+%
 The edge weighted watershed algorithm \cite{meyer_2013}
 with random seeds can be used to get 
 cheap proposals. Instead of $n$ seeds distributed uniformly
@@ -1093,7 +1094,7 @@ experiments. However we would like to note, that in practice we can improve the 
 \end{figure}
 
 
-\subsection{Social Networks}
+\subsection{Social Networks and Network Clustering}
 A application for large scale correlation clustering are social networks.
 We consider two of those networks from the Stanford Large Network Dataset Collection\footnote{\url{http://snap.stanford.edu/data/index.html}}.
 Both networks are given by weighted directed graphs with edge weights $-1$ and $1$. 
@@ -1103,12 +1104,12 @@ This is who-trust-whom online social network of a a general consumer review site
 Each directed edge $a\to b$ indicated that user $a$ trusts  or does not trust user $b$ is the edge-weight is positive or negative, respectively.
 The network contains $131828$ nodes and $841372$ edges from which $85.3\%$ are positively weighted.
 %
-The first network is called \emph{Slashdot}. 
+The second network is called \emph{Slashdot}. 
 Slashdot is a technology-related news website know for its specific user community. 
 In 2002 Slashdot introduced the Slashdot Zoo feature which allows users to tag each other as friends or foes. 
 The network was obtained in November 2008 and contains $77350$ nodes and $516575$ edges from which $76.73\%$ are positively weighted.
 
-We consider the problem to cluster this graphs such that positively weighted edges link inside and negatively weighted between clusters.
+We consider the problem to cluster this graphs such that positively weighted edges ($E^+_{\to}$) link inside and negatively weighted edges ($E^-_{\to}$) between clusters.
 In other words friends and people who trust each other should be in the same segment and foes and non-trusting people in different clusters.
 % 
 To compensate the high impact of nodes with high degree we can normalize the edge weights such that each person has the same impact to the overall network, by enforcing.
@@ -1122,14 +1123,22 @@ We define the following energy function
 \end{align}
 which is zero if the given partitioning does not violated any relation and larger otherwise.
 
+{\color{red}\textbf{TODO: Discussion}}
 
-\subsection{(3D) Image Segmentation}
+
+As another example for network clustering we use the modularity-clustering models from~\cite{kappes_2014_benchmark_arxiv} which are small but fully connected.
+
+{\color{red}\textbf{TODO: Discussion}}
+
+
+
+\subsection{2D and 3D Image Segmentation}
 To segment images or volumes into a previously
 unknown number of clusters, correlation clustering
-can be used.
-Starting from a super-pixel / super-voxel segmentation
-which defines a region adjacency graphs (RAG),
-correlation clustering finds the cut with the lowest energy.
+has been used~\cite{andres_2011_iccv,kroeger_2012_eccv}.
+
+Starting from a super-pixel/-voxel segmentation,
+correlation clustering finds the clustering with the lowest energy.
 The energy is based on a likelihood of merging adjacent super-voxels.
 Each edge has a probability to keep adjacent segments separate ($p(y_{ij} =1)$)
 or to merge them ($p(y_{ij} = 0)$).
@@ -1137,21 +1146,16 @@ The energy function is defined as following:
 \begin{align}
  J(y)  &= \sum_{ij \in E} y_{ij}\cdot \underbrace{  log\left( \frac{p(y_{ij} =0)}{p(y_{ij} =1)}\right) + log \frac{1-\beta}{\beta}  }_{w_{ij}}
 \end{align}
-Where $\beta$ is used as a prior.
+Where $\beta$ is used as a prior~\cite{andres_2011_iccv}.
 
-For 2D images, we took the models from \cite{andres_2011_iccv}
-which are defined on the images of the Berkeley Segmentation
-Database \cite{martin_2001}.
-For 3D volume segmentation we took the models from
-Andres \etal \cite{kroeger_2012_eccv}.
-We use models with the cube sizes $150^3$, $300^3$, $450^3$, $550^3$ and $900^3$.
-Both, the 2D and 3D models are available in a recent graphical model
-benchmark of Kappes \etal~\cite{kappes_2013_benchmark_cvpr}.
-We use the same names for the datasets as in the benchmark,
-\emph{image-seg} for the models from  \cite{andres_2011_iccv} and \emph{knott-150 - knott-550} and \emph{3d-seg}
-for the models from \cite{kroeger_2012_eccv}.
-The size of instances is given in Tab.~\ref{tab:instance_sizes}.
+We use the public available benchmark instances from~\cite{kappes_2013_benchmark_cvpr,kappes_2014_benchmark_arxiv}.
+For 2D images, we took the segmentation problems on the Berkeley Segmentation Database~\cite{martin_2001} called \emph{image-seg}~\cite{andres_2011_iccv,kappes_2013_benchmark_cvpr}.
+For 3D volume segmentation we took the models \emph{knott-3d-150},\emph{-300} and \emph{-450} from~\cite{kroeger_2012_eccv,kappes_2014_benchmark_arxiv} as well as the large
+instance from the \emph{3d-seg} model~\cite{andres_2011_iccv,kappes_2013_benchmark_cvpr}. These instances have underling cube sizes of  $150^3$, $300^3$, $450^3$, and $900^3$, respectively.
+We also request larger instances from the authors of~\cite{kroeger_2012_eccv} which kindly provide us the dataset~\emph{knott-3d-550} with cube size  $550^3$.
+More information of the size of instances is given in Tab.~\ref{tab:instance_sizes}.
 
+{\color{red}\textbf{TODO: Discussion}}
 
 \begin{table}[H]
    \tiny
@@ -1162,13 +1166,13 @@ The size of instances is given in Tab.~\ref{tab:instance_sizes}.
       \toprule
          Dataset          &     \#Nodes     & \#Edges  & \#Instances  & Planar        \\ 
       \midrule 
-         image-seg        &     156-3764        & ???        & 100          & $\bullet$    \\ 
-         knott-150        &     572-972         & ???        & 2            & $\times$ \\
-         knott-300        &     3846 - 5896     & ???        & 2            & $\times$ \\
-         knott-450        &     15150-17070     & ???        & 2            & $\times$ \\
-         knott-550        &     27286 - 31249   & ???        & 2            & $\times$ \\
-         3d-seg           &     101220   & ???        & 1            & $\times$ \\
-         slashdot         &     ???             & ???        & ???          & $\times$ \\     
+         image-seg        &     156-3764        & ???              & 100          & $\bullet$    \\ 
+         knott-150        &     572-972         & ???              & 2            & $\times$ \\
+         knott-300        &     3846 - 5896     & ???              & 2            & $\times$ \\
+         knott-450        &     15150-17070     & ???              & 2            & $\times$ \\
+         knott-550        &     27286 - 31249   & ???              & 2            & $\times$ \\
+         3d-seg           &     101220          & ???              & 1            & $\times$ \\
+         socialnets       &     77350 - 131828  & 516575 - 841372  & 2            & $\times$ \\  
       \bottomrule
    \end{tabular}
 \end{table}
@@ -1176,24 +1180,24 @@ The size of instances is given in Tab.~\ref{tab:instance_sizes}.
 \begin{table}[H]
    \tiny
    \centering
-   \caption{Eval}
+   \caption{Evaluation of Variation of Information (VI) for datasets with available ground-truth.}
    \label{tab:eval}
    \begin{tabular}{lllllll}
       \toprule
-         Dataset          &  image-seg &  knott-3d-150 &knott-3d-300 &knott-3d-450 &knott-3d-550 &3d-seg\\
+         Dataset          &  image-seg   & knott-3d-150&knott-3d-300&knott-3d-450 &knott-3d-550 &3d-seg\\
       \midrule 
-         PIVOT-BOEM       &      \\ 
-         HC               &\\
-         HC-CGC           &    \\
-         CGC              &   \\
-         KL               & \\
-         FUSION           &  \\
-         MC-R             &  \\   
-         MC-I             &  \\  
-         FusionCC-HC-MC   &  \\  
-         FusionCC-HC-CGC  &  \\  
-         FusionCC-WS-MC   &  \\  
-         FusionCC-WS-CGC  &  \\      
+         PIVOT-BOEM       &   $ 4.9633$  &    $ 2.9936$ &       --       &\\ 
+         HC               &   $ 2.5967$  &    $ 1.5477$ &    $ 2.3513$   &    $ 2.9155$ \\
+         HC-CGC           &   $ 2.5164$  &    $ 0.9052$ &    $ 1.7636$   &    $ 2.2256$ \\
+         CGC              &   $ 2.5247$  &    $ 0.9267$ &    $ 1.8822$   &    $ 2.3104$\\
+         KL               &   $ 2.6432$  &    $ 2.0648$ &    $ 4.1318$   &    $ 4.9270$\\
+         FUSION           &      --      &    $ 2.8787$ &    $ 4.0744$   &    $ 4.6616$\\
+         MC-R             &   $ 2.5471$  &    $ 0.9178$ &    $ 1.6369$   &    $ 2.8710$\\   
+         MC-I             &   $ 2.5367$  & $\bf 0.9063$ & $\bf 1.6352$   & $\bf 2.0037$ \\  
+         FusionCC-HC-MC   &   $ 2.5319$  &    $ 0.9629$ &    $ 1.6516$   &    $ 2.0801$\\  
+         FusionCC-HC-CGC  &$\bf 2.4961$  &    $ 0.9679$ &    $ 1.7673$   &    $ 2.3809$ \\  
+         FusionCC-WS-MC   &   $ 2.5340$  &    $ 0.9629$ &    $ 1.6742$   &    $ 2.0739$\\  
+         FusionCC-WS-CGC  &   $ 2.5192$  &    $ 1.0585$ &    $ 2.1344$   &    $ 2.7487$ \\      
       \bottomrule
    \end{tabular}
 \end{table}

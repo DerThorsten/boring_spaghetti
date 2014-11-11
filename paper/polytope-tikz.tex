@@ -1,4 +1,4 @@
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[scale=0.33]
 \coordinate (A1) at (-5, 0);
 \coordinate (A2) at (-3.5, 3.5);
 \coordinate (A3) at ( 0, 5);
@@ -15,9 +15,9 @@
 \draw[line width=1.5pt,color=blue    ,fill=blue,opacity=0.3] (A1) -- (A2)  -- (A4) -- (A1);
 \draw[line width=1.5pt,color=green    ,fill=cyan,opacity=0.3] (A2) -- (A3)  -- (A4) -- (A5) -- (A2);
 
-\node[draw, fill=black!20,circle] (N1) at (A8) { $y_0$};
-\node[draw, fill=black!20,circle] (N2) at (A2) { $y_1$};
-\node[draw, fill=black!20,circle] (N3) at (A3) { $y_3$};
+\node[draw, fill=black!20,circle] (N1) at (A8) {\scriptsize $y_0$};
+\node[draw, fill=black!20,circle] (N2) at (A2) {\scriptsize $y_1$};
+\node[draw, fill=black!20,circle] (N3) at (A3) {\scriptsize $y_3$};
 
 \path[very thick, ->,color=red]  (N1)  edge   [bend right=20]   (N2);
 \path[very thick, ->,color=blue]  (N2)  edge   [out=180,in=120,looseness=10]   (N2);
@@ -33,4 +33,4 @@
 
 
 
-\end{tikzpicture}
+\end{tikzpicture}\hspace{1cm}

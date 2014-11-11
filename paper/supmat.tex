@@ -1,0 +1,385 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage{eso-pic}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{placeins}
+
+
+% Include other packages here, before hyperref.
+\usepackage{my_macros}
+\usepackage{paralist}
+\usepackage{amsthm}
+\usepackage{dirtytalk}
+%\usepackage{framed}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{algorithm}
+%\usepackage{algorithmic}
+\usepackage{algpseudocode}
+\usepackage{setspace}
+%for tikz
+\usepackage{tikz,pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{filecontents}
+%\usepackage{scrextend}
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\newcommand{\footlabel}[2]{%
+    \addtocounter{footnote}{1}%
+    \footnotetext[\thefootnote]{%
+        \addtocounter{footnote}{-1}%
+        \refstepcounter{footnote}\label{#1}%
+        #2%
+    }%
+    $^{\ref{#1}}$%
+}
+
+\newcommand{\footref}[1]{%
+    $^{\ref{#1}}$%
+}
+
+\usetikzlibrary{arrows,positioning,automata,shadows,fit,shapes}
+\usetikzlibrary{arrows,petri,topaths}
+\usetikzlibrary{positioning,fit,calc}
+\usetikzlibrary{shapes.arrows,chains,decorations.pathreplacing,fadings}
+\usetikzlibrary{calc, matrix, backgrounds}
+
+\pgfplotsset{every axis/.append style={
+  every axis y label/.style = {at={(ticklabel cs:0.5)}, rotate=90, anchor=south},
+  axis x line = {bottom},
+  axis y line = {left},
+  tick align = outside,
+  ymajorgrids = true,
+%  legend style = {draw=none, at={(1.05, 0.5)}, anchor=west, font=\small},
+  legend style = {font=\tiny},
+  legend columns = 1,
+  every axis plot/.append style = {line width=1pt},
+  label style = {font=\small},
+  tick label style={font=\small},
+  scaled ticks = false,
+}}
+
+% Two Colored Circle Split 
+\makeatletter
+\tikzset{circle split part fill/.style  args={#1,#2}{%
+ alias=tmp@name, 
+  postaction={%
+    insert path={
+     \pgfextra{% 
+     \pgfpointdiff{\pgfpointanchor{\pgf@node@name}{center}}%
+                  {\pgfpointanchor{\pgf@node@name}{east}}%            
+     \pgfmathsetmacro\insiderad{\pgf@x}
+      \fill[#1] (\pgf@node@name.base) ([xshift=-\pgflinewidth]\pgf@node@name.east) arc
+                          (0:180:\insiderad-\pgflinewidth)--cycle;
+      \fill[#2] (\pgf@node@name.base) ([xshift=\pgflinewidth]\pgf@node@name.west)  arc
+                           (180:360:\insiderad-\pgflinewidth)--cycle;            
+         }}}}}  
+ \makeatother  
+
+%\usepackage{tkz-berge}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\definecolor{shadecolor}{rgb}{0.01,0.199,0.1}
+\usepackage{xargs} 
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage{bm}% Ã¤ndert \boldsymbol
+\def\arraystretch{0.8}
+\renewcommand{\tabcolsep}{2pt}
+\newcommand{\thickline}{2pt}
+\newcommand{\scatterplotpath}{./scatterplots/}
+
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+\newcommand{\OR}{\textrm{ or }}
+
+% \cvprfinalcopy % *** Uncomment this line for the final submission
+
+
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+\newcommand{\realplot}[1]{
+\begin{tikzpicture}
+    \begin{axis}
+        \addlegendimage{empty legend}\addlegendentry{Matrix #1}
+        \addplot {0};
+        \addplot {1};
+        \addplot {2};
+        \addplot {3};
+    \end{axis}
+\end{tikzpicture}}  
+
+% \newcommand{\anytimeplot}[1]{
+%   \addplot[color=brown,mark=x] table[x=time,y=HC]{data3/knott-3d-300.data};              \addlegendentry{HC}
+%   \addplot[color=black,mark=x] table[x=time,y=HC-CGC]{data3/knott-3d-300.data};          \addlegendentry{HC-CGC}
+%   \addplot[color=red,mark=x] table[x=time,y=CGC]{data3/knott-3d-300.data};               \addlegendentry{CGC}
+%   \addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data3/knott-3d-300.data};          \addlegendentry{KL}
+%   \addplot[color=purple,mark=x] table[x=time, y=MCR-CCFDB]{data3/knott-3d-300.data};     \addlegendentry{MC-R}
+%   \addplot[color=blue,mark=x] table[x=time, y=MCI-CCIFD]{data3/knott-3d-300.data};       \addlegendentry{MC-I}
+%   \addplot[color=green,mark=x] table[x=time, y=DYNCC-HC-MC]{data3/knott-3d-300.data};    \addlegendentry{Fusion-HC-MC}
+%   \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data3/knott-3d-300.data};    \addlegendentry{Fusion-HC-CGC}
+%   \addplot[color=orange,mark=x] table[x=time, y=DYNCC-WS-MC]{data3/knott-3d-300.data};  \addlegendentry{Fusion-WS-MC}
+%   \addplot[color=orange,mark=x] table[x=time, y=DYNCC-WS-CGC]{data3/knott-3d-300.data};  \addlegendentry{Fusion-WS-CGC}
+% }
+\newcommand{\anytimeplot}[1]{
+  \addplot[color=brown,mark=x] table[x=time,y=HC]{data3/#1.data};              \addlegendentry{HC}
+  \addplot[color=black,mark=square] table[x=time,y=HC-CGC]{data3/#1.data};          \addlegendentry{HC-CGC}
+  \addplot[color=red,mark=x] table[x=time,y=CGC]{data3/#1.data};               \addlegendentry{CGC}
+  \addplot[color=gray,mark=o] table[x=time, y=ogm-KL]{data3/#1.data};          \addlegendentry{KL} 
+  \addplot[color=yellow!50!black,mark=square] table[x=time, y=ogm-mcfusion-HC-CF*]{data3/#1.data};  \addlegendentry{Fusion}
+  \addplot[color=purple,mark=o] table[x=time, y=MCR-CCFDB]{data3/#1.data};     \addlegendentry{MC-R}
+  \addplot[color=blue,mark=o] table[x=time, y=MCI-CCIFD]{data3/#1.data};       \addlegendentry{MC-I}
+  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data3/#1.data};    \addlegendentry{CCFusion-HC-MC}
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data3/#1.data};    \addlegendentry{CCFusion-HC-CGC}
+  \addplot[color=orange,mark=o] table[x=time, y=DYNCC-WS-MC]{data3/#1.data};  \addlegendentry{CCFusion-WS-MC}
+  \addplot[color=pink,mark=x] table[x=time, y=DYNCC-WS-CGC]{data3/#1.data};  \addlegendentry{CCFusion-WS-CGC}
+}
+%  \addplot[color=yellow!50!black,mark=o] table[x=time, y=ogm-mcfusion-HC-CF*]{data3/#1.data};  \addlegendentry{Fusion}
+  %\addplot[color=green!50,mark=o] table[x=time, y=PIVOT*]{data3/#1.data};          \addlegendentry{PIVOT-BOEM}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+%%%%%%%%% TITLE
+\include{my_macros.tex}
+%\title{Correlation Clustering with Dynamic Super-Nodes (DySNCC)}
+\title{Fusion Moves for Correlation Clustering}
+
+\author{First Author\\
+Institution1\\
+Institution1 address\\
+{\tt\small firstauthor@i1.org}
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+\and
+Second Author\\
+Institution2\\
+First line of institution2 address\\
+{\tt\small secondauthor@i2.org}
+}
+
+\maketitle
+%\thispagestyle{empty}
+
+
+%%%%%%%%% ABSTRACT
+\begin{abstract}
+\end{abstract}
+\section{Anytime Tables}
+
+\section{Anytime Plots}
+%!TEX root = egpaper_for_review.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pgfplotsset{every axis legend/.append style={
+at={(1.0,1.2)},
+anchor=north east}} 
+\begin{figure*}[p]
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=0:4620,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ]
+  \addplot[color=yellow,mark=o] table[x=time, y=PIVOT*]{data3/image-seg.data};    \addlegendentry{PIVOT-BOEM}  
+  \anytimeplot{image-seg}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  
+  \caption{image-seg}\label{fig:at:image-seg}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  \begin{subfigure}[b]{0.33\textwidth}
+    \centering
+    \begin{tikzpicture}
+    \begin{semilogxaxis}[  mark size=1pt,
+   % restrict y to domain=-6000:-4400,
+    xlabel = {runtime},
+    xmin = 0,
+    xmax = 100,
+    width = 1.0\columnwidth,
+    scaled ticks = false,
+    every axis legend/.code={\let\addlegendentry\relax} 
+    ] 
+    \addplot[color=yellow,mark=o] table[x=time, y=PIVOT*]{data3/knott-3d-150.data};          \addlegendentry{PIVOT-BOEM}
+    \anytimeplot{knott-3d-150}
+  
+    \end{semilogxaxis}
+    \end{tikzpicture}
+    \caption{knott-3d-150}\label{fig:at:knott-150}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=-40000:-24000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  %legend to name = ledgendPosition,
+  legend columns=6,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ]  
+  \anytimeplot{knott-3d-300}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-300}\label{fig:at:knott-300}
+  \end{subfigure}
+  \newline
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=-80000:-60000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ] 
+  \anytimeplot{knott-3d-450} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-450}\label{fig:at:knott-450}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=-10000000:-100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ]
+  \anytimeplot{knott-3d-550} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-550}\label{fig:at:knott-550}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\begin{subfigure}[H]
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:1200000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ] 
+  \anytimeplot{seg-3d} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{seg-3d}\label{fig:at:seg3d}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ]  
+  \anytimeplot{socialnets} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{social nets}\label{fig:at:socialnets}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ] 
+  \anytimeplot{normalizedsocialnets}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{normalized social nets}\label{fig:at:nsocialnets}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=-10000000:-100000,
+  %restrict y to domain=-10000000:100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  legend to name = ledgendPosition,
+  legend columns=6,
+  scaled ticks = false%,
+  %every axis legend/.code={\let\addlegendentry\relax} 
+  ]
+  \addplot[color=yellow,mark=o] table[x=time, y=PIVOT*]{data3/modularity-clustering.data};    \addlegendentry{PIVOT-BOEM} 
+  \anytimeplot{modularity-clustering}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{modularity clustering}\label{fig:at:modularity}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{center}
+  \hypersetup{linkcolor = black}
+  \ref{ledgendPosition}
+  \hypersetup{linkcolor = red}
+  \end{center}
+
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\end{document}
