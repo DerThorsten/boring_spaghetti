@@ -517,10 +517,10 @@ based hierarchical clustering (EHC) as defined in sec.~\ref{sec:ehc}.
 EHC follows the energy function, therefore the \emph{quality}
 of the proposals is high.
 To get \emph{diversity} among the different proposal,
-we add normal distributed noise with a standard deviation of $\sigma_{ehc}$
+we add normal distributed noise  $\mathcal{N}(0, \sigma_{ehc})$
 to each edge weight.
-To get proposals of the desired \emph{size}, we can use a
-different stop condition in EHC, and stop when a certain number of connected
+To get proposals of the desired \emph{size}, we use a
+different stop condition in EHC, and stop iff a certain number of connected
 components is reached.
 
 %\subsubsection{Randomized MaxCut  (RMC)}
@@ -540,18 +540,21 @@ components is reached.
 
 \noindent \textbf{Randomized Watersheds (RWS):}
 %\subsubsection{Randomized Watersheds (RWS)}
+Watersheds have become quite popular for
+graph segmentation and have a strong connection
+to energy minimization~\cite{couprie_2011}.
 %
-The edge weighted watershed algorithm \cite{meyer_2013}
+The edge weighted watershed algorithm~\cite{meyer_2013}
 with random seeds can be used to get
 cheap proposals.
 To improve \emph{quality} we do not use $n$ seeds distributed uniformly
 over all nodes but use the following.
-Draw $n/k$ random edges only the negative edges,
-and give the two nodes of each ``seed-edge'' a different seed.
+%
+Draw $n/k$ negative edges,  and give the endpoints a different seed.
 Doing so, a random subset of negative edges is forced
 to be cut within each proposal.
-For additional \emph{diversity} randomness, noise can be added to
-the edge weighs.
+For additional \emph{diversity}, noise $\mathcal{N} (0, sigma_{ws})$
+can be added to the edge weighs.
 
 %\input{inputs/fig_hc.tex}
 
@@ -618,7 +621,9 @@ If the optimal solution $y^*$ lies in $P(G_{y' \OR y''})$ than a optimal fusion 
 \section{Experiments}\label{sec:exp}
 In our experiments we compare to the following methods withpublic available implementation.
 
-For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}\url{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}
+For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}
+\small{{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}
+}
 of the Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{https://github.com/opengm/opengm}}.
 For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we try the public available implementation in OpenGM\footref{opengm-master}
 of Kappes~\etal. We realize that their implementation has some limitations on large problems and make the following modifications.
