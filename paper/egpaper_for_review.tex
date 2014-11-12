@@ -693,6 +693,28 @@ with 3.20 GHz, equipped with 32 GB of RAM.
 In our evaluation we make not use of multiple threads.
 The methods were stopped if they exceed 30 minutes at the next possible interrupt point.
 
+An overview of the used datasets is given in Tab.~\ref{tab:instance_sizes} and described in detail in Sec.\ref{sec:nets} and \ref{sec:imseg}.
+
+\begin{table}[th]
+   \tiny
+   \centering
+   \caption{Datasets used for evaluation}
+   \label{tab:instance_sizes}
+   \begin{tabular}{llllc}
+      \toprule
+         Dataset          &     \#Nodes     & \#Edges  & \#Instances  & Planar        \\ 
+      \midrule 
+         image-seg        &     156-3764        & ???              & 100          & $\bullet$    \\ 
+         knott-150        &     572-972         & ???              & 2            & $\times$ \\
+         knott-300        &     3846 - 5896     & ???              & 2            & $\times$ \\
+         knott-450        &     15150-17070     & ???              & 2            & $\times$ \\
+         knott-550        &     27286 - 31249   & ???              & 2            & $\times$ \\
+         3d-seg           &     101220          & ???              & 1            & $\times$ \\
+         socialnets       &     77350 - 131828  & 516575 - 841372  & 2            & $\times$ \\  
+      \bottomrule
+   \end{tabular}
+\end{table}
+
 \subsection{Improvements for the Multicut Algorithm}\label{sec:tunedMC} 
 When using the  public available implementation in OpenGM\footref{opengm-master}
 of Kappes~\etal~\cite{kappes_2013_arxiv}, we realize that their implementation has some limitations on large problems.
@@ -761,7 +783,7 @@ experiments. However we would like to note, that in practice we can improve the 
 \label{fig:parameterchoice}
 \end{figure}
 
-\subsection{Social Networks and Network Clustering}
+\subsection{Social Networks and Network Clustering}\label{sec:nets}
 An application for large scale correlation clustering are social networks.
 We consider two of those networks from the Stanford Large Network Dataset Collection\footnote{\url{http://snap.stanford.edu/data/index.html}}.
 Both networks are given by weighted directed graphs with edge weights $-1$ and $1$. 
@@ -789,21 +811,22 @@ We define the following energy function
       &= \sum_{ij \in E} y_{ij}\cdot \underbrace{(w_{i \to j}+w_{j \to i})}_{w_{ij}} + \textrm{const}
 \end{align}
 which is zero if the given partitioning does not violated any relation and larger otherwise.
+We name this two datasets \emph{social nets} and \emph{normalized social nets}.
 
-As shown in Fig.~\ref{fig:anytime} (g,h) CCFusion provides for the first minutes the best results.
+As shown in Fig.~\ref{fig:anytime}(g,h) CCFusion provides for the first minutes the best results.
 Only CGC and HC-CGC are able to find better solutions after more then 1000 seconds.
 MC-I and MC-R can even not be applied on such large problems.
 We belief that with better proposal generators, which are more suited for such network problems,
 we can improve CCFusion. One candidate for such a generated would be a scalable method for the 
 PIVOT algorithm.
 
-As another example for network clustering we use the modularity-clustering models from~\cite{kappes_2014_benchmark_arxiv} which are small but fully connected.
+As another example for network clustering we use the \emph{modularity-clustering} models from~\cite{kappes_2014_benchmark_arxiv} which are small but fully connected.
 Although, CCFusion and the used parameters was not designed and chosen for this type of problem, it performs on par to competitive methods. 
-Especially is does a better job than MC-I as shown in Fig.~\ref{fig:anytime} (i)
+Especially is does a better job than MC-I as shown in Fig.~\ref{fig:anytime}(i)
 
 
 
-\subsection{2D and 3D Image Segmentation}
+\subsection{2D and 3D Image Segmentation}\label{sec:imseg}
 To segment images or volumes into a previously
 unknown number of clusters, correlation clustering
 has been used~\cite{andres_2011_iccv,kroeger_2012_eccv}.
@@ -826,29 +849,19 @@ instance from the \emph{3d-seg} model~\cite{andres_2011_iccv,kappes_2013_benchma
 We also request larger instances from the authors of~\cite{kroeger_2012_eccv} which kindly provide us the dataset~\emph{knott-3d-550} with cube size  $550^3$.
 More information of the size of instances is given in Tab.~\ref{tab:instance_sizes}.
 
-{\color{red}\textbf{TODO: Discussion}}
+For image-seg CCFusion is faster than competitive methods, \cf Fig.~\ref{fig:anytime}(a).
+The variation of information~\cite{} (VI) of the CCFusion methods is also best, \cf Tab.~\ref{tab:eval}.
+Proposals by EHC seemed to be a bit better than WS-based ones.
 
-\begin{table}[H]
-   \tiny
-   \centering
-   \caption{Datasets used for evaluation}
-   \label{tab:instance_sizes}
-   \begin{tabular}{llllc}
-      \toprule
-         Dataset          &     \#Nodes     & \#Edges  & \#Instances  & Planar        \\ 
-      \midrule 
-         image-seg        &     156-3764        & ???              & 100          & $\bullet$    \\ 
-         knott-150        &     572-972         & ???              & 2            & $\times$ \\
-         knott-300        &     3846 - 5896     & ???              & 2            & $\times$ \\
-         knott-450        &     15150-17070     & ???              & 2            & $\times$ \\
-         knott-550        &     27286 - 31249   & ???              & 2            & $\times$ \\
-         3d-seg           &     101220          & ???              & 1            & $\times$ \\
-         socialnets       &     77350 - 131828  & 516575 - 841372  & 2            & $\times$ \\  
-      \bottomrule
-   \end{tabular}
-\end{table}
+For the knott-datasets similar holds. With increasing problem size CCFusion-HC-MC and CCFusion-WS-MC have a better performance compared to competitive methods, \cf Fig.~\ref{fig:anytime}(b-e).
+Also in terms of VI they are only slightly worse than the global optimal solution found by MC-I.
+The initialization of CGC by HC denoted by HC-CGC also improves the performance compared to native CGC.
+For the largest 3D volume seg-3d, HC-CGC gives the first good solution, \cf  Fig.~\ref{fig:anytime}(f).
+However, after a view minutes  CCFusion-HC-MC and CCFusion-WS-MC give much better results and also overall best in terms of energy and VI, \cf Tab.~\ref{tab:eval}.
 
-\begin{table}[H]
+Pure HC, Fusion and PIVOT-BOEM do not give useful results on any dataset.
+
+\begin{table}[th]
    \tiny
    \centering
    \caption{Evaluation of Variation of Information (VI) for datasets with available ground-truth.}
