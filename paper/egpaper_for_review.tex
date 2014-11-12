@@ -302,50 +302,54 @@ can improve performance drastically.
 % \end{itemize}
 
 %------------------------------------------------------------------------
-\section{Correlation-Clustering-Fusion Moves}\label{sec:cc_fm}
+\section{Correlation-Clustering-Fusion}\label{sec:cc_fm}
 
-Fusion moves as defined in \cite{Lempitsky-2010} work
-in the node domain and do not work properly for 
-objective functions as Eq.~\ref{eq:nodeproblem} since
-the node coloring is ambiguous and has no semantic meaning, \cf Fig.~\ref{fig:fusion_abiguty}.
+Fusion move algorithms~\cite{Lempitsky-2010} are a popular technique 
+for large scale discrete energy minimization problems.
+They iteratively fuse two node labelings by optimizing over the label space spanned by those.
+Different fusion algorithms vary in the proposals and method used for the auxiliary fusion problem~\cite{kappes_2014_ws}.
+
+As fusion algorithms work with node labelings, % \cf Eq.~\ref{eq:nodeproblem},
+we face the problem that the node coloring is ambiguous and has no semantic meaning.
+This causes that a fusion move is not well defined, because different choices of colors 
+lead to different auxiliary problems, as shown in Fig.~\ref{fig:fusion_abiguty}.
+ 
 In the following, we propose a more suitable fusion move for correlation
 clustering which works on the edge domain.
+It allows to change all edge labelings, which are active in at least one of the two labelings.
 %
 Given two proposal solutions $y'$ and $y''$,
-$\mathcal{C}$ is the set of edges
+$\mathcal{E}^0_{\breve{y}}$ is the set of edges
 which are uncut in $y'$ and $y''$.
 %
 \begin{align}
 \breve{y}_{ij}    & = \max\{ y_{ij}', y_{ij}''\}  & \forall {ij}\in E\\  % y' \cup y'' \\
-\mathcal{E}_0  & =  \{ (i, j) \; | \; \breve{y}_{ij} = 0 \}
+\mathcal{E}^0_{\breve{y}}  & =  \{ (i, j) \; | \; \breve{y}_{ij} = 0 \}
 \end{align}
 %
 The fusion move for correlation clustering is solving Eq.~\ref{eq:edgeproblem}
-with additional \emph{must-link constraints} for all edges in $\mathcal{E}_0$.
+with additional \emph{must-link constraints} for all edges in $\mathcal{E}^0_{\breve{y}}$.
 %
 \begin{align}
   y^* &= \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:fusion_move_a}.\\ 
-      &\quad \textrm{s.t.} \quad y_{ij} = 0 & \forall (i, j) \in \mathcal{E}_0 \nonumber
+      &\quad \textrm{s.t.} \quad y_{ij} = 0 & \forall (i, j) \in \mathcal{E}^0_{\breve{y}} \nonumber
 \end{align}
 %
 By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy,
-because $y'$ and $y''$ are feasible solutions for problem~\ref{eq:fusion_move_a}.
+because $y'$ and $y''$ are feasible solutions.
 %\begin{align}
 %  \sum  w_{ij} \cdot y^*_{ij}  \leq \min \left( \sum  w_{ij} \cdot y'_{ij} ,  \sum   w_{ij} \cdot y''_{ij} \right)
 %\end{align}
 %
 
-
-Once we know how to fuse segmentations, the actual algorithm 
-for correlation clustering 
-is simple and similar to the fusion move algorithm of Lempitsky \etal~\cite{bagon_2011_arxiv}.
-We iteratively improve the best solution by
+The  correlation clustering fusion algorithm (CCFusion) iteratively improve the best solution by
 fusing it with proposal solution.
-The inherent difference is how we define the fusion.
+The inherent difference to classical fusion~\cite{Lempitsky-2010} is how we define the fusion.
 We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}.
-%
-How to optimize  Eq.~\ref{eq:fusion_move_a} in an more efficient way is
-described in the following section.
+
+A further difference is how we efferently calculate the correlation clustering fusion move and how we generate proposals.
+Both will be discussed next.
+
 
 
 \input{inputs/fig_fusion.tex}
@@ -363,7 +367,7 @@ described in the following section.
 %\input{inputs/fig_alg_graph.tex}
 
 
-\subsection{Fast Optimization} \label{sec:fast_optimization}
+\subsection{Fast Optimization of CCFusion Moves} \label{sec:fast_optimization}
 
 Eq.~\ref{eq:fusion_move_a} can be solved efficiently, since 
 we can work on a coarser graph, where all nodes which are connected
