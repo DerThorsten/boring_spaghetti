@@ -518,14 +518,16 @@ meaningful moves (??? this last sentence needs to be rewritten).
 \noindent \textbf{Randomized HierarchicalClustering (RHC):}
 %\subsubsection{Randomized HierarchicalClustering (RHC)}
 %
-To generate proposals cut we can use bottom up hierarchical clustering.
-In each step we contract the edge with the highest weight.
-Parallel edges are merged into single edges by summing their weights.
-We stop when a certain number of nodes is reached, or the
-largest edge weight among the not yet contracted edges is smaller then a certain threshold.
-To get versatile proposals we either add noise 
-to the edge weighs or permute a certain number of weights.
-
+To generate fast energy aware proposals we can use energy
+based hierarchical clustering (EHC) as defined in sec.~\ref{sec:ehc}.
+EHC follows the energy function, therefore the \emph{quality}
+of the proposals is high.
+To get \emph{diversity} among the different proposal,
+we add normal distributed noise with a standard deviation of $\sigma_{ehc}$
+to each edge weight.
+To get proposals of the desired \emph{size}, we can use a
+different stop condition in EHC, and stop when a certain number of connected
+components is reached.
 
 %\subsubsection{Randomized MaxCut  (RMC)}
 %
@@ -546,17 +548,16 @@ to the edge weighs or permute a certain number of weights.
 %\subsubsection{Randomized Watersheds (RWS)}
 %
 The edge weighted watershed algorithm \cite{meyer_2013}
-with random seeds can be used to get 
-cheap proposals. Instead of $n$ seeds distributed uniformly
-over all nodes we use the following.
-Draw $n/k$ random edges only the negative edges, 
-and give the two nodes of each random edge different seeds.
+with random seeds can be used to get
+cheap proposals.
+To improve \emph{quality} we do not use $n$ seeds distributed uniformly
+over all nodes but use the following.
+Draw $n/k$ random edges only the negative edges,
+and give the two nodes of each ``seed-edge'' a different seed.
 Doing so, a random subset of negative edges is forced
 to be cut within each proposal.
-For additional randomness, noise can be added to
+For additional \emph{diversity} randomness, noise can be added to
 the edge weighs.
-
-
 
 %\input{inputs/fig_hc.tex}
 
