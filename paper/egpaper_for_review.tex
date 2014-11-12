@@ -637,7 +637,7 @@ over all nodes but use the following.
 We draw $n/2$ negative edges, and assign to the endpoints a different seed.
 Doing so, a random subset of negative edges is forced
 to be cut within each proposal.
-For additional \emph{diversity}, noise $\mathcal{N} (0, sigma_{ws})$
+For additional \emph{diversity}, noise $\mathcal{N} (0, \sigma_{ws})$
 can be added to the edge weighs.
 
 %\input{inputs/fig_hc.tex}
@@ -650,8 +650,8 @@ can be added to the edge weighs.
 \section{Experiments}\label{sec:exp}
 In our experiments we compare to the following methods withpublic available implementation.
 
-For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}\small{{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}}
-of the Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{https://github.com/opengm/opengm}}.
+For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}{\url{github.com/opengm/opengm/tree/cgc-cvpr2014}}}
+of the Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{github.com/opengm/opengm}}.
 For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we use an modified version of
  the public available implementation in OpenGM\footref{opengm-master} of Kappes~\etal, as described in Sec.~\ref{sec:tunedMC}.
 %
