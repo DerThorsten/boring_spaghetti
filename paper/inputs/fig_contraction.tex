@@ -9,20 +9,17 @@
 
 \begin{center}
 \begin{figure}[h]
-    \resizebox{\linewidth}{!}{
+    \begin{subfigure}{0.45\linewidth}
+    \resizebox{1\linewidth}{!}{
         \begin{tikzpicture}[scale=1]%[x=1 cm, y=1 cm]
 
-                \draw (1,2) node (dummy) {\large{(a)}}; 
-                \draw (7,2) node (dummy) {\large{(b)}}; 
-                \draw (1,-1.5) node (dummy) {\large{(c)}}; 
-                \draw (7,-1.5) node (dummy) {\large{(d)}}; 
 
-                \draw (2,2) node[nS] (n0) {$0$}; 
-                \draw (4,2) node[nS] (n1) {$1$};
-                \draw (6,2) node[nS] (n2) {$2$};
-                \draw (2,0) node[nS] (n3) {$3$}; 
-                \draw (4,0) node[nS] (n4) {$4$};
-                \draw (6,0) node[nS] (n5) {$5$};
+                \draw (0,2) node[nS] (n0) {$0$}; 
+                \draw (2,2) node[nS] (n1) {$1$};
+                \draw (4,2) node[nS] (n2) {$2$};
+                \draw (0,0) node[nS] (n3) {$3$}; 
+                \draw (2,0) node[nS] (n4) {$4$};
+                \draw (4,0) node[nS] (n5) {$5$};
                 \path
                     (n0) edge[eCut] node[eNS]{$w_{01}$} (n1) 
                     (n1) edge[eCut] node[eNS]{$w_{12}$} (n2) 
@@ -33,11 +30,9 @@
                     (n2) edge[eNotCut] node[eNS]{$w_{25}$} (n5)
                 ;
 
-                \draw (0+8,2) node[nS] (n0) {$\{0,3\}$}; 
-                \draw (2+8,2) node[nS] (n1) {$\{1,4\}$};
-                \draw (4+8,2) node[nS] (n2) {$\{2,5\}$};
-                \draw (0+8,0) node (d) {}; 
-                \draw (0+8,3) node (d) {}; 
+                \draw (0,2-3.5) node[nS] (n0) {$\{0,3\}$}; 
+                \draw (2,2-3.5) node[nS] (n1) {$\{1,4\}$};
+                \draw (4,2-3.5) node[nS] (n2) {$\{2,5\}$};
                 %\draw (2,0) node[nS] (n3) {$3$}; 
                 %\draw (4,0) node[nS] (n4) {$4$};
                 %\draw (6,0) node[nS] (n5) {$5$};
@@ -51,11 +46,21 @@
                     %(n2) edge[eNotCut] node[eNS]{$w_{25}$} (n5)
                 ;
 
-                \draw (0+2,1-2.5) node[nS] (n0) {$\{0,3\}$}; 
-                \draw (2+2,1-2.5) node[nS] (n1) {$\{1,4\}$};
-                \draw (4+2,1-2.5) node[nS] (n2) {$\{2,5\}$};
-                \draw (0+2,0-2.5) node (d) {}; 
-                \draw (0+2,3-2.5) node (d) {}; 
+             
+
+        \end{tikzpicture}
+    }
+    \caption{Graph contraction}\label{fig:contraction_a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\linewidth}
+    \resizebox{1\linewidth}{!}{
+        \begin{tikzpicture}[scale=1]%[x=1 cm, y=1 cm]
+
+             
+                \draw (0,0) node[nS] (n0) {$\{0,3\}$}; 
+                \draw (2,0) node[nS] (n1) {$\{1,4\}$};
+                \draw (4,0) node[nS] (n2) {$\{2,5\}$};
                 %\draw (4,0) node[nS] (n4) {$4$};
                 %\draw (6,0) node[nS] (n5) {$5$};
                 \path
@@ -68,12 +73,12 @@
                     %(n2) edge[eNotCut] node[eNS]{$w_{25}$} (n5)
                 ;
 
-                \draw (2+6,2-1.5) node[nS] (n0) {$0$}; 
-                \draw (4+6,2-1.5) node[nS] (n1) {$1$};
-                \draw (6+6,2-1.5) node[nS] (n2) {$2$};
-                \draw (2+6,0-1.5) node[nS] (n3) {$3$}; 
-                \draw (4+6,0-1.5) node[nS] (n4) {$4$};
-                \draw (6+6,0-1.5) node[nS] (n5) {$5$};
+                \draw (0,2-3.5) node[nS] (n0) {$0$}; 
+                \draw (2,2-3.5) node[nS] (n1) {$1$};
+                \draw (4,2-3.5) node[nS] (n2) {$2$};
+                \draw (0,0-3.5) node[nS] (n3) {$3$}; 
+                \draw (2,0-3.5) node[nS] (n4) {$4$};
+                \draw (4,0-3.5) node[nS] (n5) {$5$};
                 \path
                     (n0) edge[eNotCut] node[eNS]{$w_{01}$} (n1) 
                     (n1) edge[eCut] node[eNS]{$w_{12}$} (n2) 
@@ -86,61 +91,14 @@
 
         \end{tikzpicture}
     }
-% \\
-% \begin{subfigure}[t]{0.4\linewidth}
-%     \resizebox{\linewidth}{!}{
-%         \begin{tikzpicture}[scale=1]%[x=1 cm, y=1 cm]
-%                 \draw (0,1) node[nS] (n0) {$\{0,3\}$}; 
-%                 \draw (3,1) node[nS] (n1) {$\{1,4\}$};
-%                 \draw (6,1) node[nS] (n2) {$\{2,5\}$};
-%                 \draw (0,0) node (d) {}; 
-%                 \draw (0,3) node (d) {}; 
-%                 %\draw (4,0) node[nS] (n4) {$4$};
-%                 %\draw (6,0) node[nS] (n5) {$5$};
-%                 \path
-%                     (n0) edge[eNotCut] node[eNS]{$w_{01}+$\\$w_{34}$} (n1) 
-%                     (n1) edge[eCut] node[eNS]{$w_{12}+$\\$w_{45}$} (n2) 
-%                     %(n3) edge[eCut] node[eNS]{$w_{34}$} (n4) 
-%                     %(n4) edge[eCut] node[eNS]{$w_{45}$} (n5)
-%                     %(n0) edge[eNotCut] node[eNS]{$w_{03}$} (n3)
-%                     %(n1) edge[eNotCut] node[eNS]{$w_{14}$} (n4)
-%                     %(n2) edge[eNotCut] node[eNS]{$w_{25}$} (n5)
-%                 ;
-%         \end{tikzpicture}
-%     }
-% \caption{ cut $y^*$ on contraction graph $G_w$ }
-% \label{fig:cont_c}
-% \end{subfigure}
-% \hfill
-% \begin{subfigure}[t]{0.4\linewidth}
-%     \resizebox{\linewidth}{!}{
-%         \begin{tikzpicture}[scale=1]%[x=1 cm, y=1 cm]
-%                 \draw (2,2) node[nS] (n0) {$0$}; 
-%                 \draw (4,2) node[nS] (n1) {$1$};
-%                 \draw (6,2) node[nS] (n2) {$2$};
-%                 \draw (2,0) node[nS] (n3) {$3$}; 
-%                 \draw (4,0) node[nS] (n4) {$4$};
-%                 \draw (6,0) node[nS] (n5) {$5$};
-%                 \path
-%                     (n0) edge[eNotCut] node[eNS]{$w_{01}$} (n1) 
-%                     (n1) edge[eCut] node[eNS]{$w_{12}$} (n2) 
-%                     (n3) edge[eNotCut] node[eNS]{$w_{34}$} (n4) 
-%                     (n4) edge[eCut] node[eNS]{$w_{45}$} (n5)
-%                     (n0) edge[eNotCut] node[eNS]{$w_{03}$} (n3)
-%                     (n1) edge[eNotCut] node[eNS]{$w_{14}$} (n4)
-%                     (n2) edge[eNotCut] node[eNS]{$w_{25}$} (n5)
-%                 ;
-%         \end{tikzpicture}
-%     }
-% \caption{ cut $y^*$ projected on $G$}
-% \label{fig:cont_d}
-% \end{subfigure}
-% \hfill
-\caption{\emph{(Contraction Graph)} 
-Given a graph $G=(V, E, w)$ and a consistent edge labeling $y\in P(G)$, shown by solid and doted lines in Fig.~\ref{fig:contraction}\textcolor{red}{a}, the contraction 
-graph  $G_y=(V_y,E_y, w_y) $ is constructed by contracting uncut nodes and edges in $G$ w.r.t. $y$ (Fig.~\ref{fig:contraction}\textcolor{red}{b}).
-Given a edge labeling $\bar{y}^*$ of a contracted graph $G_y=(V_y,E_y, w_y)$ (Fig.~\ref{fig:contraction}\textcolor{red}{c}),
-we can back project the edge labeling to the original graph (Fig.~\ref{fig:contraction}\textcolor{red}{d})
+    \caption{Back projection}\label{fig:contraction_b}
+    \end{subfigure}
+
+\caption{
+Given a graph $G=(V, E, w)$ and a consistent edge labeling $y\in P(G)$, shown by solid and doted lines in Fig.~\ref{fig:contraction_a}, the contraction 
+graph  $G_y=(V_y,E_y, w_y) $ is constructed by contracting uncut nodes and edges in $G$ w.r.t. $y$ .
+Given a edge labeling $\bar{y}^*$ of a contracted graph $G_y=(V_y,E_y, w_y)$ (Fig.~\ref{fig:contraction_b} ),
+we can back project the edge labeling to the original graph.
 %A cut $y^*$ defined on $G_y$  (fig.~\ref{fig:cont_c}) can be projected to $G$ (fig.~\ref{fig:cont_d}).
 }\label{fig:contraction}
 \end{figure}
