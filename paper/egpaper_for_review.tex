@@ -417,7 +417,7 @@ is an optimal solution of problem~\ref{eq:fusion_move_a}.
 \begin{proof}
 Let $y'$ be the back propagation of $\bar{y}'$, which is by definition a feasible for~\ref{eq:fusion_move_a}.
 If $y'$ would not be an optimal solution than there must exists $y''$ with 
-$\sum_{e\in E} w_ey_e'' > \sum_{e\in E} w_ey_e''$.
+$\sum_{e\in E} w_ey_e'' < \sum_{e\in E} w_ey_e'$.
 Since $y_e'$ and $y_e''$ are $0$ for all $e \in \mathcal{E}_0^{\breve{y}}$ we would have
 \begin{align*}
   \sum_{\bar{e}\in E_y} \bar{w}_{\bar{e}}\bar{y}'_{\bar{e}}
