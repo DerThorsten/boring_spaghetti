@@ -280,8 +280,7 @@ contraction leads to worse energies.
 % contraction leads to worse energies.
 
 Given the intrinsic greediness of hierarchical clustering, 
-and the fact that EHC does only local decisions, it is 
-sensitive against noise and we cannot expect optimal solutions.
+EHC is sensitive against noise and we cannot expect optimal solutions.
 
 But EHC is very fast, and can be used to initialize
 CGC~\cite{beier_2014_cvpr}. Excessive time in CGC
@@ -423,12 +422,12 @@ is an optimal solution of problem~\ref{eq:fusion_move_a}.
 \begin{proof}
 Let $y'$ be the back propagation of $\bar{y}'$, which is by definition a feasible for~\ref{eq:fusion_move_a}.
 If $y'$ would not be an optimal solution than there must exists $y''$ with 
-$\sum_{e\in E} w_ey_e'' > \sum_{e\in E} w_ey_e''$.
+$\sum_{e\in E} w_ey_e' > \sum_{e\in E} w_ey_e''$.
 Since $y_e'$ and $y_e''$ are $0$ for all $e \in \mathcal{E}_0^{\breve{y}}$ we would have
 \begin{align*}
   \sum_{\bar{e}\in E_y} \bar{w}_{\bar{e}}\bar{y}'_{\bar{e}}
  &= \sum_{e\in E \setminus \mathcal{E}_0^{\breve{y}}} w_ey_e'          
-  = \sum_{e\in E} w_ey_e'' \\
+  = \sum_{e\in E} w_ey_e' \\
  &> \sum_{e\in E} w_ey_e''
   = \sum_{e\in E \setminus \mathcal{E}_0^{\breve{y}}} w_ey_e''
   =\sum_{\bar{e}\in E_y} \bar{w}_{\bar{e}}\bar{y}''_{\bar{e}}
@@ -439,7 +438,7 @@ This contradicts that $y'$ is a optimal segmentation of $G_y$.
 %
 \end{theorem}
 
-Instead of problem~\ref{eq:fusion_move_a} we can now solve problem~ref{eq:edgeproblem} on the contracted graph $G_{\breve{y}}$.
+Instead of problem~\ref{eq:fusion_move_a} we can now solve problem~\ref{eq:edgeproblem} on the contracted graph $G_{\breve{y}}$.
 This is, depending on the intersection of the current and proposed solution, magnitudes smaller than $G$.
 The correlation clustering problem on $G_{\breve{y}}$ can be solved by any correlation clustering solver.
 Since $G_{\breve{y}}$ is smaller exact methods or good approximative methods like 
