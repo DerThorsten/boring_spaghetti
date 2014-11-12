@@ -241,13 +241,13 @@ parallel edges are merged into single edges.
 For image segmentation, the length
 weighted mean is used to do this update~\cite{arbelaez_2006}.
 
-While we, contrary to~\cite{arbelaez_2006}, directly work on energies, we are interesting in an 
+While we, contrary to~\cite{arbelaez_2006}, directly work on energies, we are interested in an 
 agglomeration with respect to our energy function~\ref{eq:edgeproblem}.
 For this we propose to use energy based agglomeration
 with the following update rule:
 Whenever there are multiple edges between 
 a pair of nodes, these edges are merged into a single edge
-by summing up their weights, since we 
+and the weights are summed up, since we 
 minimize the sum of the cut edges.
 We call HC with this update method Energy base Hierarchical Clustering (EHC).
 
@@ -312,7 +312,7 @@ In the following, we propose a more suitable fusion move for correlation
 clustering which works on the edge domain.
 %
 Given two proposal solutions $y'$ and $y''$,
-$\mathcal{C}$ is the set of edges
+$\mathcal{E}_0^{\breve{y}}$ is the set of edges
 which are uncut in $y'$ and $y''$.
 %
 \begin{align}
@@ -344,7 +344,7 @@ fusing it with proposal solution.
 The inherent difference is how we define the fusion.
 We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}.
 
-A further difference is how we efferently calculate the correlation clustering fusion move and how we generate proposals.
+A further difference is how we efficiently calculate the correlation clustering fusion move and how we generate proposals.
 Both will be discussed next. The overall framework is sketched in Fig.~\ref{fig:move_graph}.
 
 

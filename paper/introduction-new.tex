@@ -1,7 +1,7 @@
 \section{Introduction}
 Correlation clustering~\cite{Bansal-2002} also known as the multicut problem~\cite{chopra_1993_mp} 
 is a basic primitive in computer vision~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad} and data mining~\cite{Chierichetti-2014,Arasu-2009,Sadikov-2010,Chen-2012},
-see Sec.~\ref{sec:problem_formulation} for its formal definition of clustering the nodes of a graph..
+see Sec.~\ref{sec:problem_formulation} for its formal definition of clustering the nodes of a graph.
  
 Its value is, firstly, that it accommodates both positive (attractive) \emph{and} negative (repulsive) edge weights,
 which allows doing justice to evidence in the data that two nodes or pixels do \emph{not} wish  or do wish to end up in the same cluster or segment, respectively.
@@ -34,13 +34,13 @@ are not tractable, because reasonable solutions cannot be computed in acceptable
 % \paragraph{Contribution.} The evident usefulness of correlation clustering and its clean and compact formulation in terms of an optimization problem, together with its unfortunate NP-hardness, are an invitation to develop fast approximate solvers. The basic idea of the move making algorithm proposed here is to maintain, at all times, a best current partitioning; and to iteratively improve it (as we show, monotonously) by considering diverse and cheaply generated proposal partitionings. Any two nodes that are in one cluster in both the current and the proposal partitioning are contracted. Edges to contracted nodes are equally combined and reweighted, and the correlation clustering problem is then solved on this reduced graph. We offer a polyhedral characterization of this strategy, and evaluate it in conjunction with two versatile proposal generators.   We conduct experiments on a broad range of data sets ranging from 2D and 3D segmentation problems to clustering in signed social networks. The results suggest that this simple move making algorithm is the fastest technique known today, reaching close to globally optimal solutions in a tenth or a hundredth of the time required by the most efficient exact solvers. 
 \vspace{0.1cm}
 \noindent \textbf{Contribution.}
-In the present work we present some novel approaches that are designed for large scale correlation clustering problems.
+In this work we present some novel approaches that are designed for large scale correlation clustering problems.
 First, we define a novel energy based agglomerative clustering algorithm that monotonically increase the energy.
 With this at hand we show how to improve the anytime performance of Cut, Clue \& Cut.
 Second, we introduce cluster-fusion moves, which extend the original fusion moves~\cite{Lempitsky-2010} 
 used in supervised segmentation to the unsupervised case and give a polyhedral interpretation of this algorithm.
 We propose two versatile proposal generators, and evaluate the proposed methods on existing and new benchmark problems.
-That experiments show that we can improve the computation time by one to two magnitudes without worsening the segmentation 
+Experiments show that we can improve the computation time by one to two magnitudes without worsening the segmentation 
 quality significantly.
  
 \vspace{0.1cm}
@@ -48,7 +48,7 @@ quality significantly.
 A natural approach is to solve the integer linear programming problem directly. 
 To this end, efficient separation procedures have been found~\cite{kappes_2011_emmcvpr,kappes_2013_arxiv} that allow to iteratively augment the set of constraints until a valid partitioning is found. 
 Alternatively, it is possible to relax the integrality constraints of the integer linear programming formulation~\cite{kappes_2013_arxiv}. 
-Such an outer relaxation can be iteratively tightened. However, intermediate solutions are fractional and so rounding is required to obtain a valid partitioning.
+Such an outer relaxation can be iteratively tightened. However, intermediate solutions are fractional and therefore rounding is required to obtain a valid partitioning.
 For the latter approach column generating methods exits, that works best on planar \cite{yarkony_2012_eccv} graphs. %or almost planar \cite{yarkony-andres-2013} graphs. 
 
 Another line of work uses move making algorithm 
@@ -59,11 +59,11 @@ As shown by Beier \etal~\cite{beier_2014_cvpr} only CGC~\cite{beier_2014_cvpr}
 can deal with large scale problems, but can also suffer on very large auxiliary problems.
 
 Outside computer vision greedy methods~\cite{Soon-2001,Ng-2002,Gionis-2007,Elsner-2008,Ailon-2008} has been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
-The PIVOT Algorithm~\cite{Ailon-2008} iterate over all nodes in random order.
-If the node is not assigned it construct a cluster containing the node and all its 
+The PIVOT Algorithm~\cite{Ailon-2008} iterates over all nodes in random order.
+If the node is not assigned it constructs a cluster containing the node and all its 
 unassigned positively linked neighbors.  
 %
-A widely use post-processing method is  Best One Element Move (BOEM)~\cite{Gionis-2007}, which iteratively reassigned nodes to clusters.
+A widely use post-processing method is  Best One Element Move (BOEM)~\cite{Gionis-2007}, which iteratively reassigns nodes to clusters.
 
 For energy minimization problems fusion moves have become increasingly popular~\cite{Lempitsky-2010,kappes_2014_ws}.
 For many large scale computer vision applications fusion moves lead to good approximations
