@@ -48,7 +48,7 @@ anchor=north east}}
   \centering
   \begin{tikzpicture}
   \begin{semilogxaxis}[  mark size=1pt,
-  restrict y to domain=-40000:-24000,
+  %restrict y to domain=-40000:-24000,
   xlabel = {runtime},
   xmin = 0,
   xmax = 4100,
@@ -57,12 +57,14 @@ anchor=north east}}
   %legend to name = ledgendPosition,
   legend columns=6,
   every axis legend/.code={\let\addlegendentry\relax} 
-  ]  
+  ]
+  \addplot[color=yellow,mark=o] table[x=time, y=PIVOT*]{data3/knott-3d-300.data};          \addlegendentry{PIVOT-BOEM}  
   \anytimeplot{knott-3d-300}
   \end{semilogxaxis}
   \end{tikzpicture}
   \caption{knott-3d-300}\label{fig:at:knott-300}
   \end{subfigure}
+  {\color{gray}\rule{\textwidth}{1pt}}\vspace{0.2cm}
   \newline
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{subfigure}[b]{0.33\textwidth}
@@ -119,6 +121,8 @@ anchor=north east}}
   \end{tikzpicture}
   \caption{seg-3d}\label{fig:at:seg3d}
   \end{subfigure}
+  {\color{gray}\rule{\textwidth}{1pt}}\vspace{0.2cm}
+  \newline
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{subfigure}[b]{0.33\textwidth}
   \centering
