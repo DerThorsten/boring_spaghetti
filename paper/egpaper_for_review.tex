@@ -547,7 +547,7 @@ Therefore the size of the proposals
 should be small enough, such that solving
 eq.~\ref{eq:fusion_move_a} can
 be done fast enough, but  on the other side 
-large enough to define a large internal polytope and so a powerful move.
+large enough to define a large internal polytope and therefore a powerful move.
 %
 To this end we suggest two proposal generators.
 
@@ -634,11 +634,12 @@ cheap proposals.
 To improve \emph{quality} we do not use $n$ seeds distributed uniformly
 over all nodes but use the following.
 %
-We draw $n/2$ negative edges, and assign to the endpoints a different seed.
+We draw $n/2$ negative edges, and assign different seed to the endpoints
+of each edge.
 Doing so, a random subset of negative edges is forced
 to be cut within each proposal.
 For additional \emph{diversity}, noise $\mathcal{N} (0, \sigma_{ws})$
-can be added to the edge weighs.
+is added to the edge weighs.
 
 %\input{inputs/fig_hc.tex}
 
@@ -651,7 +652,7 @@ can be added to the edge weighs.
 In our experiments we compare to the following methods withpublic available implementation.
 
 For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}{\url{github.com/opengm/opengm/tree/cgc-cvpr2014}}}
-of the Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{github.com/opengm/opengm}}.
+of Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{github.com/opengm/opengm}}.
 For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we use an modified version of
  the public available implementation in OpenGM\footref{opengm-master} of Kappes~\etal, as described in Sec.~\ref{sec:tunedMC}.
 %
