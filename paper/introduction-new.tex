@@ -74,24 +74,21 @@ We will show how to overcome this point later.
 
 \vspace{0.1cm}
 \noindent \textbf{Outline:} 
-In sec.~\ref{sec:problem_formulation} we will give a 
+In Sec.~\ref{sec:problem_formulation} we will give a 
 detailed problem definition where we introduce 
 the correlation clustering objective.
-In sec.~\ref{sec:related_work} we will 
-discuss existing methods for correlation 
-clustering and briefly explain the concept of fusion moves.
-In sec: ~\ref{sec:cc_fm} we describe our proposed
+In Sec.~\ref{sec:cc_fm} we describe our proposed
 method and show the properties of the algorithm.
-In sec.~\ref{sec:exp} we show an evaluation
-of the method on existing parameter  and discuss the effects of parameters.
-Future work will be discussed in sec. \ref{sec:future} and
-we will conclude in ~\ref{sec:conclusion}.
+In Sec.~\ref{sec:exp} we show an evaluation
+of the proposed methods methods and state of the art
+and conclude in Sec.~\ref{sec:future} and\ref{sec:conclusion}.
 %-------------------------------------------------------------------------
 
 \section{Notation and Problem Formulation}\label{sec:problem_formulation}
 Let $G=(V,E, w)$ be a weighted graph of nodes $V$ and edges $E$.
 %
 The function $w : E \rightarrow \mathbb{R}$ assigns a weight to each edge.
+We will use $w_e$ as a shorthand for $w(e)$.
 A positive weight expresses the desire that two adjacent nodes should
 be merged, whereas a negative weight indicates
 that these nodes should be separated into two different regions.
@@ -101,7 +98,7 @@ that these nodes should be separated into two different regions.
 %
 A segmentation of the graph $G$ can by either given by an 
 node labeling $l \in \mathbb{N}^{|V|}$
-or an edge labeling $y \in\{0,1\}^{|E|}$.  
+or an edge labeling $y \in\{0,1\}^{|E|}$, \cf Fig.~\ref{fig:notation} .
 An edge labeling is only consistent if it contains no dangling edges~\cite{kappes_2013_arxiv}.
 We denote the set of all consistent edge labelings by $P(G)\subset\{0,1\}^{|E|}$.
 The convex hull of this set is known as the \emph{multicut polytope} $MC(G) = \textrm{conv}(P(G))$.
@@ -116,7 +113,7 @@ or in the edge domain, by label each edge $e$ as cut $y_e=1$ or uncut $y_e=0$
 \begin{align}
   y^* &= \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}.%\\ 
 \end{align}
-As shown in~\cite{kappes_2013_arxiv} both problems are equivalent, but formulation \ref{eq:nodeproblem}
-suffers from ambiguities in the formulation~\cite{kappes_2011_emmcvpr}.
+As shown in~\cite{kappes_2013_arxiv}  both problems are equivalent, but formulation \ref{eq:nodeproblem}
+suffers from ambiguities in the formulation, \cf Fig.~\ref{fig:notation}. 
 
 \input{inputs/fig_notation.tex}

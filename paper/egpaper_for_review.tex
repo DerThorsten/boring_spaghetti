@@ -30,7 +30,13 @@
 \usepackage{filecontents}
 %\usepackage{scrextend}
 \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
-\pdfpageattr{/Group <</S /Transparency /I true /CS /DeviceRGB>>} 
+\pdfpageattr{/Group <</S /Transparency /I true /CS /DeviceRGB>>}
+\usepackage{everypage}
+\AddEverypageHook{%
+  \makeatletter%
+  \special{pdf: put @thispage <</Group << /S /Transparency /I true /CS /DeviceRGB>> >>}%
+  \makeatother%
+}%
 
 \newcommand{\footlabel}[2]{%
     \addtocounter{footnote}{1}%
@@ -228,7 +234,7 @@ Correlation clustering, or multicut partitioning, is the NP-hard problem of part
 Agglomerative hierarchical clustering (HC) is widely used
 in graph / image segmentation~\cite{arbelaez_2006}.
 In each step, the edge with the highest weight $w$ is
-contracted (red edges in Fig.~\ref{fig:hc_alg}).
+contracted (green edges in Fig.~\ref{fig:hc_alg}).
 Doing so, parallel edges edges can occur.
 In agglomerative clustering, weights of
 parallel edges are merged into single edges.
@@ -236,9 +242,9 @@ For image segmentation, the length
 weighted mean is used to do this update~\cite{arbelaez_2006}.
 
 While we, contrary to~\cite{arbelaez_2006}, directly work on energies, we are interesting in an 
-agglomeration with respect to our energy function.
+agglomeration with respect to our energy function~\ref{eq:edgeproblem}.
 For this we propose to use energy based agglomeration
-withe the following update rule:
+with the following update rule:
 Whenever there are multiple edges between 
 a pair of nodes, these edges are merged into a single edge
 by summing up their weights, since we 
@@ -246,7 +252,7 @@ minimize the sum of the cut edges.
 We call HC with this update method Energy base Hierarchical Clustering (EHC).
 
 We stop EHC if the highest edge weight is
-smaller or equal to zero  (green edge in Fig.~\ref{fig:hc_alg}). Any further edge
+smaller or equal to zero  (blue edge in Fig.~\ref{fig:hc_alg}). Any further edge
 contraction leads to worse energies.
 
 % Hierarchical clustering is fast, and 
@@ -275,8 +281,7 @@ contraction leads to worse energies.
 
 Given the intrinsic greediness of hierarchical clustering, 
 and the fact that EHC does only local decisions, it is 
-sensitive against salt and paper noise 
-and we do not expect very good solutions.
+sensitive against noise and we cannot expect optimal solutions.
 
 But EHC is very fast, and can be used to initialize
 CGC~\cite{beier_2014_cvpr}. Excessive time in CGC
@@ -302,7 +307,7 @@ can improve performance drastically.
 Fusion moves as defined in \cite{Lempitsky-2010} work
 in the node domain and do not work properly for 
 objective functions as Eq.~\ref{eq:nodeproblem} since
-the node coloring is ambiguous and has no semantic meaning (see Fig.~\ref{fig:fusion_abiguty}).
+the node coloring is ambiguous and has no semantic meaning, \cf Fig.~\ref{fig:fusion_abiguty}.
 In the following, we propose a more suitable fusion move for correlation
 clustering which works on the edge domain.
 %
@@ -311,22 +316,23 @@ $\mathcal{C}$ is the set of edges
 which are uncut in $y'$ and $y''$.
 %
 \begin{align}
-\breve{y}    & =  y' \cup y'' \\
-\mathcal{C}  & =  \{ (i, j) \quad | \quad \breve{y}_{ij} = 0 \}
+\breve{y}_{ij}    & = \max\{ y_{ij}', y_{ij}''\}  & \forall {ij}\in E\\  % y' \cup y'' \\
+\mathcal{E}_0  & =  \{ (i, j) \; | \; \breve{y}_{ij} = 0 \}
 \end{align}
 %
 The fusion move for correlation clustering is solving Eq.~\ref{eq:edgeproblem}
-with additional \emph{must-link constraints} for all edges in $\mathcal{C}$.
+with additional \emph{must-link constraints} for all edges in $\mathcal{E}_0$.
 %
 \begin{align}
-  y^* &=& \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:fusion_move_a}.\\ 
-  s.t & &  y_{ij} = 0 \quad \forall (i, j) \in \mathcal{C} \nonumber
+  y^* &= \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:fusion_move_a}.\\ 
+      &\quad \textrm{s.t.} \quad y_{ij} = 0 & \forall (i, j) \in \mathcal{E}_0 \nonumber
 \end{align}
 %
-By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy:
-\begin{align}
-  \sum  w_{ij} \cdot y^*_{ij}  \leq \min \left( \sum  w_{ij} \cdot y'_{ij} ,  \sum   w_{ij} \cdot y''_{ij} \right)
-\end{align}
+By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy,
+because $y'$ and $y''$ are feasible solutions for problem~\ref{eq:fusion_move_a}.
+%\begin{align}
+%  \sum  w_{ij} \cdot y^*_{ij}  \leq \min \left( \sum  w_{ij} \cdot y'_{ij} ,  \sum   w_{ij} \cdot y''_{ij} \right)
+%\end{align}
 %
 
 
@@ -334,7 +340,7 @@ Once we know how to fuse segmentations, the actual algorithm
 for correlation clustering 
 is simple and similar to the fusion move algorithm of Lempitsky \etal~\cite{bagon_2011_arxiv}.
 We iteratively improve the best solution by
-fusing it with proposal solutions.
+fusing it with proposal solution.
 The inherent difference is how we define the fusion.
 We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}.
 %
@@ -798,20 +804,20 @@ More information of the size of instances is given in Tab.~\ref{tab:instance_siz
    \label{tab:eval}
    \begin{tabular}{lllllll}
       \toprule
-         Dataset          &  image-seg   & knott-3d-150&knott-3d-300&knott-3d-450 &knott-3d-550 &3d-seg\\
+         Dataset          &  image-seg   & knott-3d-150 & knott-3d-300   & knott-3d-450 & knott-3d-550 &3d-seg\\
       \midrule 
-         PIVOT-BOEM       &   $ 4.9633$  &    $ 2.9936$ &       --       &\\ 
-         HC               &   $ 2.5967$  &    $ 1.5477$ &    $ 2.3513$   &    $ 2.9155$ \\
-         HC-CGC           &   $ 2.5164$  &    $ 0.9052$ &    $ 1.7636$   &    $ 2.2256$ \\
-         CGC              &   $ 2.5247$  &    $ 0.9267$ &    $ 1.8822$   &    $ 2.3104$\\
-         KL               &   $ 2.6432$  &    $ 2.0648$ &    $ 4.1318$   &    $ 4.9270$\\
-         FUSION           &      --      &    $ 2.8787$ &    $ 4.0744$   &    $ 4.6616$\\
-         MC-R             &   $ 2.5471$  &    $ 0.9178$ &    $ 1.6369$   &    $ 2.8710$\\   
-         MC-I             &   $ 2.5367$  & $\bf 0.9063$ & $\bf 1.6352$   & $\bf 2.0037$ \\  
-         FusionCC-HC-MC   &   $ 2.5319$  &    $ 0.9629$ &    $ 1.6516$   &    $ 2.0801$\\  
-         FusionCC-HC-CGC  &$\bf 2.4961$  &    $ 0.9679$ &    $ 1.7673$   &    $ 2.3809$ \\  
-         FusionCC-WS-MC   &   $ 2.5340$  &    $ 0.9629$ &    $ 1.6742$   &    $ 2.0739$\\  
-         FusionCC-WS-CGC  &   $ 2.5192$  &    $ 1.0585$ &    $ 2.1344$   &    $ 2.7487$ \\      
+         PIVOT-BOEM       &   $ 4.9633$  &    $ 2.9936$ &       --       &              &              &  --\\ 
+         HC               &   $ 2.5967$  &    $ 1.5477$ &    $ 2.3513$   &    $ 2.9155$ &              & $       2.8395$\\
+         HC-CGC           &   $ 2.5164$  &    $ 0.9052$ &    $ 1.7636$   &    $ 2.2256$ &              & $       1.7603$ \\
+         CGC              &   $ 2.5247$  &    $ 0.9267$ &    $ 1.8822$   &    $ 2.3104$ &              & $       6.8908$ \\
+         KL               &   $ 2.6432$  &    $ 2.0648$ &    $ 4.1318$   &    $ 4.9270$ &              & $       7.1057$\\
+         FUSION           &      --      &    $ 2.8787$ &    $ 4.0744$   &    $ 4.6616$ &              & $       6.5366$ \\
+         MC-R             &   $ 2.5471$  &    $ 0.9178$ &    $ 1.6369$   &    $ 2.8710$ &              & $       6.5058$\\   
+         MC-I             &   $ 2.5367$  & $\bf 0.9063$ & $\bf 1.6352$   & $\bf 2.0037$ &              & $       4.3319$\\  
+         FusionCC-HC-MC   &   $ 2.5319$  &    $ 0.9629$ &    $ 1.6516$   &    $ 2.0801$ &              & $\bf    1.3347$ \\  
+         FusionCC-HC-CGC  &$\bf 2.4961$  &    $ 0.9679$ &    $ 1.7673$   &    $ 2.3809$ &              & $       2.1347$ \\  
+         FusionCC-WS-MC   &   $ 2.5340$  &    $ 0.9629$ &    $ 1.6742$   &    $ 2.0739$ &              & $\bf    1.3334$ \\  
+         FusionCC-WS-CGC  &   $ 2.5192$  &    $ 1.0585$ &    $ 2.1344$   &    $ 2.7487$ &              & $       3.3514$ \\      
       \bottomrule
    \end{tabular}
 \end{table}
