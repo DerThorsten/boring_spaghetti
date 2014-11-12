@@ -280,8 +280,7 @@ contraction leads to worse energies.
 % contraction leads to worse energies.
 
 Given the intrinsic greediness of hierarchical clustering, 
-and the fact that EHC does only local decisions, it is 
-sensitive against noise and we cannot expect optimal solutions.
+EHC is sensitive against noise and we cannot expect optimal solutions.
 
 But EHC is very fast, and can be used to initialize
 CGC~\cite{beier_2014_cvpr}. Excessive time in CGC
@@ -300,6 +299,8 @@ can improve performance drastically.
 % \item Centroid: Distance between centroids
 % \item Group Average: average of all cross-cluster pairs.
 % \end{itemize}
+
+
 
 %------------------------------------------------------------------------
 \section{Correlation-Clustering-Fusion Moves}\label{sec:cc_fm}
@@ -347,6 +348,10 @@ We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}.
 A further difference is how we efficiently calculate the correlation clustering fusion move and how we generate proposals.
 Both will be discussed next. The overall framework is sketched in Fig.~\ref{fig:move_graph}.
 
+As classical fusion, CCFusion does not provide and lower bound on the objective and 
+has no sound stopping condition.
+For latter we use a maximal number of iterations and maximal number of iteration without improvement as stopping condition.
+
 
 \input{inputs/fig_fusion.tex}
 
@@ -364,7 +369,7 @@ Both will be discussed next. The overall framework is sketched in Fig.~\ref{fig:
 
 
 \subsection{Fast Optimization of CCFusion Moves} \label{sec:fast_optimization}
-In general the auxiliary fusion problem~\ref{eq:fusion_move_a} is still NP-hard.
+In general the auxiliary fusion problem~\ref{eq:fusion_move_a} is, as for classical fusion~\cite{Lempitsky-2010}, still NP-hard.
 However, many variables have been fixed to be zero and we can reformulate~\ref{eq:fusion_move_a}
 into a correlation clustering problem on a coarser graph, where all nodes which are connected
 via must-link constraints are merged into single nodes. We call this graph \emph{contracted graph}.
@@ -417,12 +422,12 @@ is an optimal solution of problem~\ref{eq:fusion_move_a}.
 \begin{proof}
 Let $y'$ be the back propagation of $\bar{y}'$, which is by definition a feasible for~\ref{eq:fusion_move_a}.
 If $y'$ would not be an optimal solution than there must exists $y''$ with 
-$\sum_{e\in E} w_ey_e'' < \sum_{e\in E} w_ey_e'$.
+$\sum_{e\in E} w_ey_e' > \sum_{e\in E} w_ey_e''$.
 Since $y_e'$ and $y_e''$ are $0$ for all $e \in \mathcal{E}_0^{\breve{y}}$ we would have
 \begin{align*}
   \sum_{\bar{e}\in E_y} \bar{w}_{\bar{e}}\bar{y}'_{\bar{e}}
  &= \sum_{e\in E \setminus \mathcal{E}_0^{\breve{y}}} w_ey_e'          
-  = \sum_{e\in E} w_ey_e'' \\
+  = \sum_{e\in E} w_ey_e' \\
  &> \sum_{e\in E} w_ey_e''
   = \sum_{e\in E \setminus \mathcal{E}_0^{\breve{y}}} w_ey_e''
   =\sum_{\bar{e}\in E_y} \bar{w}_{\bar{e}}\bar{y}''_{\bar{e}}
@@ -433,7 +438,7 @@ This contradicts that $y'$ is a optimal segmentation of $G_y$.
 %
 \end{theorem}
 
-Instead of problem~\ref{eq:fusion_move_a} we can now solve problem~ref{eq:edgeproblem} on the contracted graph $G_{\breve{y}}$.
+Instead of problem~\ref{eq:fusion_move_a} we can now solve problem~\ref{eq:edgeproblem} on the contracted graph $G_{\breve{y}}$.
 This is, depending on the intersection of the current and proposed solution, magnitudes smaller than $G$.
 The correlation clustering problem on $G_{\breve{y}}$ can be solved by any correlation clustering solver.
 Since $G_{\breve{y}}$ is smaller exact methods or good approximative methods like 
@@ -513,37 +518,38 @@ When optimizing over the green polytope we find $y_2$ which we will never leaf a
 %-------------------------------------------------------------------------
 \subsection{Proposal Generators}
 
-As discussed in \cite{Lempitsky-2010}, proposals
+As discussed in~\cite{Lempitsky-2010}, proposals
 should have two properties: \emph{quality} 
 and \emph{diversity}.
-%
-The quality of the individual proposals
-ensures low energy solutions since the
-result of the fusion cannot be higher then
-the energy of the current best solution.
-%
-Diversity between the individual proposals
-increase the chances to escape from local minima.
-%
+
+A proposal have a high quality if it at least in some regions have a low energy.
+For high quality proposals the chance that the inner polytope includes 
+better solution (vertex) is larger than for those with low quality.
+
+Diversity between the individual proposals increase the chances
+to span diverse internal polytopes, cover with the intersection of
+inner polytopes a large part of the original polytope and so  
+more likely find the global optimal solution or escape from local minima.
+
 For correlation clustering fusion we add a third
 property: \emph{size}.
-The size of the contraction graph directly
+The size of the contracted graph directly
 depends on the number of connected components
-in the proposal solution and the current best solution.
-The extreme  case is a proposal where each 
-node is in a separate connnected component.
-Solving the fusion move with such a proposal
-is equivalent to solving the original problem.
-Solving the fusion move with a proposal with 
-a single connected component will result 
-in the current best solution.
+of the intersection of the proposal solution and the current best solution.
+%
+In the extreme case, where each 
+node is in a separate connnected component,
+the fusion move is equivalent to solving the original problem.
+In the other extreme, where the proposal has 
+a single connected component, the current best solution will not change.
+% 
 Therefore the size of the proposals
 should be small enough, such that solving
-eq.~\ref{eq:edgeproblem} can
-be done fast enough, but large enough to make
-meaningful moves (??? this last sentence needs to be rewritten).
-
-
+eq.~\ref{eq:fusion_move_a} can
+be done fast enough, but  on the other side 
+large enough to define a large internal polytope and so a powerful move.
+%
+To this end we suggest two proposal generators.
 
 
 %\begin{algorithm}
@@ -591,14 +597,14 @@ meaningful moves (??? this last sentence needs to be rewritten).
 %\subsubsection{Randomized HierarchicalClustering (RHC)}
 %
 To generate fast energy aware proposals we can use energy
-based hierarchical clustering (EHC) as defined in sec.~\ref{sec:ehc}.
+based hierarchical clustering (EHC) as defined in Sec.~\ref{sec:ehc}.
 EHC follows the energy function, therefore the \emph{quality}
 of the proposals is high.
 To get \emph{diversity} among the different proposal,
 we add normal distributed noise  $\mathcal{N}(0, \sigma_{ehc})$
 to each edge weight.
 To get proposals of the desired \emph{size}, we use a
-different stop condition in EHC, and stop iff a certain number of connected
+different stop condition as in EHC, and stop iff a certain number of connected
 components is reached.
 
 %\subsubsection{Randomized MaxCut  (RMC)}
@@ -628,18 +634,13 @@ cheap proposals.
 To improve \emph{quality} we do not use $n$ seeds distributed uniformly
 over all nodes but use the following.
 %
-Draw $n/k$ negative edges,  and give the endpoints a different seed.
+We draw $n/2$ negative edges, and assign to the endpoints a different seed.
 Doing so, a random subset of negative edges is forced
 to be cut within each proposal.
-For additional \emph{diversity}, noise $\mathcal{N} (0, sigma_{ws})$
-can be added to
-the edge weighs.
+For additional \emph{diversity}, noise $\mathcal{N} (0, \sigma_{ws})$
+can be added to the edge weighs.
 
 %\input{inputs/fig_hc.tex}
-
-%-----------------------------------------------------------------------
-\subsection{Limitations}
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -649,18 +650,19 @@ the edge weighs.
 \section{Experiments}\label{sec:exp}
 In our experiments we compare to the following methods withpublic available implementation.
 
-For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}
-\small{{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}
-}
-of the Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{https://github.com/opengm/opengm}}.
-For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we try the public available implementation in OpenGM\footref{opengm-master}
-of Kappes~\etal. We realize that their implementation has some limitations on large problems and make the following modifications.
-Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
-Secondly, we follow~\cite{kroeger_2012_eccv} and search for shortest paths and add those only if they are non-chordal instead of searching for the shortest non-chordal path
-during the separation procedure. Fig.~\ref{fig:at:knott-450b} show the improvements with our modifications compared to the implementation in OpenGM for the knott-3d-450 dataset.
-This procedure is one magnitude faster, but might cause a few extra outer iterations.
-In~\cite{kroeger_2012_eccv}. this has been used for MC-I only. 
-For MC-R this search procedure is not sufficient and need to be followed by a search for a shortest non-chordal paths.
+For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}{\url{github.com/opengm/opengm/tree/cgc-cvpr2014}}}
+of the Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{github.com/opengm/opengm}}.
+For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we use an modified version of
+ the public available implementation in OpenGM\footref{opengm-master} of Kappes~\etal, as described in Sec.~\ref{sec:tunedMC}.
+%
+%We realize that their implementation has some limitations on large problems and make the following modifications.
+%Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
+%Secondly, we follow~\cite{kroeger_2012_eccv} and search for shortest paths and add those only if they are non-chordal instead of searching for the shortest non-chordal path
+%during the separation procedure. Fig.~\ref{fig:at:knott-450b} show the improvements with our modifications compared to the implementation in OpenGM for the knott-3d-450 dataset.
+%This procedure is one magnitude faster, but might cause a few extra outer iterations.
+%In~\cite{kroeger_2012_eccv}. this has been used for MC-I only. 
+%For MC-R this search procedure is not sufficient and need to be followed by a search for a shortest non-chordal paths.
+%
 From the field of data-mining we compare to the PIVOT-algorithm~\cite{Ailon-2008} followed by a round of BOEM~\cite{Gionis-2007} denoted by \textbf{PIVOT-BOEM}.
 We use the public available code of Micha Elsner\footnote{\url{http://www.ling.ohio-state.edu/~melsner/resources/correlation-readme.html}}.
 While this implementation uses full adjacency matrixes it does not scale as well as the algorithm can and therefor can not be applied on all datasets.
@@ -678,14 +680,19 @@ CGC warm started with the solution from EHC denoted by \textbf{EHC-CGC}.
 %
 The proposed correlation cluster fusion algorithm with EHC-based and watershed-based proposals
  and MC-I and CGC as subproblem solvers denoted by 
-\textbf{fusionCC-HC-MC},
+\textbf{CCFusion-HC-MC},
 \textbf{-HC-CGC},
 \textbf{-WS-MC}, and 
 \textbf{-WS-CGC}, respectively.
 We set the size of the proposals fix to $10\%$ of the original problem size
 and the standard derivation of the random edge noise to $1.5$.
 
+All experiments were run on Intel Core i5-4570 CPUs
+with 3.20 GHz, equipped with 32 GB of RAM.
+In our evaluation we make not use of multiple threads.
+The methods were stopped if they exceed 30 minutes at the next possible interrupt point.
 
+\subsection{Improvements for the Multicut Algorithm}\label{sec:tunedMC} 
  \begin{figure}[t]
     \centering
     \begin{tikzpicture}
@@ -720,11 +727,16 @@ and the standard derivation of the random edge noise to $1.5$.
     However, for large scale problems it still does not scale.}
     \label{fig:at:knott-450b}
   \end{figure}
+When using the  public available implementation in OpenGM\footref{opengm-master}
+of Kappes~\etal~\cite{kappes_2013_arxiv}, we realize that their implementation has some limitations on large problems.
+This results in a very slow separation and make the following modifications.
+Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
+Secondly, we follow~\cite{kroeger_2012_eccv} and search for shortest paths and add those only if they are non-chordal instead of searching for the shortest non-chordal path
+during the separation procedure. Fig.~\ref{fig:at:knott-450b} show the improvements with our modifications compared to the implementation in OpenGM for the knott-3d-450 dataset.
+This procedure is one magnitude faster, but might cause a few extra outer iterations.
+In~\cite{kroeger_2012_eccv}. this has been used for MC-I only. 
+For MC-R this search procedure is not sufficient and need to be followed by a search for a shortest non-chordal paths.
 
-All experiments were run on Intel Core i5-4570 CPUs
-with 3.20 GHz, equipped with 32 GB of RAM.
-In our evaluation we make not use of multiple threads.
-The methods were stopped if they exceed 30 minutes at the next possible interrupt point.
 
 \subsection{Parameter Choice for CCFusion}
 Beside the choice of the proposal generator and fusion method CCFusion has some more parameters, which need to be set.

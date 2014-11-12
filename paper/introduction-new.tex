@@ -51,7 +51,7 @@ Alternatively, it is possible to relax the integrality constraints of the intege
 Such an outer relaxation can be iteratively tightened. However, intermediate solutions are fractional and therefore rounding is required to obtain a valid partitioning.
 For the latter approach column generating methods exits, that works best on planar \cite{yarkony_2012_eccv} graphs. %or almost planar \cite{yarkony-andres-2013} graphs. 
 
-Another line of work uses move making algorithm 
+Another line of work uses move making algorithms 
 to optimize correlation clustering~\cite{bansal_2004_ml,beier_2014_cvpr,Kernighan-1970}.
 Starting with an initial segmentation, auxiliary max-cut problems are approximately solved,
 such that the segmentation is strictly improved.
@@ -81,7 +81,7 @@ In Sec.~\ref{sec:cc_fm} we describe our proposed
 method and show the properties of the algorithm.
 In Sec.~\ref{sec:exp} we show an evaluation
 of the proposed methods methods and state of the art
-and conclude in Sec.~\ref{sec:future} and\ref{sec:conclusion}.
+and conclude in Sec.~\ref{sec:future} and \ref{sec:conclusion}.
 %-------------------------------------------------------------------------
 
 \section{Notation and Problem Formulation}\label{sec:problem_formulation}
@@ -98,7 +98,7 @@ that these nodes should be separated into two different regions.
 %
 A segmentation of the graph $G$ can by either given by an 
 node labeling $l \in \mathbb{N}^{|V|}$
-or an edge labeling $y \in\{0,1\}^{|E|}$, \cf Fig.~\ref{fig:notation} .
+or an edge labeling $y \in\{0,1\}^{|E|}$, \cf Fig.~\ref{fig:notation}.
 An edge labeling is only consistent if it contains no dangling edges~\cite{kappes_2013_arxiv}.
 We denote the set of all consistent edge labelings by $P(G)\subset\{0,1\}^{|E|}$.
 The convex hull of this set is known as the \emph{multicut polytope} $MC(G) = \textrm{conv}(P(G))$.
