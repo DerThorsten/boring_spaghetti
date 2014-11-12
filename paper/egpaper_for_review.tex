@@ -302,54 +302,50 @@ can improve performance drastically.
 % \end{itemize}
 
 %------------------------------------------------------------------------
-\section{Correlation-Clustering-Fusion}\label{sec:cc_fm}
+\section{Correlation-Clustering-Fusion Moves}\label{sec:cc_fm}
 
-Fusion move algorithms~\cite{Lempitsky-2010} are a popular technique 
-for large scale discrete energy minimization problems.
-They iteratively fuse two node labelings by optimizing over the label space spanned by those.
-Different fusion algorithms vary in the proposals and method used for the auxiliary fusion problem~\cite{kappes_2014_ws}.
-
-As fusion algorithms work with node labelings, % \cf Eq.~\ref{eq:nodeproblem},
-we face the problem that the node coloring is ambiguous and has no semantic meaning.
-This causes that a fusion move is not well defined, because different choices of colors 
-lead to different auxiliary problems, as shown in Fig.~\ref{fig:fusion_abiguty}.
- 
+Fusion moves as defined in \cite{Lempitsky-2010} work
+in the node domain and do not work properly for 
+objective functions as Eq.~\ref{eq:nodeproblem} since
+the node coloring is ambiguous and has no semantic meaning, \cf Fig.~\ref{fig:fusion_abiguty}.
 In the following, we propose a more suitable fusion move for correlation
 clustering which works on the edge domain.
-It allows to change all edge labelings, which are active in at least one of the two labelings.
 %
 Given two proposal solutions $y'$ and $y''$,
-$\mathcal{E}^0_{\breve{y}}$ is the set of edges
+$\mathcal{C}$ is the set of edges
 which are uncut in $y'$ and $y''$.
 %
 \begin{align}
 \breve{y}_{ij}    & = \max\{ y_{ij}', y_{ij}''\}  & \forall {ij}\in E\\  % y' \cup y'' \\
-\mathcal{E}^0_{\breve{y}}  & =  \{ (i, j) \; | \; \breve{y}_{ij} = 0 \}
+\mathcal{E}_0^{\breve{y}}  & =  \{ ij \in E \; | \; \breve{y}_{ij} = 0 \}
 \end{align}
 %
 The fusion move for correlation clustering is solving Eq.~\ref{eq:edgeproblem}
-with additional \emph{must-link constraints} for all edges in $\mathcal{E}^0_{\breve{y}}$.
+with additional \emph{must-link constraints} for all edges in $\mathcal{E}_0^{\breve{y}}$.
 %
 \begin{align}
   y^* &= \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:fusion_move_a}.\\ 
-      &\quad \textrm{s.t.} \quad y_{ij} = 0 & \forall (i, j) \in \mathcal{E}^0_{\breve{y}} \nonumber
+      &\quad \textrm{s.t.} \quad y_{ij} = 0 & \forall (i, j) \in \mathcal{E}_0^{\breve{y}} \nonumber
 \end{align}
 %
 By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy,
-because $y'$ and $y''$ are feasible solutions.
+because $y'$ and $y''$ are feasible solutions for problem~\ref{eq:fusion_move_a}.
 %\begin{align}
 %  \sum  w_{ij} \cdot y^*_{ij}  \leq \min \left( \sum  w_{ij} \cdot y'_{ij} ,  \sum   w_{ij} \cdot y''_{ij} \right)
 %\end{align}
 %
 
-The  correlation clustering fusion algorithm (CCFusion) iteratively improve the best solution by
+
+Once we know how to fuse segmentations, the actual algorithm 
+for correlation clustering 
+is simple and similar to the fusion move algorithm of Lempitsky \etal~\cite{bagon_2011_arxiv}.
+We iteratively improve the best solution by
 fusing it with proposal solution.
-The inherent difference to classical fusion~\cite{Lempitsky-2010} is how we define the fusion.
+The inherent difference is how we define the fusion.
 We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}.
 
 A further difference is how we efferently calculate the correlation clustering fusion move and how we generate proposals.
 Both will be discussed next. The overall framework is sketched in Fig.~\ref{fig:move_graph}.
-
 
 
 \input{inputs/fig_fusion.tex}
@@ -416,30 +412,36 @@ Furthermore, the back projection of the optimal segmentation $\bar{y}$ of the co
 % \end{definition}
 
 \begin{theorem}[Equivalence]
-The back projection of the optimal segmentation $\bar{y}^*$ of the contracted graph $G_y=(V_y,E_y, \bar{w})$
+The back projection of the optimal segmentation $\bar{y}'$ of the contracted graph $G_y=(V_y,E_y, \bar{w})$
 is an optimal solution of problem~\ref{eq:fusion_move_a}.
 \begin{proof}
-Let $y'$ be the back propagation of $\bar{y}^*$, which is by definition a feasible solution of~\ref{eq:fusion_move_a}.
-If 
-
-Since $\bar{y}^*$ fulfills all-must link constraints of~\ref{eq:fusion_move_a} it is a feasible solution.
-Let
-
-, we have  $y^*\cdot w = \rho^{-1}_y(y^*)\cdot \bar{w}$.
-Consequently, $y^*\cdot w = \rho_y(\bar{y}) \cdot w$ and  $\rho^{-1}_y(y^*)\cdot \bar{w}= \bar{y}\cdot\bar{w}$.
+Let $y'$ be the back propagation of $\bar{y}'$, which is by definition a feasible for~\ref{eq:fusion_move_a}.
+If $y'$ would not be an optimal solution than there must exists $y''$ with 
+$\sum_{e\in E} w_ey_e'' > \sum_{e\in E} w_ey_e''$.
+Since $y_e'$ and $y_e''$ are $0$ for all $e \in \mathcal{E}_0^{\breve{y}}$ we would have
+\begin{align*}
+  \sum_{\bar{e}\in E_y} \bar{w}_{\bar{e}}\bar{y}'_{\bar{e}}
+ &= \sum_{e\in E \setminus \mathcal{E}_0^{\breve{y}}} w_ey_e'          
+  = \sum_{e\in E} w_ey_e'' \\
+ &> \sum_{e\in E} w_ey_e''
+  = \sum_{e\in E \setminus \mathcal{E}_0^{\breve{y}}} w_ey_e''
+  =\sum_{\bar{e}\in E_y} \bar{w}_{\bar{e}}\bar{y}''_{\bar{e}}
+\end{align*}
+where $\bar{y}''$ is the projection from $y''$ on $G_y$.
+This contradicts that $y'$ is a optimal segmentation of $G_y$.
 \end{proof}
 %
 \end{theorem}
 
+Instead of problem~\ref{eq:fusion_move_a} we can now solve problem~ref{eq:edgeproblem} on the contracted graph $G_{\breve{y}}$.
+This is, depending on the intersection of the current and proposed solution, magnitudes smaller than $G$.
+The correlation clustering problem on $G_{\breve{y}}$ can be solved by any correlation clustering solver.
+Since $G_{\breve{y}}$ is smaller exact methods or good approximative methods like 
+multicuts~\cite{kappes_2013_arxiv} or CGC~\cite{beier_2014_cvpr}
+become tractable.
 
-TODO:
-Here we need to proof that it is equivalent 
-to optimize the contracted graph !
-
-
-
-\input{inputs/fig_contraction.tex}
-\input{inputs/fig_projection.tex}
+%\input{inputs/fig_contraction.tex}
+%\input{inputs/fig_projection.tex}
 
 
 
@@ -542,10 +544,10 @@ based hierarchical clustering (EHC) as defined in sec.~\ref{sec:ehc}.
 EHC follows the energy function, therefore the \emph{quality}
 of the proposals is high.
 To get \emph{diversity} among the different proposal,
-we add normal distributed noise with a standard deviation of $\sigma_{ehc}$
+we add normal distributed noise  $\mathcal{N}(0, \sigma_{ehc})$
 to each edge weight.
-To get proposals of the desired \emph{size}, we can use a
-different stop condition in EHC, and stop when a certain number of connected
+To get proposals of the desired \emph{size}, we use a
+different stop condition in EHC, and stop iff a certain number of connected
 components is reached.
 
 %\subsubsection{Randomized MaxCut  (RMC)}
@@ -565,17 +567,21 @@ components is reached.
 
 \noindent \textbf{Randomized Watersheds (RWS):}
 %\subsubsection{Randomized Watersheds (RWS)}
+Watersheds have become quite popular for
+graph segmentation and have a strong connection
+to energy minimization~\cite{couprie_2011}.
 %
-The edge weighted watershed algorithm \cite{meyer_2013}
+The edge weighted watershed algorithm~\cite{meyer_2013}
 with random seeds can be used to get
 cheap proposals.
 To improve \emph{quality} we do not use $n$ seeds distributed uniformly
 over all nodes but use the following.
-Draw $n/k$ random edges only the negative edges,
-and give the two nodes of each ``seed-edge'' a different seed.
+%
+Draw $n/k$ negative edges,  and give the endpoints a different seed.
 Doing so, a random subset of negative edges is forced
 to be cut within each proposal.
-For additional \emph{diversity} randomness, noise can be added to
+For additional \emph{diversity}, noise $\mathcal{N} (0, sigma_{ws})$
+can be added to
 the edge weighs.
 
 %\input{inputs/fig_hc.tex}
@@ -643,7 +649,9 @@ If the optimal solution $y^*$ lies in $P(G_{y' \OR y''})$ than a optimal fusion 
 \section{Experiments}\label{sec:exp}
 In our experiments we compare to the following methods withpublic available implementation.
 
-For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}\url{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}
+For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}
+\small{{https://github.com/opengm/opengm/tree/cgc-cvpr2014}}
+}
 of the Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{https://github.com/opengm/opengm}}.
 For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we try the public available implementation in OpenGM\footref{opengm-master}
 of Kappes~\etal. We realize that their implementation has some limitations on large problems and make the following modifications.
