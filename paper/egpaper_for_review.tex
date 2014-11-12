@@ -665,16 +665,16 @@ For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cit
 %
 From the field of data-mining we compare to the PIVOT-algorithm~\cite{Ailon-2008} followed by a round of BOEM~\cite{Gionis-2007} denoted by \textbf{PIVOT-BOEM}.
 We use the public available code of Micha Elsner\footnote{\url{http://www.ling.ohio-state.edu/~melsner/resources/correlation-readme.html}}.
-While this implementation uses full adjacency matrixes it does not scale as well as the algorithm can and therefor can not be applied on all datasets.
+While this implementation uses full adjacency matrixes it does not scale as well and can not be applied on all datasets.
 We also run classical fusion moves~\cite{Lempitsky-2010} (\textbf{Fusion}) and select distinct labels for the two candidate segmentations.
-
+%
 As reported in~\cite{beier_2014_cvpr}, CGC is faster and gives better energies then PlanarCC~\cite{yarkony_2012_eccv} and Expand \& Explore~\cite{bagon_2011_arxiv}.
 Therefore we exclude those in our experiments.
 
 We compare this methods to the following methods suggested in the present paper.
 %
-Energy Based Based Hierarchical Clustering (\textbf{EHC})
-as described in sec.~\ref{sec:ehc}.
+Energy Based Based Hierarchical Clustering (\textbf{EHC}),
+as described in Sec.~\ref{sec:ehc}.
 %
 CGC warm started with the solution from EHC denoted by \textbf{EHC-CGC}.
 %
@@ -685,7 +685,7 @@ The proposed correlation cluster fusion algorithm with EHC-based and watershed-b
 \textbf{-WS-MC}, and 
 \textbf{-WS-CGC}, respectively.
 We set the size of the proposals fix to $10\%$ of the original problem size
-and the standard derivation of the random edge noise to $1.5$.
+and the standard derivation of the random edge noise is set to $1.5$.
 
 All experiments were run on Intel Core i5-4570 CPUs
 with 3.20 GHz, equipped with 32 GB of RAM.
@@ -693,6 +693,16 @@ In our evaluation we make not use of multiple threads.
 The methods were stopped if they exceed 30 minutes at the next possible interrupt point.
 
 \subsection{Improvements for the Multicut Algorithm}\label{sec:tunedMC} 
+When using the  public available implementation in OpenGM\footref{opengm-master}
+of Kappes~\etal~\cite{kappes_2013_arxiv}, we realize that their implementation has some limitations on large problems.
+This results in a very slow separation and make the following modifications.
+Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
+Secondly, we follow~\cite{kroeger_2012_eccv} and search for shortest paths and add those only if they are non-chordal instead of searching for the shortest non-chordal path
+during the separation procedure. Fig.~\ref{fig:at:knott-450b} show the improvements with our modifications compared to the implementation in OpenGM for the knott-3d-450 dataset.
+This procedure is one magnitude faster, but might cause a few extra outer iterations.
+In~\cite{kroeger_2012_eccv}. this has been used for MC-I only. 
+For MC-R this search procedure is not sufficient and need to be followed by a search for a shortest non-chordal paths.
+
  \begin{figure}[t]
     \centering
     \begin{tikzpicture}
@@ -727,16 +737,6 @@ The methods were stopped if they exceed 30 minutes at the next possible interrup
     However, for large scale problems it still does not scale.}
     \label{fig:at:knott-450b}
   \end{figure}
-When using the  public available implementation in OpenGM\footref{opengm-master}
-of Kappes~\etal~\cite{kappes_2013_arxiv}, we realize that their implementation has some limitations on large problems.
-This results in a very slow separation and make the following modifications.
-Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
-Secondly, we follow~\cite{kroeger_2012_eccv} and search for shortest paths and add those only if they are non-chordal instead of searching for the shortest non-chordal path
-during the separation procedure. Fig.~\ref{fig:at:knott-450b} show the improvements with our modifications compared to the implementation in OpenGM for the knott-3d-450 dataset.
-This procedure is one magnitude faster, but might cause a few extra outer iterations.
-In~\cite{kroeger_2012_eccv}. this has been used for MC-I only. 
-For MC-R this search procedure is not sufficient and need to be followed by a search for a shortest non-chordal paths.
-
 
 \subsection{Parameter Choice for CCFusion}
 Beside the choice of the proposal generator and fusion method CCFusion has some more parameters, which need to be set.
@@ -745,7 +745,7 @@ Fig.~\ref{fig:parameterchoice} shows a evaluation of the impact of this paramete
 The runtime many depend on the number of clusters in the proposal (Fig.~\ref{fig:parameterchoice} left), which controls the size of the auxiliary move problems.
 The level of noise has no major impact on the runtime.
 The energy of the final solution improves with finer proposals since this increase the search-space of the moves.
-Although the level of noise has to be large enough to generate diverse proposals but also not to large to generate proposals with low energy.
+Although the level of noise has to be large enough to generate diverse proposals but also not to large to generate proposals with low quality.
 As shown in Fig.~\ref{fig:parameterchoice} right the useful parameter set is quite large. This allows us to use the same parameters for \emph{all}
 experiments. However we would like to note, that in practice we can improve the performance by adjust these parameters for the specific problem setting.
 %
@@ -761,13 +761,13 @@ experiments. However we would like to note, that in practice we can improve the 
 \end{figure}
 
 \subsection{Social Networks and Network Clustering}
-A application for large scale correlation clustering are social networks.
+An application for large scale correlation clustering are social networks.
 We consider two of those networks from the Stanford Large Network Dataset Collection\footnote{\url{http://snap.stanford.edu/data/index.html}}.
 Both networks are given by weighted directed graphs with edge weights $-1$ and $1$. 
 %
 The first network is called \emph{Epinions}. 
 This is who-trust-whom online social network of a a general consumer review site Epinions.com. 
-Each directed edge $a\to b$ indicated that user $a$ trusts  or does not trust user $b$ is the edge-weight is positive or negative, respectively.
+Each directed edge $a\to b$ indicated that user $a$ trusts  or does not trust user $b$ by a  positive or negative edge-weight, respectively.
 The network contains $131828$ nodes and $841372$ edges from which $85.3\%$ are positively weighted.
 %
 The second network is called \emph{Slashdot}. 
@@ -789,12 +789,16 @@ We define the following energy function
 \end{align}
 which is zero if the given partitioning does not violated any relation and larger otherwise.
 
-{\color{red}\textbf{TODO: Discussion}}
-
+As shown in Fig.~\ref{fig:anytime} (g,h) CCFusion provides for the first minutes the best results.
+Only CGC and HC-CGC are able to find better solutions after more then 1000 seconds.
+MC-I and MC-R can even not be applied on such large problems.
+We belief that with better proposal generators, which are more suited for such network problems,
+we can improve CCFusion. One candidate for such a generated would be a scalable method for the 
+PIVOT algorithm.
 
 As another example for network clustering we use the modularity-clustering models from~\cite{kappes_2014_benchmark_arxiv} which are small but fully connected.
-
-{\color{red}\textbf{TODO: Discussion}}
+Although, CCFusion and the used parameters was not designed and chosen for this type of problem, it performs on par to competitive methods. 
+Especially is does a better job than MC-I as shown in Fig.~\ref{fig:anytime} (i)
 
 
 
