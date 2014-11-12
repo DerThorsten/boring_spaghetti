@@ -348,7 +348,7 @@ The inherent difference to classical fusion~\cite{Lempitsky-2010} is how we defi
 We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}.
 
 A further difference is how we efferently calculate the correlation clustering fusion move and how we generate proposals.
-Both will be discussed next.
+Both will be discussed next. The overall framework is sketched in Fig.~\ref{fig:move_graph}.
 
 
 
@@ -368,43 +368,64 @@ Both will be discussed next.
 
 
 \subsection{Fast Optimization of CCFusion Moves} \label{sec:fast_optimization}
-
-Eq.~\ref{eq:fusion_move_a} can be solved efficiently, since 
-we can work on a coarser graph, where all nodes which are connected
-via must-link constraints are merged into single nodes.
-This coarser graph is constructed by contracting all must-link edges
-(see Fig.~\ref{fig:move_graph}).
-
-
-\begin{definition}\emph{(Contradicted Graph)}
+In general the auxiliary fusion problem~\ref{eq:fusion_move_a} is still NP-hard.
+However, many variables have been fixed to be zero and we can reformulate~\ref{eq:fusion_move_a}
+into a correlation clustering problem on a coarser graph, where all nodes which are connected
+via must-link constraints are merged into single nodes. We call this graph \emph{contracted graph}.
+%
+\begin{definition}\emph{(Contracted Graph)}
 Given a weighted graph $G=V,E,w)$ segmentation of $G$ given by $y\in P(G)$,
 we denote by $S: V \to \mathbb{N}$ a mapping from the nodes to the segments.
-We define the contradiction of graph $G_y=(V_y,E_y, \bar{w})$
+We define the contraction of graph $G_y=(V_y,E_y, \bar{w})$
 by $V_y=\{S(v)|v\in V\}$, $E_y=\{S(u)S(v)|uv\in E\}$, and 
 $\forall \bar{u}\bar{v}\in E_y: \bar{w}_{\bar{u}\bar{v}}=\sum_{uv\in E, S(u)=\bar{u},S(v)=\bar{v}}w_{uv}$ 
 \end{definition}
-
-\begin{definition}\emph{(Back Projection)}
-Given a segmentation $\bar{y}$ of a contradicted graph $G_y=(V_y,E_y)$.
-We define the back projection $\rho^G$ from $\bar{y}$ to a segmentation of original graph  $G=(V,E)$
-by 
+%
+Any clustering $\bar{y}$ of the contracted graph $G_y=(V_y,E_y)$ can be \emph{back projected} to a clustering $y$ the original graph $G=(V,E)$ by
+%
 \begin{align}
-\rho^G_{uv}(\bar{y})=\left\{ 
+y_{uv}&=\left\{ 
 \begin{array}{ll}
 \bar{y}_{S(u)S(v)}& \textrm{ if }S(u) \neq S(v)\\
 0                & \textrm{ else}
 \end{array}
-\right.
+\right.& \forall uv \in E
 \end{align}
-\end{definition}
+Furthermore, the back projection of the optimal segmentation $\bar{y}$ of the contracted graph is a solution of problem~\ref{eq:fusion_move_a}.
+
+
+% Eq.~\ref{eq:fusion_move_a} can be solved efficiently, since 
+% we can work on a coarser graph, where all nodes which are connected
+% via must-link constraints are merged into single nodes.
+% This coarser graph is constructed by contracting all must-link edges
+% (see Fig.~\ref{fig:move_graph}).
+
+
+% \begin{definition}\emph{(Back Projection)}
+% Given a segmentation $\bar{y}$ of a contradicted graph $G_y=(V_y,E_y)$.
+% We define the back projection $\rho^G$ from $\bar{y}$ to a segmentation of original graph  $G=(V,E)$
+% by 
+% \begin{align}
+% \rho^G_{uv}(\bar{y})=\left\{ 
+% \begin{array}{ll}
+% \bar{y}_{S(u)S(v)}& \textrm{ if }S(u) \neq S(v)\\
+% 0                & \textrm{ else}
+% \end{array}
+% \right.
+% \end{align}
+% \end{definition}
 
 \begin{theorem}[Equivalence]
-The optimal multicut $\bar{y}^*$ on the contracted graph $G_y$
-is equivalent to the optimal multicut $y^*$ in the original graph $G$ 
-with additional must link constraints ($y^* \leq y$).
-%
+The back projection of the optimal segmentation $\bar{y}^*$ of the contracted graph $G_y=(V_y,E_y, \bar{w})$
+is an optimal solution of problem~\ref{eq:fusion_move_a}.
 \begin{proof}
-Since $y^*$ fulfills all  must link constraints, we have  $y^*\cdot w = \rho^{-1}_y(y^*)\cdot \bar{w}$.
+Let $y'$ be the back propagation of $\bar{y}^*$, which is by definition a feasible solution of~\ref{eq:fusion_move_a}.
+If 
+
+Since $\bar{y}^*$ fulfills all-must link constraints of~\ref{eq:fusion_move_a} it is a feasible solution.
+Let
+
+, we have  $y^*\cdot w = \rho^{-1}_y(y^*)\cdot \bar{w}$.
 Consequently, $y^*\cdot w = \rho_y(\bar{y}) \cdot w$ and  $\rho^{-1}_y(y^*)\cdot \bar{w}= \bar{y}\cdot\bar{w}$.
 \end{proof}
 %
