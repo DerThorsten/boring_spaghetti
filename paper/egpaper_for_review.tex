@@ -32,13 +32,13 @@
 
 %\usepackage{scrextend}
 \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
-\pdfpageattr{/Group <</S /Transparency /I true /CS /DeviceRGB>>}
-\usepackage{everypage}
-\AddEverypageHook{%
-  \makeatletter%
-  \special{pdf: put @thispage <</Group << /S /Transparency /I true /CS /DeviceRGB>> >>}%
-  \makeatother%
-}%
+% \pdfpageattr{/Group <</S /Transparency /I true /CS /DeviceRGB>>}
+% \usepackage{everypage}
+% \AddEverypageHook{%
+%   \makeatletter%
+%   \special{pdf: put @thispage <</Group << /S /Transparency /I true /CS /DeviceRGB>> >>}%
+%   \makeatother%
+% }%
 
 \newcommand{\footlabel}[2]{%
     \addtocounter{footnote}{1}%
