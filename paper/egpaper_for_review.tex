@@ -649,7 +649,7 @@ is added to the edge weighs.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Experiments}\label{sec:exp}
-In our experiments we compare to the following methods withpublic available implementation.
+In our experiments we compare to the following methods with public available implementation.
 
 For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}{\url{github.com/opengm/opengm/tree/cgc-cvpr2014}}}
 of Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{github.com/opengm/opengm}}.
@@ -687,6 +687,8 @@ The proposed correlation cluster fusion algorithm with EHC-based and watershed-b
 \textbf{-WS-CGC}, respectively.
 We set the size of the proposals fix to $10\%$ of the original problem size
 and the standard derivation of the random edge noise is set to $1.5$.
+%
+As stopping condition we choose 10000 iterations and 100 iterations with no improvement.
 
 All experiments were run on Intel Core i5-4570 CPUs
 with 3.20 GHz, equipped with 32 GB of RAM.
