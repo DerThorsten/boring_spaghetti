@@ -119,6 +119,7 @@
 \renewcommand{\tabcolsep}{2pt}
 \newcommand{\thickline}{2pt}
 \newcommand{\scatterplotpath}{./scatterplots/}
+\newcommand{\rd}{\color{red}}
 
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 \newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
@@ -868,49 +869,43 @@ Pure HC, Fusion and PIVOT-BOEM do not give useful results on any dataset.
 \begin{table}[t]
    \tiny
    \centering
-   \caption{Evaluation of Variation of Information (VI) for datasets with available ground-truth.}
+   \caption{Evaluation by Variation of Information (VOI) Rand Index (RI) for datasets with available ground-truth.}
    \label{tab:eval}
    \begin{tabular}{lllllll}
       \toprule
-         Dataset          &  image-seg   & knott-3d-150 & knott-3d-300   & knott-3d-450 & knott-3d-550 &3d-seg\\
+         VOI              &  image-seg   & knott-3d-150 & knott-3d-300   & knott-3d-450 & knott-3d-550 &3d-seg\\
       \midrule 
-         PIVOT-BOEM       &   $ 4.9633$  &    $ 2.9936$ &    $ 4.4986$   &      --      &    --        &  --\\ 
+         PIVOT-BOEM       &\rd$ 4.9633$  &\rd $ 2.9936$ &\rd $ 4.4986$   &      --      &    --        &  --\\ 
          HC               &   $ 2.5967$  &    $ 1.5477$ &    $ 2.3513$   &    $ 2.9155$ &    --        & $       2.8395$\\
          HC-CGC           &   $ 2.5164$  &    $ 0.9052$ &    $ 1.7636$   &    $ 2.2256$ &    --        & $       1.7603$ \\
-         CGC              &   $ 2.5247$  &    $ 0.9267$ &    $ 1.8822$   &    $ 2.3104$ &    --        & $       6.8908$ \\
-         KL               &   $ 2.6432$  &    $ 2.0648$ &    $ 4.1318$   &    $ 4.9270$ &    --        & $       7.1057$\\
-         FUSION           &$\bf 2.1406$  &    $ 2.8787$ &    $ 4.0744$   &    $ 4.6616$ &    --        & $       6.5366$ \\
-         MC-R             &   $ 2.5471$  &    $ 0.9178$ &    $ 1.6369$   &    $ 2.8710$ &    --        & $       6.5058$\\   
-         MC-I             &   $ 2.5367$  & $\bf 0.9063$ & $\bf 1.6352$   & $\bf 2.0037$ &    --        & $       4.3319$\\  
+         CGC              &   $ 2.5247$  &    $ 0.9267$ &    $ 1.8822$   &    $ 2.3104$ &    --        & $\rd    6.8908$ \\
+         KL               &   $ 2.6432$  &\rd $ 2.0648$ &\rd $ 4.1318$   &\rd $ 4.9270$ &    --        & $\rd    7.1057$\\
+         FUSION           &$\bf 2.1406$  &\rd $ 2.8787$ &\rd $ 4.0744$   &\rd $ 4.6616$ &    --        & $\rd    6.5366$ \\
+         MC-R             &   $ 2.5471$  &    $ 0.9178$ &    $ 1.6369$   &    $ 2.8710$ &    --        & $\rd    6.5058$\\   
+         MC-I             &   $ 2.5367$  & $\bf 0.9063$ & $\bf 1.6352$   & $\bf 2.0037$ &    --        & $\rd    4.3319$\\  
          FusionCC-HC-MC   &   $ 2.5319$  &    $ 0.9629$ &    $ 1.6516$   &    $ 2.0801$ &    --        & $\bf    1.3347$ \\  
          FusionCC-HC-CGC  &$\bf 2.4961$  &    $ 0.9679$ &    $ 1.7673$   &    $ 2.3809$ &    --        & $       2.1347$ \\  
          FusionCC-WS-MC   &   $ 2.5340$  &    $ 0.9629$ &    $ 1.6742$   &    $ 2.0739$ &    --        & $\bf    1.3334$ \\  
          FusionCC-WS-CGC  &   $ 2.5192$  &    $ 1.0585$ &    $ 2.1344$   &    $ 2.7487$ &    --        & $       3.3514$ \\      
       \bottomrule
    \end{tabular}
-\end{table}
 
-\begin{table}[t]
-   \tiny
-   \centering
-   \caption{Evaluation of Rand Index (RI) for datasets with available ground-truth.}
-   \label{tab:eval2}
    \begin{tabular}{lllllll}
       \toprule
-         Dataset          &  image-seg   & knott-3d-150 & knott-3d-300   & knott-3d-450 & knott-3d-550 &3d-seg\\
+          RI              &  image-seg   & knott-3d-150 & knott-3d-300   & knott-3d-450 & knott-3d-550 &3d-seg\\
       \midrule 
-         PIVOT-BOEM       &   $ 0.7438$  &    $ 0.7851$ &    $  0.8792$  &      --      &    --        &  --\\ 
-         HC               &   $ 0.7560$  &    $ 0.8139$ &    $  0.8084$  &    $ 0.7610$ &    --        & $ 0.9651$\\
-         HC-CGC           &   $ 0.7724$  &    $ 0.9226$ &    $  0.8713$  &    $ 0.8433$ &    --        & $ 0.9861$ \\
-         CGC              &   $ 0.7590$  &    $ 0.9206$ &    $  0.8666$  &    $ 0.8341$ &    --        & $ 0.6024$ \\
-         KL               &   $ 0.6400$  &    $ 0.8085$ &    $  0.6858$  &    $ 0.6409$ &    --        & $ 0.5849$\\
-         FUSION           &   $ 0.5480$  &    $ 0.2849$ &    $  0.1420$  &    $ 0.0998$ &    --        & $ 0.0345$ \\
-         MC-R             &   $ 0.7822$  &    $ 0.9232$ & $\bf  0.8849$  &    $ 0.6713$ &    --        & $ 0.0432$ \\   
-         MC-I             &   $ 0.7821$  & $\bf 0.9236$ & $\bf  0.8849$  & $\bf 0.8670$ &    --        & $ 0.5461$\\  
-         FusionCC-HC-MC   &   $ 0.7801$  &    $ 0.9042$ &    $  0.8824$  &    $ 0.8573$ &    --        & $\bf 0.9906$ \\  
-         FusionCC-HC-CGC  &   $ 0.7780$  &    $ 0.9031$ &    $  0.8763$  &    $ 0.8470$ &    --        & $ 0.9775$ \\  
-         FusionCC-WS-MC   &$\bf 0.7825$  &    $ 0.9042$ &    $  0.8802$  &    $ 0.8582$ &    --        & $ 0.8895$ \\  
-         FusionCC-WS-CGC  &   $ 0.7750$  &    $ 0.8951$ &    $  0.8596$  &    $ 0.8394$ &    --        & $\bf 0.9906$ \\      
+         PIVOT-BOEM       &   $ 0.7438$  &\rd $ 0.7851$ &    $  0.8792$  &      --      &    --        &  --\\ 
+         HC               &   $ 0.7560$  &\rd $ 0.8139$ &\rd $  0.8084$  &\rd $ 0.7610$ &    --        &   $ 0.9651$\\
+         HC-CGC           &   $ 0.7724$  &    $ 0.9226$ &    $  0.8713$  &    $ 0.8433$ &    --        &   $ 0.9861$ \\
+         CGC              &   $ 0.7590$  &    $ 0.9206$ &    $  0.8666$  &    $ 0.8341$ &    --        &\rd$ 0.6024$ \\
+         KL               &\rd$ 0.6400$  &\rd $ 0.8085$ &\rd $  0.6858$  &\rd $ 0.6409$ &    --        &\rd$ 0.5849$\\
+         FUSION           &\rd$ 0.5480$  &\rd $ 0.2849$ &\rd $  0.1420$  &\rd $ 0.0998$ &    --        &\rd$ 0.0345$ \\
+         MC-R             &   $ 0.7822$  &    $ 0.9232$ & $\bf  0.8849$  &\rd $ 0.6713$ &    --        &\rd$ 0.0432$ \\   
+         MC-I             &   $ 0.7821$  & $\bf 0.9236$ & $\bf  0.8849$  & $\bf 0.8670$ &    --        &\rd$ 0.5461$\\  
+         FusionCC-HC-MC   &   $ 0.7801$  &    $ 0.9042$ &    $  0.8824$  &    $ 0.8573$ &    --        &$\bf 0.9906$ \\  
+         FusionCC-HC-CGC  &   $ 0.7780$  &    $ 0.9031$ &    $  0.8763$  &    $ 0.8470$ &    --        &   $ 0.9775$ \\  
+         FusionCC-WS-MC   &$\bf 0.7825$  &    $ 0.9042$ &    $  0.8802$  &    $ 0.8582$ &    --        &   $ 0.8895$ \\  
+         FusionCC-WS-CGC  &   $ 0.7750$  &    $ 0.8951$ &    $  0.8596$  &    $ 0.8394$ &    --        &   $\bf 0.9906$ \\      
       \bottomrule
    \end{tabular}
 \end{table}
@@ -954,11 +949,13 @@ Pure HC, Fusion and PIVOT-BOEM do not give useful results on any dataset.
 
 
 \section{Future Work}\label{sec:future}
-In future work we would like to investigate in much larger problem instances.
+In future work we would like to investigate in much larger problem instances
+and interactive correlation clustering, by enforcing
+updates only in local regions by appropriate proposals.
+%
 Within this challenging task we can also enforce additionally must-not-link constraints in eq.~\ref{eq:fusion_move_a}.
 If those build a closed surface, the problem decompose into two independent problems.
-This is also useful for interactive correlation clustering, by enforcing
-updates only in local regions by appropriate proposals.
+%
 Overall, a more specific selection of proposals, maybe conditioned on the current solution,
 should lead better proposals and to faster progress of CCFusion.
 %
@@ -971,6 +968,9 @@ by using higher order subproblems.
 We have presented a fast and scalable 
 approximate solver for correlation 
 clustering, named Correlation Clustering Fusion (CCFusion).
+It is orthogonal to previous research, \ie it can be combined with and
+correlation clustering solver.
+%
 The best solution is iteratively improved 
 by a fusion with proposal solutions.
 The fusion move itself is formulated as correlation
