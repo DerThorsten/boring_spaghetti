@@ -19,7 +19,7 @@ into superpixels (superregions), which are then clustered into ``perceptually me
 regions by correlation clustering on sparse graphs.
 Such an approach has been shown to yield
 state-of-the-art results on the Berkeley Segmentation Database
-\cite{andres_2011_iccv,yarkony_2012_eccv,alush_2013_simbad}.
+\cite{andres_2011_iccv,Kim-2011,yarkony_2012_eccv,alush_2013_simbad}.
 
 Despite the clear mathematical formulation and nice properties,
 correlation clustering is known to be NP-hard. 
@@ -36,8 +36,11 @@ are not tractable, because reasonable solutions cannot be computed in acceptable
 \noindent \textbf{Contribution.}
 In this work we present some novel approaches that are designed for large scale correlation clustering problems.
 First, we define a novel energy based agglomerative clustering algorithm that monotonically increase the energy.
-With this at hand we show how to improve the anytime performance of Cut, Clue \& Cut.
-Second, we introduce cluster-fusion moves, which extend the original fusion moves~\cite{Lempitsky-2010} 
+With this at hand we show how to improve the anytime performance of Cut, Clue \& Cut~\cite{beier_2014_cvpr}.
+%
+Second, we improve the anytime performance of polyhedral multicut methods~\cite{kappes_2013_arxiv} by more efficient separation procedures.
+%
+Third, we introduce cluster-fusion moves, which extend the original fusion moves~\cite{Lempitsky-2010} 
 used in supervised segmentation to the unsupervised case and give a polyhedral interpretation of this algorithm.
 We propose two versatile proposal generators, and evaluate the proposed methods on existing and new benchmark problems.
 Experiments show that we can improve the computation time by one to two magnitudes without worsening the segmentation 
@@ -45,17 +48,17 @@ quality significantly.
  
 \vspace{0.1cm}
 \noindent \textbf{Related Work.}
-A natural approach is to solve the integer linear programming problem directly. 
+A natural approach is to solve the integer linear program (ILP) directly. 
 To this end, efficient separation procedures have been found~\cite{kappes_2011_emmcvpr,kappes_2013_arxiv} that allow to iteratively augment the set of constraints until a valid partitioning is found. 
-Alternatively, it is possible to relax the integrality constraints of the integer linear programming formulation~\cite{kappes_2013_arxiv}. 
+Alternatively, it is possible to relax the integrality constraints of the ILP formulation~\cite{kappes_2013_arxiv}. 
 Such an outer relaxation can be iteratively tightened. However, intermediate solutions are fractional and therefore rounding is required to obtain a valid partitioning.
 For the latter approach column generating methods exits, that works best on planar \cite{yarkony_2012_eccv} graphs. %or almost planar \cite{yarkony-andres-2013} graphs. 
 
 Another line of work uses move making algorithms 
 to optimize correlation clustering~\cite{bansal_2004_ml,beier_2014_cvpr,Kernighan-1970}.
-Starting with an initial segmentation, auxiliary max-cut problems are approximately solved,
+Starting with an initial segmentation, auxiliary max-cut problems are (approximately) solved,
 such that the segmentation is strictly improved.
-As shown by Beier \etal~\cite{beier_2014_cvpr} only CGC~\cite{beier_2014_cvpr} 
+As shown by Beier \etal~\cite{beier_2014_cvpr} only Cut, Clue \& Cut (CGC)~\cite{beier_2014_cvpr} 
 can deal with large scale problems, but can also suffer on very large auxiliary problems.
 
 Outside computer vision greedy methods~\cite{Soon-2001,Ng-2002,Gionis-2007,Elsner-2008,Ailon-2008} has been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
@@ -69,7 +72,7 @@ For energy minimization problems fusion moves have become increasingly popular~\
 For many large scale computer vision applications fusion moves lead to good approximations
 with state of the art any time performance~\cite{kappes_2014_ws}.
 Due to the ambiguity of a node-labeling, classical fusion moves~\cite{Lempitsky-2010} can not be applied directly for correlation clustering.
-We will show how to overcome this point later.
+We will show how to overcome this point in Sec.~\ref{sec:cc_fm}.
 
 
 \vspace{0.1cm}
@@ -77,13 +80,13 @@ We will show how to overcome this point later.
 In Sec.~\ref{sec:problem_formulation} we will give a 
 detailed problem definition where we introduce 
 the correlation clustering objective.
-In Sec.~\ref{sec:cc_fm} we describe our proposed
-method and show the properties of the algorithm.
-In Sec.~\ref{sec:exp} we show an evaluation
-of the proposed methods methods and state of the art
-and conclude in Sec.~\ref{sec:future} and \ref{sec:conclusion}.
+Followed by a description of energy based hierarchical clustering in Sec.~\ref{sec:ehc} and
+our proposed correlation clustering fusion moves in Sec.~\ref{sec:cc_fm}.
+We evaluate the proposed methods methods in Sec.~\ref{sec:exp} and conclude in Sec.~\ref{sec:future} and \ref{sec:conclusion}.
+
 %-------------------------------------------------------------------------
 
+\input{inputs/fig_notation.tex}
 \section{Notation and Problem Formulation}\label{sec:problem_formulation}
 Let $G=(V,E, w)$ be a weighted graph of nodes $V$ and edges $E$.
 %
@@ -96,12 +99,15 @@ that these nodes should be separated into two different regions.
 %A \emph{subgraph} $G_A = \{A, E_A, w\}$ consists
 %of nodes $A \subseteq V$ and edges $E_A := E\cap (A\times A)$.
 %
+%\input{inputs/fig_notation.tex}
 A segmentation of the graph $G$ can by either given by an 
 node labeling $l \in \mathbb{N}^{|V|}$
 or an edge labeling $y \in\{0,1\}^{|E|}$, \cf Fig.~\ref{fig:notation}.
 An edge labeling is only consistent if it contains no dangling edges~\cite{kappes_2013_arxiv}.
 We denote the set of all consistent edge labelings by $P(G)\subset\{0,1\}^{|E|}$.
 The convex hull of this set is known as the \emph{multicut polytope} $MC(G) = \textrm{conv}(P(G))$.
+%
+By $l(y)$ we denote a node labeling for a segmentation given by $y$.
 
 Given a weighted graph $G=(V,E,w)$ we consider the problem of segmenting $G$ such that the costs
 of the edges between distinct segments is minimized. This can be formulated in the node domain
@@ -116,4 +122,4 @@ or in the edge domain, by label each edge $e$ as cut $y_e=1$ or uncut $y_e=0$
 As shown in~\cite{kappes_2013_arxiv}  both problems are equivalent, but formulation \ref{eq:nodeproblem}
 suffers from ambiguities in the formulation, \cf Fig.~\ref{fig:notation}. 
 
-\input{inputs/fig_notation.tex}
+%\input{inputs/fig_notation.tex}
