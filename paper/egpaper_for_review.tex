@@ -720,13 +720,15 @@ The methods were stopped if they exceed 30 minutes at the next possible interrup
 \subsection{Improvements for the Multicut Algorithm}\label{sec:tunedMC} 
 When using the  public available implementation in OpenGM\footref{opengm-master}
 of Kappes~\etal~\cite{kappes_2013_arxiv}, we realize that their implementation has some limitations on large problems.
-This results in a very slow separation and make the following modifications.
+This results in a very slow separation and we make the following modifications.
 Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
 Secondly, we follow~\cite{kroeger_2012_eccv} and search for shortest paths and add those only if they are non-chordal instead of searching for the shortest non-chordal path
-during the separation procedure. Fig.~\ref{fig:at:knott-450b} show the improvements with our modifications compared to the implementation in OpenGM for the knott-3d-450 dataset.
-This procedure is one magnitude faster, but might cause a few extra outer iterations.
+during the separation procedure. 
 In~\cite{kroeger_2012_eccv}. this has been used for MC-I only. 
 For MC-R this search procedure is not sufficient and need to be followed by a search for a shortest non-chordal paths.
+%
+Fig.~\ref{fig:at:knott-450b} show the improvements with our modifications compared to the implementation in OpenGM for the knott-3d-450 dataset.
+This procedure is one magnitude faster, but might cause a few extra outer iterations.
 
  \begin{figure}[t]
     \centering
