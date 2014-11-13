@@ -339,20 +339,21 @@ because $y'$ and $y''$ are feasible solutions for problem~\ref{eq:fusion_move_a}
 %
 
 
-Once we know how to fuse segmentations, the actual algorithm 
-for correlation clustering 
-is simple and similar to the fusion move algorithm of Lempitsky \etal~\cite{Lempitsky-2010}.
-We iteratively improve the best solution by
+%Once we know how to fuse segmentations, the actual algorithm 
+%for correlation clustering 
+%is simple and similar to the fusion move algorithm of 
+As Lempitsky \etal~\cite{Lempitsky-2010}, 
+we iteratively improve the best solution by
 fusing it with proposal solution.
 The inherent difference is how we define the fusion.
-We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}.
-
-A further difference is how we efficiently calculate the correlation clustering fusion move and how we generate proposals.
-Both will be discussed next. The overall framework is sketched in Fig.~\ref{fig:move_graph}.
+%We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}.
 
 As classical fusion, CCFusion does not provide and lower bound on the objective and 
 has no sound stopping condition.
 For latter we use a maximal number of iterations and maximal number of iteration without improvement as stopping condition.
+
+A further difference is how we efficiently calculate the correlation clustering fusion move and how we generate proposals.
+Both will be discussed next. The overall framework is sketched in Fig.~\ref{fig:move_graph}.
 
 
 \input{inputs/fig_fusion.tex}
