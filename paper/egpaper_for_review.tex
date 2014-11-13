@@ -372,31 +372,28 @@ Both will be discussed next. The overall framework is sketched in Fig.~\ref{fig:
 
 
 \subsection{Fast Optimization of CCFusion Moves} \label{sec:fast_optimization}
-In general the auxiliary fusion problem~\ref{eq:fusion_move_a} is, as for classical fusion~\cite{Lempitsky-2010}, still NP-hard.
+In general the auxiliary fusion problem~\ref{eq:fusion_move_a} is, as for classical fusion~\cite{Lempitsky-2010}, NP-hard.
 However, many variables have been fixed to be zero and we can reformulate~\ref{eq:fusion_move_a}
 into a correlation clustering problem on a coarser graph, where all nodes which are connected
 via must-link constraints are merged into single nodes. We call this graph \emph{contracted graph}.
 %
 \begin{definition}\emph{(Contracted Graph)}
-Given a weighted graph $G=(V,E,w)$ segmentation of $G$ given by $y\in P(G)$,
-we denote by $S: V \to \mathbb{N}$ a mapping from the nodes to the segments.
+Given a weighted graph $G=(V,E,w)$ and a segmentation of $G$ given by $y\in P(G)$,
 We define the contraction of graph $G_y=(V_y,E_y, \bar{w})$
-by $V_y=\{S(v)|v\in V\}$, $E_y=\{S(u)S(v)|uv\in E\}$, and 
-$\forall \bar{u}\bar{v}\in E_y: \bar{w}_{\bar{u}\bar{v}}=\sum_{uv\in E, S(u)=\bar{u},S(v)=\bar{v}}w_{uv}$ 
+by $V_y=\{l_v(y)|v\in V\}$, $E_y=\{l_u(y)l_v(y)|uv\in E\}$, and 
+$\forall \bar{u}\bar{v}\in E_y: \bar{w}_{\bar{u}\bar{v}}=\sum_{uv\in E, l_u(y)=\bar{u},l_v(y)=\bar{v}}w_{uv}$ 
 \end{definition}
 %
-Any clustering $\bar{y}$ of the contracted graph $G_y=(V_y,E_y)$ can be \emph{back projected} to a clustering $y$ the original graph $G=(V,E)$ by
+Any clustering $\bar{y}$ of the contracted graph $G_y=(V_y,E_y)$ can be \emph{back projected} to a clustering $\tilde{y}$ the original graph $G=(V,E)$ by
 %
 \begin{align}
-y_{uv}&=\left\{ 
+\tilde{y}_{uv}&=\left\{ 
 \begin{array}{ll}
-\bar{y}_{S(u)S(v)}& \textrm{ if }S(u) \neq S(v)\\
+\bar{y}_{l_u(y)l_v(y)}& \textrm{ if }l_u(y) \neq l_v(y)\\
 0                & \textrm{ else}
 \end{array}
 \right.& \forall uv \in E
 \end{align}
-Furthermore, the back projection of the optimal segmentation $\bar{y}$ of the contracted graph is a solution of problem~\ref{eq:fusion_move_a}.
-
 
 % Eq.~\ref{eq:fusion_move_a} can be solved efficiently, since 
 % we can work on a coarser graph, where all nodes which are connected
@@ -423,7 +420,7 @@ Furthermore, the back projection of the optimal segmentation $\bar{y}$ of the co
 The back projection of the optimal segmentation $\bar{y}'$ of the contracted graph $G_y=(V_y,E_y, \bar{w})$
 is an optimal solution of problem~\ref{eq:fusion_move_a}.
 \begin{proof}
-Let $y'$ be the back propagation of $\bar{y}'$, which is by definition a feasible for~\ref{eq:fusion_move_a}.
+Let $y'$ be the back propagation of $\bar{y}'$, which is by definition feasible for~\ref{eq:fusion_move_a}.
 If $y'$ would not be an optimal solution than there must exists $y''$ with 
 $\sum_{e\in E} w_ey_e' > \sum_{e\in E} w_ey_e''$.
 Since $y_e'$ and $y_e''$ are $0$ for all $e \in \mathcal{E}_0^{\breve{y}}$ we would have
