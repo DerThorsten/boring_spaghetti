@@ -8,7 +8,7 @@
 \tikzstyle{eCC}=[very thick,dotted,minimum size = 0.5cm,inner sep = 0pt,draw=black, font=\small,align=left]
 
 \begin{center}
-\begin{figure}[h]
+\begin{figure}[t]
     \begin{subfigure}{0.45\linewidth}
     \resizebox{1\linewidth}{!}{
         \begin{tikzpicture}[scale=1]%[x=1 cm, y=1 cm]
@@ -95,9 +95,11 @@
     \end{subfigure}
 
 \caption{
-Given a graph $G=(V, E, w)$ and a consistent edge labeling $y\in P(G)$, shown by solid and doted lines in Fig.~\ref{fig:contraction_a}, the contraction 
-graph  $G_y=(V_y,E_y, w_y) $ is constructed by contracting uncut nodes and edges in $G$ w.r.t. $y$ .
-Given a edge labeling $\bar{y}^*$ of a contracted graph $G_y=(V_y,E_y, w_y)$ (Fig.~\ref{fig:contraction_b} ),
+\textbf{(a)} Given a graph $G=(V, E, w)$ and a consistent edge labeling $y\in P(G)$, shown by solid and doted lines, the contraction 
+graph  $G_y=(V_y,E_y, w_y) $ is constructed by contracting uncut nodes and edges in $G$ w.r.t. $y$.
+%
+\textbf{(b)} 
+Given a edge labeling $\bar{y}^*$ of a contracted graph $G_y=(V_y,E_y, w_y)$,
 we can back project the edge labeling to the original graph.
 %A cut $y^*$ defined on $G_y$  (fig.~\ref{fig:cont_c}) can be projected to $G$ (fig.~\ref{fig:cont_d}).
 }\label{fig:contraction}
