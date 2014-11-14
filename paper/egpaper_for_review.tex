@@ -386,16 +386,16 @@ via must-link constraints are merged into single nodes. We call this graph \emph
 \begin{definition}\emph{(Contracted Graph)}
 Given a weighted graph $G=(V,E,w)$ and a segmentation of $G$ given by $y\in P(G)$,
 we define the contraction of graph $G_y=(V_y,E_y, \bar{w})$
-by $V_y=\{l_v(y)|v\in V\}$, $E_y=\{l_u(y)l_v(y)|uv\in E\}$, and 
-$\forall \bar{u}\bar{v}\in E_y: \bar{w}_{\bar{u}\bar{v}}=\sum_{uv\in E, l_u(y)=\bar{u},l_v(y)=\bar{v}}w_{uv}$ 
+by $V_y=\{l_i(y)|i\in V\}$, $E_y=\{l_i(y)l_j(y)|ij\in E\}$, and 
+$\forall \bar{u}\bar{v}\in E_y: \bar{w}_{\bar{u}\bar{v}}=\sum_{ij\in E, l_i(y)=\bar{u},l_j(y)=\bar{v}}w_{ij}$ 
 \end{definition}
 %
 Any clustering $\bar{y}$ of the contracted graph $G_y=(V_y,E_y)$ can be \emph{back projected} to a clustering $\tilde{y}$ of the original graph $G=(V,E)$ by
 %
 \begin{align}
-\tilde{y}_{uv}&=\left\{ 
+\tilde{y}_{ij}&=\left\{ 
 \begin{array}{ll}
-\bar{y}_{l_u(y)l_v(y)}& \textrm{ if }l_u(y) \neq l_v(y)\\
+\bar{y}_{l_i(y)l_j(y)}& \textrm{ if }l_i(y) \neq l_j(y)\\
 0                & \textrm{ else}
 \end{array}
 \right.& \forall uv \in E
