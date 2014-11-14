@@ -473,10 +473,10 @@ be the same in the original graph, as shown in Theorem~\ref{thm:Equivalence}.
 The choice of the proposal defines the shape of the inner polytope. 
 In the given toy example, the first (red) polytope give a huge improvement, the second proposal
 defines the blue polytope which does not lead to an improvement. 
-The third proposal generates the green polytope that includes the global optimal solution.
+The third proposal generates the green polytope that includes the globally optimal solution.
 
-This procedure is fundamental different to common polyhedral multicut methods~\cite{kappes_2011_emmcvpr,kappes_2013_arxiv}, 
-which tighten a outer relaxation of the multicut polytope and contrary to our method do not operate in the feasible domain. 
+This procedure is fundamentally different from common polyhedral multicut methods~\cite{kappes_2011_emmcvpr,kappes_2013_arxiv}, 
+which tighten an outer relaxation of the multicut polytope and contrary to our method do not operate in the feasible domain. 
 
 
 
@@ -528,11 +528,11 @@ As discussed in~\cite{Lempitsky-2010}, proposals
 should have two properties: \emph{quality} 
 and \emph{diversity}.
 
-A proposal have a high quality if it at least in some regions have a low energy.
-For high quality proposals the chance that the inner polytope includes 
+A proposal has a high quality if it at least in some regions has a low energy.
+For high quality proposals the chance that the inner polytope includes a
 better solution (vertex) is larger than for those with low quality.
 
-Diversity between the individual proposals increase the chances
+Diversity between the individual proposals increases the chances
 to span diverse internal polytopes, cover with the intersection of
 inner polytopes a large part of the original polytope and find 
 more likely the global optimal solution or escape from local minima.
@@ -607,7 +607,7 @@ based hierarchical clustering (EHC) as defined in Sec.~\ref{sec:ehc}.
 EHC follows the energy function, therefore the \emph{quality}
 of the proposals is high.
 To get \emph{diversity} among the different proposal,
-we add normal distributed noise  $\mathcal{N}(0, \sigma_{ehc})$
+we add normally distributed noise  $\mathcal{N}(0, \sigma_{ehc})$
 to each edge weight.
 To get proposals of the desired \emph{size}, we use a
 different stop condition as in EHC, and stop iff a certain number of connected
