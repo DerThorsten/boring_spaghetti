@@ -230,7 +230,7 @@ First line of institution2 address\\
 %   image segmentation problems.
 %
 \end{abstract}
-\vspace{-0.5cm}
+\vspace{-0.6cm}
 
 \input{introduction-new.tex}
 %\input{introduction-old.tex}
@@ -289,7 +289,7 @@ contraction does not improve the energies.
 Given the intrinsic greediness of hierarchical clustering, 
 EHC is sensitive against noise and we cannot expect optimal solutions.
 
-But EHC is very fast, and can be used to initialize
+However, EHC is very fast and can be used to initialize
 CGC~\cite{beier_2014_cvpr}. Excessive time in CGC
 is spent in the \emph{cut phase} to solve the 
 first two coloring on the complete graph.
@@ -447,7 +447,7 @@ This contradicts that $y'$ is a optimal segmentation of $G_y$.
 Instead of problem~\ref{eq:fusion_move_a} we can now solve problem~\ref{eq:edgeproblem} on the contracted graph $G_{\breve{y}}$.
 This is, depending on the intersection of the current and proposed solution, magnitudes smaller than $G$.
 The correlation clustering problem on $G_{\breve{y}}$ can be solved by any correlation clustering solver.
-Since $G_{\breve{y}}$ is smaller exact methods or good approximative methods like 
+Since $G_{\breve{y}}$ is smaller, exact methods or good approximative methods like 
 multicuts~\cite{kappes_2013_arxiv} or CGC~\cite{beier_2014_cvpr}
 are very fast.
 
@@ -471,7 +471,7 @@ Furthermore, the cost do not change and an improvement in the smaller polytope w
 be the same in the original graph, as shown in Theorem~\ref{thm:Equivalence}.
 
 The choice of the proposal defines the shape of the inner polytope. 
-In the given toy example, the first (red) polytope give a huge improvement, the second proposal
+In the given toy example, the first (red) polytope gives a huge improvement, the second proposal
 defines the blue polytope which does not lead to an improvement. 
 The third proposal generates the green polytope that includes the globally optimal solution.
 
@@ -671,7 +671,7 @@ For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cit
 %
 From the field of data-mining we compare to the PIVOT-algorithm~\cite{Ailon-2008} followed by a round of BOEM~\cite{Gionis-2007} denoted by \textbf{PIVOT-BOEM}.
 We use the publicly available code\footnote{\url{http://www.ling.ohio-state.edu/~melsner/resources/correlation-readme.html}}.
-While this implementation uses full adjacency matrices it does not scale as well and can not be applied on all datasets.
+As this implementation uses full adjacency matrices it does not scale as well and can not be applied on all datasets.
 We also run classical fusion moves~\cite{Lempitsky-2010} (\textbf{Fusion}) and select distinct labels for the two candidate segmentations.
 %
 As reported in~\cite{beier_2014_cvpr}, CGC is faster and gives better energies than PlanarCC~\cite{yarkony_2012_eccv} and Expand \& Explore~\cite{bagon_2011_arxiv}.
@@ -726,7 +726,7 @@ The methods were stopped if they exceed 30 minutes at the next possible interrup
 
 \subsection{Improvements for the Multicut Algorithm}\label{sec:tunedMC} 
 When using the  publicly available implementation in OpenGM\footref{opengm-master}
-of Kappes~\etal~\cite{kappes_2013_arxiv}, we have realize that their implementation has some limitations on large problems.
+of Kappes~\etal~\cite{kappes_2013_arxiv}, we have noticed that their implementation has some limitations on large problems.
 This results in a very slow separation and we make the following modifications.
 Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
 Secondly, we follow~\cite{kroeger_2012_eccv} and search for shortest paths and add those only if they are non-chordal instead of searching for the shortest non-chordal path
@@ -779,7 +779,7 @@ Fig.~\ref{fig:parameterchoice} shows an evaluation of the impact of this paramet
 The runtime depends on the number of clusters in the proposal (Fig.~\ref{fig:parameterchoice} left), which controls the size of the auxiliary move problems.
 The level of noise has no major impact on the runtime.
 The energy of the final solution improves with finer proposals since this increases the search space of the moves.
-The level of noise has to be large enough to generate diverse proposals, but not too large which would lead to proposals with low quality.
+The level of noise has to be large enough to generate diverse proposals, but not too large as this would lead to proposals with low quality.
 As shown in Fig.~\ref{fig:parameterchoice} right the useful parameter set is quite large. This allows us to use the same parameters for \emph{all}
 experiments. However we would like to note that in practice we can improve the performance by adjusting these parameters for the specific problem setting.
 %
@@ -878,6 +878,7 @@ experiments. However we would like to note that in practice we can improve the p
    \centering
    \caption{Evaluation by Variation of Information (VOI) and Rand Index (RI) for datasets with available ground truth.}
    \label{tab:eval}
+   \vspace{-0.1cm}
    \begin{tabular}{llllll}
       \toprule
          VOI              &  image-seg   & knott-3d-150 & knott-3d-300   & knott-3d-450 &3d-seg\\
@@ -956,7 +957,7 @@ experiments. However we would like to note that in practice we can improve the p
 
 
 \section{Future Work}\label{sec:future}
-In future work we would like to investigate in much larger problem instances
+In future work we would like to investigate much larger problem instances
 and interactive correlation clustering, by enforcing
 updates only in local regions by appropriate proposals.
 %
@@ -964,7 +965,7 @@ Within this challenging task we can also enforce additionally must-not-link cons
 If those build a closed surface, the problem decomposes into two independent problems.
 %
 Overall, a more specific selection of proposals, maybe conditioned on the current solution,
-should lead better proposals and to faster progress of CC-Fusion.
+should lead to better proposals and to faster progress of CC-Fusion.
 %
 Furthermore, we can extend our approach to higher-order correlation clustering~\cite{Kim-2011,kappes_2013_arxiv}
 by using higher order subproblems.
@@ -976,7 +977,7 @@ We have presented a fast and scalable
 approximate solver for correlation 
 clustering, named Correlation Clustering Fusion (CC-Fusion).
 It is orthogonal to previous research, \ie it can be combined with
-correlation clustering solver.
+any correlation clustering solver.
 %
 The best solution is iteratively improved 
 by a fusion with proposal solutions.
@@ -985,7 +986,7 @@ clustering on a smaller graph with fewer edges and nodes
 and can therefore be solved much faster than the original problem.
 %
 Our evaluation shows that several CC-Fusion algorithms
-outperform state-of-the-art solvers w.r.t. any time performance 
+outperform state-of-the-art solvers w.r.t. anytime performance 
 with increasing problem size.
 
 \enlargethispage{0.4cm}

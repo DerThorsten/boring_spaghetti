@@ -5,14 +5,14 @@ Correlation clustering~\cite{Bansal-2002} also known as the multicut problem~\ci
 is a basic primitive in computer vision~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad} and data mining~\cite{Chierichetti-2014,Arasu-2009,Sadikov-2010,Chen-2012}.
 See Sec.~\ref{sec:problem_formulation} for its formal definition of clustering the nodes of a graph.
  
-Its value is, firstly, that it accommodates both positive (attractive) \emph{and} negative (repulsive) edge weights,
+Its merit is, firstly, that it accommodates both positive (attractive) \emph{and} negative (repulsive) edge weights,
 which allows doing justice to evidence in the data that two nodes or pixels do not wish or do wish to end up in the same cluster or segment, respectively.
 Secondly, it does not require a specification of the number of clusters beforehand.
 
 
-In signed social networks, where positive and negative edges encodes friend and foe relationships, respectively,
+In signed social networks, where positive and negative edges encode friend and foe relationships, respectively,
 correlation clustering is a natural way to detect communities~\cite{Chierichetti-2014,Chen-2012}.
-Correlation clustering can also been used to cluster query refinements in web search~\cite{Sadikov-2010}.
+Correlation clustering can also be used to cluster query refinements in web search~\cite{Sadikov-2010}.
 Because social and web-related networks are often huge, heuristic methods, \eg the PIVOT-algorithm~\cite{Ailon-2008},
 are popular~\cite{Chierichetti-2014}.
 
@@ -24,7 +24,7 @@ state-of-the-art results on the Berkeley Segmentation Database
 \cite{andres_2011_iccv,Kim-2011,yarkony_2012_eccv,alush_2013_simbad}.
 
 While it has a clear mathematical formulation and nice properties,
-correlation clustering suffers on its NP-hardness. 
+correlation clustering suffers from NP-hardness. 
 %
 Consequently, partition problems on large scale data, \eg
 huge volume images in computational neuroscience~\cite{kroeger_2012_eccv}
@@ -54,16 +54,16 @@ A natural approach is to solve the integer linear program (ILP) directly.
 To this end, efficient separation procedures have been found~\cite{kappes_2011_emmcvpr,kappes_2013_arxiv} that allow to iteratively augment the set of constraints until a valid partitioning is found. 
 Alternatively, it is possible to relax the integrality constraints of the ILP formulation~\cite{kappes_2013_arxiv}. 
 Such an outer relaxation can be iteratively tightened. However, intermediate solutions are fractional and therefore rounding is required to obtain a valid partitioning.
-For the latter approach column generating methods exits, which work best on planar \cite{yarkony_2012_eccv} graphs. %or almost planar \cite{yarkony-andres-2013} graphs. 
+For the latter approach column generating methods exist, which work best on planar \cite{yarkony_2012_eccv} graphs. %or almost planar \cite{yarkony-andres-2013} graphs. 
 
 Another line of work uses move making algorithms 
 to optimize correlation clustering~\cite{bagon_2011_arxiv,beier_2014_cvpr,Kernighan-1970}.
 Starting with an initial segmentation, auxiliary max-cut problems are (approximately) solved,
 such that the segmentation is strictly improved.
 As shown in~\cite{beier_2014_cvpr} only Cut, Glue \& Cut (CGC)
-can deal with large scale problems, but can also suffer on very large auxiliary problems.
+can deal with large scale problems, but can also suffer from very large auxiliary problems.
 
-Outside computer vision greedy methods~\cite{Soon-2001,Ng-2002,Gionis-2007,Elsner-2008,Ailon-2008} have been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
+Outside computer vision, greedy methods~\cite{Soon-2001,Ng-2002,Gionis-2007,Elsner-2008,Ailon-2008} have been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
 The PIVOT Algorithm~\cite{Ailon-2008} iterates over all nodes in random order.
 If the node is not assigned it constructs a cluster containing the node and all its 
 unassigned positively linked neighbors.  
@@ -72,9 +72,9 @@ A widely used post-processing method is  Best One Element Move (BOEM)~\cite{Gion
 
 For energy minimization problems fusion moves have become increasingly popular~\cite{Lempitsky-2010,kappes_2014_ws}.
 For many large scale computer vision applications fusion moves lead to good approximations
-with state of the art any time performance~\cite{kappes_2014_ws}.
+with state of the art anytime performance~\cite{kappes_2014_ws}.
 Due to the ambiguity of a node-labeling, classical fusion moves~\cite{Lempitsky-2010} cannot be applied directly for correlation clustering.
-We will show how to overcome this point in Sec.~\ref{sec:cc_fm}.
+We will show how to overcome this problem in Sec.~\ref{sec:cc_fm}.
 
 
 \vspace{0.1cm}
@@ -84,7 +84,7 @@ detailed problem definition and introduce
 the correlation clustering objective.
 Next we give a description of energy based hierarchical clustering in Sec.~\ref{sec:ehc} and
 our proposed correlation clustering fusion moves in Sec.~\ref{sec:cc_fm}.
-We evaluate the proposed methods methods in Sec.~\ref{sec:exp} and conclude in Sec.~\ref{sec:future} and \ref{sec:conclusion}.
+We evaluate the proposed methods in Sec.~\ref{sec:exp} and conclude in Sec.~\ref{sec:future} and \ref{sec:conclusion}.
 
 %-------------------------------------------------------------------------
 
