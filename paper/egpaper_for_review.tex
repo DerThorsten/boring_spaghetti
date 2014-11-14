@@ -242,15 +242,13 @@ Agglomerative hierarchical clustering (HC) is widely used
 in graph / image segmentation~\cite{arbelaez_2006}.
 In each step, the edge with the highest weight $w$ is
 contracted (green edges in Fig.~\ref{fig:hc_alg}).
-Doing so, parallel edges edges can occur.
+Doing so, parallel edges can occur.
 In agglomerative clustering, weights of
 parallel edges are merged into single edges.
 For image segmentation, the length
 weighted mean is used to do this update~\cite{arbelaez_2006}.
 
-Because we, contrary to~\cite{arbelaez_2006}, directly work on energies, we are interested in an 
-agglomeration with respect to our energy function~\ref{eq:edgeproblem}.
-For this we propose to use energy based agglomeration
+Because we, contrary to~\cite{arbelaez_2006}, directly work on energies, we use energy based agglomeration
 with the following update rule:
 Whenever there are multiple edges between 
 a pair of nodes, these edges are merged into a single edge
@@ -286,15 +284,15 @@ contraction does not improve the energies.
 % smaller or equal to zero  (green edge in fig. ~\ref{fig:hc_alg}). Any further edge
 % contraction leads to worse energies.
 
-Given the intrinsic greediness of hierarchical clustering, 
-EHC is sensitive against noise and we cannot expect optimal solutions.
+Given the intrinsic greediness of hierarchical clustering, we cannot expect
+EHC to yield optimal solutions in general.
 
 However, EHC is very fast and can be used to initialize
 CGC~\cite{beier_2014_cvpr}. Excessive time in CGC
 is spent in the \emph{cut phase} to solve the 
 first two coloring on the complete graph.
 As shown in Sec.~\ref{sec:exp},
-allowing CGC to start from the EHC solution
+allowing CGC to start from the EHC solution instead
 can improve performance drastically.
 
 
@@ -380,8 +378,8 @@ Both will be discussed next. The overall framework is sketched in Fig.~\ref{fig:
 \subsection{Fast Optimization of CC-Fusion Moves} \label{sec:fast_optimization}
 In general the auxiliary fusion problem~\ref{eq:fusion_move_a} is, as for classical fusion~\cite{Lempitsky-2010}, NP-hard.
 However, many variables have been fixed to be zero and we can reformulate~\ref{eq:fusion_move_a}
-into a correlation clustering problem on a coarser graph, where all nodes which are connected
-via must-link constraints are merged into single nodes. We call this graph \emph{contracted graph}.
+into a correlation clustering problem on a coarsened graph, where all nodes which are connected
+via must-link constraints are merged into single nodes. We call this graph a \emph{contracted graph}.
 %
 \begin{definition}\emph{(Contracted Graph)}
 Given a weighted graph $G=(V,E,w)$ and a segmentation of $G$ given by $y\in P(G)$,
@@ -528,14 +526,14 @@ As discussed in~\cite{Lempitsky-2010}, proposals
 should have two properties: \emph{quality} 
 and \emph{diversity}.
 
-A proposal has a high quality if it at least in some regions has a low energy.
+A proposal has a high quality if  it has a low energy at least in some regions.
 For high quality proposals the chance that the inner polytope includes a
 better solution (vertex) is larger than for those with low quality.
 
 Diversity between the individual proposals increases the chances
 to span diverse internal polytopes, cover with the intersection of
 inner polytopes a large part of the original polytope and find 
-more likely the global optimal solution or escape from local minima.
+more likely the globally optimal solution or escape from local minima.
 
 For correlation clustering fusion we add a third
 property: \emph{size}.
@@ -543,7 +541,7 @@ The size of the contracted graph directly
 depends on the number of connected components
 of the intersection of the proposal solution and the current best solution.
 %
-In the extreme case, where each 
+In one extreme case, where each 
 node is in a separate connnected component,
 the fusion move is equivalent to solving the original problem.
 In the other extreme, where the proposal has 
@@ -599,7 +597,7 @@ To this end we suggest two proposal generators.
 
 
 
-\noindent \textbf{Randomized HierarchicalClustering (RHC):}
+\noindent \textbf{Randomized Hierarchical Clustering (RHC):}
 %\subsubsection{Randomized HierarchicalClustering (RHC)}
 %
 To generate fast energy aware proposals we can use energy
@@ -610,7 +608,7 @@ To get \emph{diversity} among the different proposal,
 we add normally distributed noise  $\mathcal{N}(0, \sigma_{ehc})$
 to each edge weight.
 To get proposals of the desired \emph{size}, we use a
-different stop condition as in EHC, and stop iff a certain number of connected
+different stop condition as in EHC, and stop only if a certain number of connected
 components is reached.
 
 %\subsubsection{Randomized MaxCut  (RMC)}
