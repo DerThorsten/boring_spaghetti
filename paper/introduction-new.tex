@@ -79,7 +79,7 @@ We will show how to overcome this problem in Sec.~\ref{sec:cc_fm}.
 
 \vspace{0.1cm}
 \noindent \textbf{Outline:} 
-In Sec.~\ref{sec:problem_formulation} we will give a 
+In Sec.~\ref{sec:problem_formulation} we give a 
 detailed problem definition and introduce 
 the correlation clustering objective.
 Next we give a description of energy based hierarchical clustering in Sec.~\ref{sec:ehc} and
@@ -96,7 +96,7 @@ The function $w : E \rightarrow \mathbb{R}$ assigns a weight to each edge.
 We will use $w_e$ as a shorthand for $w(e)$.
 A positive weight expresses the desire that two adjacent nodes should
 be merged, whereas a negative weight indicates
-that these nodes should be separated into two different regions.
+that these nodes should be separated into two distinct regions.
 %
 %A \emph{subgraph} $G_A = \{A, E_A, w\}$ consists
 %of nodes $A \subseteq V$ and edges $E_A := E\cap (A\times A)$.
@@ -109,19 +109,19 @@ An edge labeling is only consistent if it does not violate any cycle constraint~
 We denote the set of all consistent edge labelings by $P(G)\subset\{0,1\}^{|E|}$.
 The convex hull of this set is known as the \emph{multicut polytope} $MC(G) = \textrm{conv}(P(G))$.
 %
-By $l(y)$ we denote a node labeling for a segmentation given by $y$.
+By $l(y)$ we denote some node labeling for a segmentation given by $y$.
 
 Given a weighted graph $G=(V,E,w)$ we consider the problem of segmenting $G$ such that the costs
 of the edges between distinct segments is minimized. This can be formulated in the node domain
 by assigning each node $i$ a label $l_i \in \mathbb{N}$
 \begin{align}
-  l^* &= \argmin_{L \in \mathbb{N}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{i} \neq l_{j}], \label{eq:nodeproblem}
+  l^* &= \argmin_{l \in \mathbb{N}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{i} \neq l_{j}], \label{eq:nodeproblem}
 \end{align} 
 or in the edge domain, by labeling each edge $e$ as cut $y_e=1$ or uncut $y_e=0$ 
 \begin{align}
   y^* &= \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}.%\\ 
 \end{align}
 As shown in~\cite{kappes_2013_arxiv}  both problems are equivalent, but formulation \ref{eq:nodeproblem}
-suffers from ambiguities in the formulation, \cf Fig.~\ref{fig:notation}. 
+suffers from ambiguities in the representation, \cf Fig.~\ref{fig:notation}. 
 
 %\input{inputs/fig_notation.tex}

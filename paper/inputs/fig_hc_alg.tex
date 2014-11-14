@@ -77,14 +77,14 @@
 
 }
 \caption{
-    Hierarchical clustering can be used to optimize
+    Energy-based Hierarchical clustering can be used to greedily optimize
     Eq.~\ref{eq:edgeproblem}.
     In each step, the two nodes connected via the edge with 
     the highest weight are merged by contracting this edge.
-    (to be contracted edge is shown in green).
-    Due to edge contraction parallel edges can occur which 
+    (edge to be contracted is shown in green).
+    Due to edge contraction parallel edges can occur, which 
     are merged into single ones, and their weights are summed up.
-    The algorithm stops when the highest edge weight is smaller
+    The algorithm terminates when the highest edge weight is smaller
     or equal to zero (edge shown in blue).
 }\label{fig:hc_alg}
 \end{center}
