@@ -334,7 +334,7 @@ with additional \emph{must-link constraints} for all edges in $\mathcal{E}_0^{\b
       &\quad \textrm{s.t.} \quad y_{ij} = 0 & \forall (i, j) \in \mathcal{E}_0^{\breve{y}} \nonumber
 \end{align}
 %
-By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy w.r.t. the proposal
+By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy w.r.t. the proposals
 $y'$ and $y''$,
 because $y'$ and $y''$ are feasible solutions for problem~\ref{eq:fusion_move_a}.
 %\begin{align}
@@ -354,7 +354,7 @@ The inherent difference is how we define the fusion.
 
 As classical fusion, CC-Fusion does not provide a lower bound on the objective and 
 has no sound stopping condition.
-For the latter we use a maximal number of iterations and maximal number of iteration without improvement as stopping condition.
+For the latter we use a maximal number of iterations and maximal number of iterations without improvement.
 
 A further difference is how we efficiently calculate the correlation clustering fusion move and how we generate proposals.
 Both will be discussed next. The overall framework is sketched in Fig.~\ref{fig:move_graph}.
@@ -483,8 +483,8 @@ which tighten an outer relaxation of the multicut polytope and contrary to our m
 \input{polytope-tikz.tex}
 \caption{Each fusion move can be interpreted as an optimization of an inner polytope.
 Each inner polytope includes the current vertex. Starting with $y_0$ we optimize over the red polytope 
-and find $y_1$ as optima. When optimize over the blue polytope we stay in $y_1$ as optima.
-When optimizing over the green polytope we find $y_2$ which we will never leave again or any polytope containing~$y_2$. 
+and find $y_1$ as optimum. When optimizing over the blue polytope we stay in $y_1$ as optimum,
+when optimizing over the green polytope we find $y_2$ which we will never leave again. 
 }
 \label{fig:polyheadral}
 \end{figure}
@@ -523,8 +523,8 @@ When optimizing over the green polytope we find $y_2$ which we will never leave 
 \subsection{Proposal Generators}
 
 As discussed in~\cite{Lempitsky-2010}, proposals
-should have two properties: \emph{quality} 
-and \emph{diversity}.
+should have two properties: \emph{high quality} 
+and \emph{large diversity}.
 
 A proposal has a high quality if  it has a low energy at least in some regions.
 For high quality proposals the chance that the inner polytope includes a
@@ -608,7 +608,7 @@ To get \emph{diversity} among the different proposal,
 we add normally distributed noise  $\mathcal{N}(0, \sigma_{ehc})$
 to each edge weight.
 To get proposals of the desired \emph{size}, we use a
-different stop condition as in EHC, and stop only if a certain number of connected
+different stop condition for EHC, and stop only if a certain number of connected
 components is reached.
 
 %\subsubsection{Randomized MaxCut  (RMC)}
@@ -633,12 +633,12 @@ graph segmentation and have a strong connection
 to energy minimization~\cite{couprie_2011}.
 %
 The edge weighted watershed algorithm~\cite{meyer_2013}
-with random seeds can be used to get
+with random seeds can be used to find
 cheap proposals.
 To improve \emph{quality} we do not use $n$ seeds distributed uniformly
 over all nodes but use the following.
 %
-We draw $n/2$ negative edges, and assign different seed to the endpoints
+We draw $n/2$ negative edges, and assign different seeds to the endpoints
 of each edge.
 Doing so, a random subset of negative edges is forced
 to be cut within each proposal.
