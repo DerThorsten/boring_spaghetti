@@ -28,7 +28,7 @@ We define the following energy function
       &= \sum_{ij \in E} y_{ij}\cdot \underbrace{(w_{i \to j}+w_{j \to i})}_{w_{ij}} + \textrm{const}
 \end{align}
 which is zero if the given partitioning does not violated any relation and larger otherwise.
-We name this two datasets \emph{social nets} and \emph{normalized social nets}.
+We name these two datasets \emph{social nets} and \emph{normalized social nets}.
 
 \textbf{Network Modularity Clustering.}
 As another example for network clustering we use the \emph{modularity-clustering} models from~\cite{kappes_2014_benchmark_arxiv} which are small but fully connected.
@@ -43,15 +43,15 @@ correlation clustering finds the clustering with the lowest energy.
 The energy is based on a likelihood of merging adjacent super-voxels.
 Each edge has a probability to keep adjacent segments separate ($p(y_{ij} =1)$)
 or to merge them ($p(y_{ij} = 0)$).
-The energy function is defined as following:
+The energy function is
 \begin{align}
  J(y)  &= \sum_{ij \in E} y_{ij}\cdot \underbrace{  log\left( \frac{p(y_{ij} =0)}{p(y_{ij} =1)}\right) + log \frac{1-\beta}{\beta}  }_{w_{ij}}
 \end{align}
-Where $\beta$ is used as a prior~\cite{andres_2011_iccv}.
+where $\beta$ is used as a prior~\cite{andres_2011_iccv}.
 
-We use the public available benchmark instances from~\cite{kappes_2013_benchmark_cvpr,kappes_2014_benchmark_arxiv}.
-For 2D images, we took the segmentation problems on the Berkeley Segmentation Database~\cite{martin_2001} called \emph{image-seg}~\cite{andres_2011_iccv,kappes_2013_benchmark_cvpr}.
+We use the publicly available benchmark instances from~\cite{kappes_2013_benchmark_cvpr,kappes_2014_benchmark_arxiv}.
+For 2D images from the Berkeley Segmentation Database~\cite{martin_2001}, we took the segmentation problems called \emph{image-seg}~\cite{andres_2011_iccv,kappes_2013_benchmark_cvpr}.
 For 3D volume segmentation we took the models \emph{knott-3d-150},\emph{-300} and \emph{-450} from~\cite{kroeger_2012_eccv,kappes_2014_benchmark_arxiv} as well as the large
-instance from the \emph{3d-seg} model~\cite{andres_2011_iccv,kappes_2013_benchmark_cvpr}. These instances have underling cube sizes of  $150^3$, $300^3$, $450^3$, and $900^3$, respectively.
-We also request larger instances from the authors of~\cite{kroeger_2012_eccv} which kindly provide us the dataset~\emph{knott-3d-550} with cube size  $550^3$.
+instance from the \emph{3d-seg} model~\cite{andres_2011_iccv,kappes_2013_benchmark_cvpr}. These instances have underlying cube sizes of  $150^3$, $300^3$, $450^3$, and $900^3$, respectively.
+We also request larger instances from the authors of~\cite{kroeger_2012_eccv} who kindly provide us the dataset~\emph{knott-3d-550} with cube size  $550^3$.
 %More information of the size of instances is given in Tab.~\ref{tab:instance_sizes}.
