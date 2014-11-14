@@ -248,7 +248,7 @@ parallel edges are merged into single edges.
 For image segmentation, the length
 weighted mean is used to do this update~\cite{arbelaez_2006}.
 
-While we, contrary to~\cite{arbelaez_2006}, directly work on energies, we are interested in an 
+Because we, contrary to~\cite{arbelaez_2006}, directly work on energies, we are interested in an 
 agglomeration with respect to our energy function~\ref{eq:edgeproblem}.
 For this we propose to use energy based agglomeration
 with the following update rule:
@@ -256,7 +256,7 @@ Whenever there are multiple edges between
 a pair of nodes, these edges are merged into a single edge
 and the weights are summed up, since we 
 minimize the sum of the cut edges.
-We call HC with this update method Energy base Hierarchical Clustering (EHC).
+We call HC with this update method Energy based Hierarchical Clustering (EHC).
 
 We stop EHC if the highest edge weight is
 smaller or equal to zero  (blue edge in Fig.~\ref{fig:hc_alg}). Any further edge
@@ -292,7 +292,7 @@ EHC is sensitive against noise and we cannot expect optimal solutions.
 But EHC is very fast, and can be used to initialize
 CGC~\cite{beier_2014_cvpr}. Excessive time in CGC
 is spend in the \emph{cut phase} to solve the 
-first 2 coloring on the complete graph.
+first two coloring on the complete graph.
 As shown in Sec.~\ref{sec:exp},
 allowing CGC to start from the EHC solution
 can improve performance drastically.
@@ -310,7 +310,7 @@ can improve performance drastically.
 
 
 %------------------------------------------------------------------------
-\section{Correlation-Clustering-Fusion Moves}\label{sec:cc_fm}
+\section{Correlation Clustering Fusion Moves}\label{sec:cc_fm}
 
 Fusion moves as defined in~\cite{Lempitsky-2010} work
 in the node domain and do not work properly for 
@@ -336,7 +336,8 @@ with additional \emph{must-link constraints} for all edges in $\mathcal{E}_0^{\b
       &\quad \textrm{s.t.} \quad y_{ij} = 0 & \forall (i, j) \in \mathcal{E}_0^{\breve{y}} \nonumber
 \end{align}
 %
-By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy,
+By construction, solving Eq.~\ref{eq:fusion_move_a} cannot increase the energy w.r.t. the proposal
+$y'$ and $y''$,
 because $y'$ and $y''$ are feasible solutions for problem~\ref{eq:fusion_move_a}.
 %\begin{align}
 %  \sum  w_{ij} \cdot y^*_{ij}  \leq \min \left( \sum  w_{ij} \cdot y'_{ij} ,  \sum   w_{ij} \cdot y''_{ij} \right)
@@ -349,11 +350,11 @@ because $y'$ and $y''$ are feasible solutions for problem~\ref{eq:fusion_move_a}
 %is simple and similar to the fusion move algorithm of 
 As Lempitsky \etal~\cite{Lempitsky-2010}, 
 we iteratively improve the best solution by
-fusing it with proposal solution.
+fusing it with proposal solutions.
 The inherent difference is how we define the fusion.
 %We fuse the segmentations according to Eq.~\ref{eq:fusion_move_a}.
 
-As classical fusion, CC-Fusion does not provide and lower bound on the objective and 
+As classical fusion, CC-Fusion does not provide a lower bound on the objective and 
 has no sound stopping condition.
 For latter we use a maximal number of iterations and maximal number of iteration without improvement as stopping condition.
 
@@ -384,7 +385,7 @@ via must-link constraints are merged into single nodes. We call this graph \emph
 %
 \begin{definition}\emph{(Contracted Graph)}
 Given a weighted graph $G=(V,E,w)$ and a segmentation of $G$ given by $y\in P(G)$,
-We define the contraction of graph $G_y=(V_y,E_y, \bar{w})$
+we define the contraction of graph $G_y=(V_y,E_y, \bar{w})$
 by $V_y=\{l_v(y)|v\in V\}$, $E_y=\{l_u(y)l_v(y)|uv\in E\}$, and 
 $\forall \bar{u}\bar{v}\in E_y: \bar{w}_{\bar{u}\bar{v}}=\sum_{uv\in E, l_u(y)=\bar{u},l_v(y)=\bar{v}}w_{uv}$ 
 \end{definition}
@@ -426,7 +427,7 @@ The back projection of the optimal segmentation $\bar{y}'$ of the contracted gra
 is an optimal solution of problem~\ref{eq:fusion_move_a}.
 \begin{proof}
 Let $y'$ be the back propagation of $\bar{y}'$, which is by definition feasible for~\ref{eq:fusion_move_a}.
-If $y'$ would not be an optimal solution than there must exists $y''$ with 
+If $y'$ would not be an optimal solution there must be a $y''$ with 
 $\sum_{e\in E} w_ey_e' > \sum_{e\in E} w_ey_e''$.
 Since $y_e'$ and $y_e''$ are $0$ for all $e \in \mathcal{E}_0^{\breve{y}}$ we would have
 \begin{align*}

@@ -1,3 +1,5 @@
+%!TEX root = ./egpaper_for_review.tex
+%
 \section{Introduction}
 Correlation clustering~\cite{Bansal-2002} also known as the multicut problem~\cite{chopra_1993_mp} 
 is a basic primitive in computer vision~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad} and data mining~\cite{Chierichetti-2014,Arasu-2009,Sadikov-2010,Chen-2012},
@@ -61,17 +63,17 @@ such that the segmentation is strictly improved.
 As shown in ~\cite{beier_2014_cvpr} only Cut, Glue \& Cut (CGC)~\cite{beier_2014_cvpr} 
 can deal with large scale problems, but can also suffer on very large auxiliary problems.
 
-Outside computer vision greedy methods~\cite{Soon-2001,Ng-2002,Gionis-2007,Elsner-2008,Ailon-2008} has been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
+Outside computer vision greedy methods~\cite{Soon-2001,Ng-2002,Gionis-2007,Elsner-2008,Ailon-2008} have been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
 The PIVOT Algorithm~\cite{Ailon-2008} iterates over all nodes in random order.
 If the node is not assigned it constructs a cluster containing the node and all its 
 unassigned positively linked neighbors.  
 %
-A widely use post-processing method is  Best One Element Move (BOEM)~\cite{Gionis-2007}, which iteratively reassigns nodes to clusters.
+A widely used post-processing method is  Best One Element Move (BOEM)~\cite{Gionis-2007}, which iteratively reassigns nodes to clusters.
 
 For energy minimization problems fusion moves have become increasingly popular~\cite{Lempitsky-2010,kappes_2014_ws}.
 For many large scale computer vision applications fusion moves lead to good approximations
 with state of the art any time performance~\cite{kappes_2014_ws}.
-Due to the ambiguity of a node-labeling, classical fusion moves~\cite{Lempitsky-2010} can not be applied directly for correlation clustering.
+Due to the ambiguity of a node-labeling, classical fusion moves~\cite{Lempitsky-2010} cannot be applied directly for correlation clustering.
 We will show how to overcome this point in Sec.~\ref{sec:cc_fm}.
 
 
@@ -80,7 +82,7 @@ We will show how to overcome this point in Sec.~\ref{sec:cc_fm}.
 In Sec.~\ref{sec:problem_formulation} we will give a 
 detailed problem definition where we introduce 
 the correlation clustering objective.
-Followed by a description of energy based hierarchical clustering in Sec.~\ref{sec:ehc} and
+Next we give a description of energy based hierarchical clustering in Sec.~\ref{sec:ehc} and
 our proposed correlation clustering fusion moves in Sec.~\ref{sec:cc_fm}.
 We evaluate the proposed methods methods in Sec.~\ref{sec:exp} and conclude in Sec.~\ref{sec:future} and \ref{sec:conclusion}.
 
@@ -100,7 +102,7 @@ that these nodes should be separated into two different regions.
 %of nodes $A \subseteq V$ and edges $E_A := E\cap (A\times A)$.
 %
 %\input{inputs/fig_notation.tex}
-A segmentation of the graph $G$ can by either given by an 
+A segmentation of the graph $G$ can be either given by a
 node labeling $l \in \mathbb{N}^{|V|}$
 or an edge labeling $y \in\{0,1\}^{|E|}$, \cf Fig.~\ref{fig:notation}.
 An edge labeling is only consistent if it contains no dangling edges~\cite{kappes_2013_arxiv}.
@@ -115,7 +117,7 @@ by assigning each node $v$ a label $l_v \in \mathbb{N}$
 \begin{align}
   l^* &= \argmin_{L \in \mathbb{N}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{i} \neq l_{j}], \label{eq:nodeproblem}
 \end{align} 
-or in the edge domain, by label each edge $e$ as cut $y_e=1$ or uncut $y_e=0$ 
+or in the edge domain, by labeling each edge $e$ as cut $y_e=1$ or uncut $y_e=0$ 
 \begin{align}
   y^* &= \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}.%\\ 
 \end{align}
