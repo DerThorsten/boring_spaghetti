@@ -655,9 +655,8 @@ is added to the edge weighs \cite{straehle_2012}.
 \section{Experiments}\label{sec:exp}
 In our experiments we compare to the following methods with publicly available implementation.
 %
-For \textbf{CGC}~\cite{beier_2014_cvpr} we used the publicly available implementation\footnote{\label{opengm-cvpr2014}{\url{github.com/opengm/opengm/tree/cgc-cvpr2014}}} and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{github.com/opengm/opengm}}.
-For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we use a modified version of
- the publicly available implementation in OpenGM\footref{opengm-master}, as described in Sec.~\ref{sec:tunedMC}.
+For \textbf{CGC}~\cite{beier_2014_cvpr} we used a branch of OpenGM\footnote{\label{opengm-cvpr2014}{\url{github.com/opengm/opengm/tree/cgc-cvpr2014}}} and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{github.com/opengm/opengm}}.
+For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we modified OpenGM\footref{opengm-master}, as described in Sec.~\ref{sec:tunedMC}.
 %
 %We realize that their implementation has some limitations on large problems and make the following modifications.
 %Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
@@ -667,28 +666,28 @@ For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cit
 %In~\cite{kroeger_2012_eccv}. this has been used for MC-I only. 
 %For MC-R this search procedure is not sufficient and need to be followed by a search for a shortest non-chordal paths.
 %
-From the field of data-mining we compare to the PIVOT-algorithm~\cite{Ailon-2008} followed by a round of BOEM~\cite{Gionis-2007} denoted by \textbf{PIVOT-BOEM}.
-We use the publicly available code\footnote{\url{http://www.ling.ohio-state.edu/~melsner/resources/correlation-readme.html}}.
-As this implementation uses full adjacency matrices it does not scale as well and can not be applied on all datasets.
+From the field of data-mining we compare to the PIVOT-algorithm~\cite{Ailon-2008} followed by a round of BOEM~\cite{Gionis-2007} denoted by \textbf{PIVOT-BOEM}\footnote{\url{http://www.ling.ohio-state.edu/~melsner/resources/correlation-readme.html}}.
+This implementation uses full adjacency matrices it does not scale and cannot be applied to all datasets.
 We also run classical fusion moves~\cite{Lempitsky-2010} (\textbf{Fusion}) and select distinct labels for the two candidate segmentations.
 %
-As reported in~\cite{beier_2014_cvpr}, CGC is faster and gives better energies than PlanarCC~\cite{yarkony_2012_eccv} and Expand \& Explore~\cite{bagon_2011_arxiv}.
+According to~\cite{beier_2014_cvpr}, CGC is faster and gives better energies than PlanarCC~\cite{yarkony_2012_eccv} and Expand \& Explore~\cite{bagon_2011_arxiv}.
 Therefore we exclude those in our experiments.
 
-We compare these methods to the following methods suggested in the present paper.
+We compare all of the above to the following methods suggested in the present paper:
 %
-Energy Based Based Hierarchical Clustering (\textbf{EHC}),
+Energy Based Hierarchical Clustering (\textbf{EHC}),
 as described in Sec.~\ref{sec:ehc}.
 %
-CGC warm started with the solution from EHC denoted by \textbf{EHC-CGC}.
+CGC warm started with the solution from EHC (\textbf{EHC-CGC}).
 %
 The proposed correlation cluster fusion algorithm with EHC-based and watershed-based proposals
- and MC-I and CGC as subproblem solvers denoted by 
+ and MC-I and CGC as subproblem solvers ( 
 \textbf{CC-Fusion-HC-MC},
 \textbf{-HC-CGC},
 \textbf{-WS-MC}, and 
-\textbf{-WS-CGC}, respectively.
-We set the size of the proposals to $10\%$ of the original problem size
+\textbf{-WS-CGC}) respectively.
+We set the number of connected components in the proposals to  $10\%$ of the 
+number of nodes of
 and use random edge noise with $\sigma=1.5$.
 %
 As stopping condition we choose $10^4$ iterations and $100$ iterations with no improvement.
@@ -696,7 +695,7 @@ As stopping condition we choose $10^4$ iterations and $100$ iterations with no i
 All experiments were run on Intel Core i5-4570 CPUs
 with 3.20 GHz, equipped with 32 GB of RAM.
 In our evaluation we make no use of multiple threads.
-The methods were stopped if they exceed 30 minutes at the next possible interrupt point.
+The methods were stopped once they exceed 30 minutes at the next possible interrupt point.
 
 % An overview of the used datasets is given in Tab.~\ref{tab:instance_sizes} and described in detail in Sec.\ref{sec:nets} and \ref{sec:imseg}.
 
@@ -723,13 +722,13 @@ The methods were stopped if they exceed 30 minutes at the next possible interrup
 \input{datasets.tex}
 
 \subsection{Improvements for the Multicut Algorithm}\label{sec:tunedMC} 
-When using the  publicly available implementation in OpenGM\footref{opengm-master}
-of Kappes~\etal~\cite{kappes_2013_arxiv}, we have noticed that their implementation has some limitations on large problems.
+When using the  publicly available implementation in OpenGM\footref{opengm-master}, we have noticed that their implementation has some limitations on large problems.
 This results in a very slow separation and we make the following modifications.
-Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
-Secondly, we follow~\cite{kroeger_2012_eccv} and search for shortest paths and add those only if they are non-chordal instead of searching for the shortest non-chordal path
+Firstly, we used \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm,
+which speeds up MC-R.
+Secondly, we follow~\cite{kroeger_2012_eccv} and search for shortest paths and add those only if they are non-chordal,instead of searching for the shortest non-chordal path
 during the separation procedure. 
-In~\cite{kroeger_2012_eccv} this has been used for MC-I only. 
+In~\cite{kroeger_2012_eccv} this was used for MC-I only. 
 For MC-R this search procedure is not sufficient and needs to be followed by a search for shortest non-chordal paths.
 %
 Fig.~\ref{fig:at:knott-450b} shows the improvements with our modifications compared to the implementation in OpenGM for the knott-3d-450 dataset.
@@ -771,7 +770,7 @@ This procedure is one magnitude faster, but might cause a few extra outer iterat
   \end{figure}
 
 \subsection{Parameter Choice for CC-Fusion}
-Beside the choice of the proposal generator and fusion method CC-Fusion has some more parameters, which need to be set.
+Beside the choice of the proposal generator and fusion method, CC-Fusion has some more parameters, which need to be set.
 The most crucial one is the number of segments in the proposal. For HC we also have to set the noise which is used to generate diversity.
 Fig.~\ref{fig:parameterchoice} shows an evaluation of the impact of this parameters for a single instance of knott-3d-450 averaged over several random seeds.
 The runtime depends on the number of clusters in the proposal (Fig.~\ref{fig:parameterchoice} left), which controls the size of the auxiliary move problems.
@@ -786,7 +785,7 @@ experiments. However we would like to note that in practice we can improve the p
 \centering
 \fbox{\includegraphics[width=0.45\columnwidth,trim=3.5cm 8cm 4.5cm 8cm,clip]{images/grid-time2.pdf}}
 \fbox{\includegraphics[width=0.45\columnwidth,trim=3.5cm 8cm 4.5cm 8cm,clip]{images/grid-value2.pdf}}
-\caption{Empirical evaluation of the impact of noise used for proposal generation and proposal size.
+\caption{Empirical evaluation of the impact of noise used for proposal generation and the size of the proposals.
   Proposals with many segments cause longer runtime. Noise seemed not to be a critical parameter but should be selected large enough.
 }
 \label{fig:parameterchoice}
@@ -959,8 +958,8 @@ In future work we would like to investigate much larger problem instances
 and interactive correlation clustering, by enforcing
 updates only in local regions by appropriate proposals.
 %
-Within this challenging task we can also enforce additionally must-not-link constraints in eq.~\ref{eq:fusion_move_a}.
-If those build a closed surface, the problem decomposes into two independent problems.
+%Within this challenging task we can also enforce additionally must-not-link constraints in eq.~\ref{eq:fusion_move_a}.
+%If those build a closed surface, the problem decomposes into two independent problems.
 %
 Overall, a more specific selection of proposals, maybe conditioned on the current solution,
 should lead to better proposals and to faster progress of CC-Fusion.
