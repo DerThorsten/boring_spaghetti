@@ -11,10 +11,10 @@ Secondly, it does not require a specification of the number of clusters beforeha
 In signed social networks, where positive and negative edges encodes friend and foe relationships, respectively,
 correlation clustering is a natural way to detect communities~\cite{Chierichetti-2014,Chen-2012}.
 Correlation clustering can also been used to cluster query refinements in web search~\cite{Sadikov-2010}.
-Because social and web-related networks are often very huge, heuristic methods, \eg the PIVOT-algorithm~\cite{Ailon-2008},
-are very popular~\cite{Chierichetti-2014}.
+Because social and web-related networks are often huge, heuristic methods, \eg the PIVOT-algorithm~\cite{Ailon-2008},
+are popular~\cite{Chierichetti-2014}.
 
-In computer vision applications, unsupervised image segmentation algorithms usually start with an over-segmentation
+In computer vision applications, unsupervised image segmentation algorithms often start with an over-segmentation
 into superpixels (superregions), which are then clustered into ``perceptually meaningful''
 regions by correlation clustering on sparse graphs.
 Such an approach has been shown to yield
@@ -27,7 +27,7 @@ correlation clustering is known to be NP-hard.
 Consequently, partition problems on large scale data, \eg
 huge volume images in computational neuroscience~\cite{kroeger_2012_eccv}
 or social networks~\cite{Leskovec-2010}, 
-are not tractable, because reasonable solutions cannot be computed in acceptable time.
+are not tractable because reasonable solutions cannot be computed in acceptable time.
 
 % Importantly, this allows doing justice to evidence in the data that two nodes or pixels do \emph{not} wish to end up in the same cluster or segment. This is in contrast to the submodular potentials so popularized by the graph cut algorithm, which only allow two nodes to be attracted to each other, or at most be agnostic about membership in the same cluster. Secondly, the algorithm does not require a specification of the number of clusters. This is in contrast to methods such as normalized cut \cite{} that can only accommodate attractive interactions and hence need the number of clusters to be specified. 
 
@@ -35,7 +35,7 @@ are not tractable, because reasonable solutions cannot be computed in acceptable
 \vspace{0.1cm}
 \noindent \textbf{Contribution.}
 In this work we present some novel approaches that are designed for large scale correlation clustering problems.
-First, we define a novel energy based agglomerative clustering algorithm that monotonically increase the energy.
+First, we define a novel energy based agglomerative clustering algorithm that monotonically increases the energy.
 With this at hand we show how to improve the anytime performance of Cut, Clue \& Cut~\cite{beier_2014_cvpr}.
 %
 Second, we improve the anytime performance of polyhedral multicut methods~\cite{kappes_2013_arxiv} by more efficient separation procedures.
@@ -52,13 +52,13 @@ A natural approach is to solve the integer linear program (ILP) directly.
 To this end, efficient separation procedures have been found~\cite{kappes_2011_emmcvpr,kappes_2013_arxiv} that allow to iteratively augment the set of constraints until a valid partitioning is found. 
 Alternatively, it is possible to relax the integrality constraints of the ILP formulation~\cite{kappes_2013_arxiv}. 
 Such an outer relaxation can be iteratively tightened. However, intermediate solutions are fractional and therefore rounding is required to obtain a valid partitioning.
-For the latter approach column generating methods exits, that works best on planar \cite{yarkony_2012_eccv} graphs. %or almost planar \cite{yarkony-andres-2013} graphs. 
+For the latter approach column generating methods exits, that work best on planar \cite{yarkony_2012_eccv} graphs. %or almost planar \cite{yarkony-andres-2013} graphs. 
 
 Another line of work uses move making algorithms 
 to optimize correlation clustering~\cite{bansal_2004_ml,beier_2014_cvpr,Kernighan-1970}.
 Starting with an initial segmentation, auxiliary max-cut problems are (approximately) solved,
 such that the segmentation is strictly improved.
-As shown by Beier \etal~\cite{beier_2014_cvpr} only Cut, Clue \& Cut (CGC)~\cite{beier_2014_cvpr} 
+As shown in ~\cite{beier_2014_cvpr} only Cut, Glue \& Cut (CGC)~\cite{beier_2014_cvpr} 
 can deal with large scale problems, but can also suffer on very large auxiliary problems.
 
 Outside computer vision greedy methods~\cite{Soon-2001,Ng-2002,Gionis-2007,Elsner-2008,Ailon-2008} has been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
