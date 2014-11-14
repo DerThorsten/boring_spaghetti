@@ -1,23 +1,24 @@
+%!TEX root = ./egpaper_for_review.tex
 \subsection{Datasets}\label{sec:datasets}
 \textbf{Social Networks.}\label{sec:nets}
-An application for large scale correlation clustering are social networks.
+One important application for large scale correlation clustering are social networks.
 We consider two of those networks from the Stanford Large Network Dataset Collection\footnote{\url{http://snap.stanford.edu/data/index.html}}.
 Both networks are given by weighted directed graphs with edge weights $-1$ and $1$. 
 %
 The first network is called \emph{Epinions}. 
-This is who-trust-whom online social network of a a general consumer review site Epinions.com. 
-Each directed edge $a\to b$ indicated that user $a$ trusts  or does not trust user $b$ by a  positive or negative edge-weight, respectively.
+This is who-trust-whom online social network of a a general consumer review site. 
+Each directed edge $a\to b$ indicates that user $a$ trusts  or does not trust user $b$ by a  positive or negative edge-weight, respectively.
 The network contains $131828$ nodes and $841372$ edges from which $85.3\%$ are positively weighted.
 %
 The second network is called \emph{Slashdot}. 
-Slashdot is a technology-related news website know for its specific user community. 
-In 2002 Slashdot introduced the Slashdot Zoo feature which allows users to tag each other as friends or foes. 
-The network was obtained in November 2008 and contains $77350$ nodes and $516575$ edges from which $76.73\%$ are positively weighted.
+Slashdot is a technology-related news website known for its specific user community. 
+In 2002 Slashdot introduced the Slashdot Zoo feature which allows users to tag each other as friend or foe. 
+The network was obtained in November 2008 and contains $77350$ nodes and $516575$ edges of which $76.73\%$ are positively weighted.
 
 We consider the problem to cluster this graphs such that positively weighted edges ($E^+_{\to}$) link inside and negatively weighted edges ($E^-_{\to}$) between clusters.
 In other words friends and people who trust each other should be in the same segment and foes and non-trusting people in different clusters.
 % 
-To compensate the high impact of nodes with high degree we can normalize the edge weights such that each person has the same impact to the overall network, by enforcing.
+To compensate the high impact of nodes with high degree we can normalize the edge weights such that each person has the same impact on the overall network, by enforcing.
 \begin{align}
   \sum_{i\to j \in E_{\to}} |w_{i\to j}| &= 1&\forall i\in V, deg^{\textrm{out}}(i)\geq 1 
 \end{align}
