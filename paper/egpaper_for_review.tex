@@ -778,10 +778,10 @@ The most crucial one is the number of segments in the proposal. For HC we also h
 Fig.~\ref{fig:parameterchoice} shows an evaluation of the impact of this parameters for a single instance of knott-3d-450 averaged over several random seeds.
 The runtime depends on the number of clusters in the proposal (Fig.~\ref{fig:parameterchoice} left), which controls the size of the auxiliary move problems.
 The level of noise has no major impact on the runtime.
-The energy of the final solution improves with finer proposals since this increase the search-space of the moves.
-Although the level of noise has to be large enough to generate diverse proposals but also not to large to generate proposals with low quality.
+The energy of the final solution improves with finer proposals since this increases the search space of the moves.
+The level of noise has to be large enough to generate diverse proposals but not to large to generate proposals with low quality.
 As shown in Fig.~\ref{fig:parameterchoice} right the useful parameter set is quite large. This allows us to use the same parameters for \emph{all}
-experiments. However we would like to note, that in practice we can improve the performance by adjust these parameters for the specific problem setting.
+experiments. However we would like to note, that in practice we can improve the performance by adjusting these parameters for the specific problem setting.
 %
 %
 \begin{figure}[th]
@@ -789,7 +789,7 @@ experiments. However we would like to note, that in practice we can improve the 
 \fbox{\includegraphics[width=0.45\columnwidth,trim=3.5cm 8cm 4.5cm 8cm,clip]{images/grid-time2.pdf}}
 \fbox{\includegraphics[width=0.45\columnwidth,trim=3.5cm 8cm 4.5cm 8cm,clip]{images/grid-value2.pdf}}
 \caption{Empirical evaluation of the impact of noise used for proposal generation and proposal size.
-  Proposals with many segments causes longer runtime. Noise seemed not to be a critical parameter but should be selected large enough.
+  Proposals with many segments cause longer runtime. Noise seemed not to be a critical parameter but should be selected large enough.
 }
 \label{fig:parameterchoice}
 \end{figure}
