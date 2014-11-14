@@ -6,7 +6,7 @@ is a basic primitive in computer vision~\cite{andres_2011_iccv,kroeger_2012_eccv
 See Sec.~\ref{sec:problem_formulation} for its formal definition of clustering the nodes of a graph.
  
 Its value is, firstly, that it accommodates both positive (attractive) \emph{and} negative (repulsive) edge weights,
-which allows doing justice to evidence in the data that two nodes or pixels do \emph{not} wish  or do wish to end up in the same cluster or segment, respectively.
+which allows doing justice to evidence in the data that two nodes or pixels do not wish or do wish to end up in the same cluster or segment, respectively.
 Secondly, it does not require a specification of the number of clusters beforehand.
 
 
@@ -18,13 +18,13 @@ are popular~\cite{Chierichetti-2014}.
 
 In computer vision applications, unsupervised image segmentation algorithms often start with an over-segmentation
 into superpixels (superregions), which are then clustered into ``perceptually meaningful''
-regions by correlation clustering on sparse graphs.
+regions by correlation clustering.
 Such an approach has been shown to yield
 state-of-the-art results on the Berkeley Segmentation Database
 \cite{andres_2011_iccv,Kim-2011,yarkony_2012_eccv,alush_2013_simbad}.
 
-Despite the clear mathematical formulation and nice properties,
-correlation clustering is known to be NP-hard. 
+While it has a clear mathematical formulation and nice properties,
+correlation clustering suffers on its NP-hardness. 
 %
 Consequently, partition problems on large scale data, \eg
 huge volume images in computational neuroscience~\cite{kroeger_2012_eccv}
@@ -54,13 +54,13 @@ A natural approach is to solve the integer linear program (ILP) directly.
 To this end, efficient separation procedures have been found~\cite{kappes_2011_emmcvpr,kappes_2013_arxiv} that allow to iteratively augment the set of constraints until a valid partitioning is found. 
 Alternatively, it is possible to relax the integrality constraints of the ILP formulation~\cite{kappes_2013_arxiv}. 
 Such an outer relaxation can be iteratively tightened. However, intermediate solutions are fractional and therefore rounding is required to obtain a valid partitioning.
-For the latter approach column generating methods exits, that work best on planar \cite{yarkony_2012_eccv} graphs. %or almost planar \cite{yarkony-andres-2013} graphs. 
+For the latter approach column generating methods exits, which work best on planar \cite{yarkony_2012_eccv} graphs. %or almost planar \cite{yarkony-andres-2013} graphs. 
 
 Another line of work uses move making algorithms 
 to optimize correlation clustering~\cite{bagon_2011_arxiv,beier_2014_cvpr,Kernighan-1970}.
 Starting with an initial segmentation, auxiliary max-cut problems are (approximately) solved,
 such that the segmentation is strictly improved.
-As shown in ~\cite{beier_2014_cvpr} only Cut, Glue \& Cut (CGC)~\cite{beier_2014_cvpr} 
+As shown in~\cite{beier_2014_cvpr} only Cut, Glue \& Cut (CGC)
 can deal with large scale problems, but can also suffer on very large auxiliary problems.
 
 Outside computer vision greedy methods~\cite{Soon-2001,Ng-2002,Gionis-2007,Elsner-2008,Ailon-2008} have been suggested for correlation clustering problems, see \cite{Elsner-2009} for an overview.
@@ -80,7 +80,7 @@ We will show how to overcome this point in Sec.~\ref{sec:cc_fm}.
 \vspace{0.1cm}
 \noindent \textbf{Outline:} 
 In Sec.~\ref{sec:problem_formulation} we will give a 
-detailed problem definition where we introduce 
+detailed problem definition and introduce 
 the correlation clustering objective.
 Next we give a description of energy based hierarchical clustering in Sec.~\ref{sec:ehc} and
 our proposed correlation clustering fusion moves in Sec.~\ref{sec:cc_fm}.
@@ -105,7 +105,7 @@ that these nodes should be separated into two different regions.
 A segmentation of the graph $G$ can be either given by a
 node labeling $l \in \mathbb{N}^{|V|}$
 or an edge labeling $y \in\{0,1\}^{|E|}$, \cf Fig.~\ref{fig:notation}.
-An edge labeling is only consistent if it contains no dangling edges~\cite{kappes_2013_arxiv}.
+An edge labeling is only consistent if it contains no violated cycle constraints~\cite{kappes_2013_arxiv}.
 We denote the set of all consistent edge labelings by $P(G)\subset\{0,1\}^{|E|}$.
 The convex hull of this set is known as the \emph{multicut polytope} $MC(G) = \textrm{conv}(P(G))$.
 %

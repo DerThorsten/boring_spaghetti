@@ -291,7 +291,7 @@ EHC is sensitive against noise and we cannot expect optimal solutions.
 
 But EHC is very fast, and can be used to initialize
 CGC~\cite{beier_2014_cvpr}. Excessive time in CGC
-is spend in the \emph{cut phase} to solve the 
+is spent in the \emph{cut phase} to solve the 
 first two coloring on the complete graph.
 As shown in Sec.~\ref{sec:exp},
 allowing CGC to start from the EHC solution
@@ -356,7 +356,7 @@ The inherent difference is how we define the fusion.
 
 As classical fusion, CC-Fusion does not provide a lower bound on the objective and 
 has no sound stopping condition.
-For latter we use a maximal number of iterations and maximal number of iteration without improvement as stopping condition.
+For the latter we use a maximal number of iterations and maximal number of iteration without improvement as stopping condition.
 
 A further difference is how we efficiently calculate the correlation clustering fusion move and how we generate proposals.
 Both will be discussed next. The overall framework is sketched in Fig.~\ref{fig:move_graph}.
@@ -390,7 +390,7 @@ by $V_y=\{l_v(y)|v\in V\}$, $E_y=\{l_u(y)l_v(y)|uv\in E\}$, and
 $\forall \bar{u}\bar{v}\in E_y: \bar{w}_{\bar{u}\bar{v}}=\sum_{uv\in E, l_u(y)=\bar{u},l_v(y)=\bar{v}}w_{uv}$ 
 \end{definition}
 %
-Any clustering $\bar{y}$ of the contracted graph $G_y=(V_y,E_y)$ can be \emph{back projected} to a clustering $\tilde{y}$ the original graph $G=(V,E)$ by
+Any clustering $\bar{y}$ of the contracted graph $G_y=(V_y,E_y)$ can be \emph{back projected} to a clustering $\tilde{y}$ of the original graph $G=(V,E)$ by
 %
 \begin{align}
 \tilde{y}_{uv}&=\left\{ 
@@ -427,7 +427,7 @@ The back projection of the optimal segmentation $\bar{y}'$ of the contracted gra
 is an optimal solution of problem~\ref{eq:fusion_move_a}.
 \begin{proof}
 Let $y'$ be the back propagation of $\bar{y}'$, which is by definition feasible for~\ref{eq:fusion_move_a}.
-If $y'$ would not be an optimal solution there must be a $y''$ with 
+If $y'$ would not be an optimal solution, there must be a $y''$ with 
 $\sum_{e\in E} w_ey_e' > \sum_{e\in E} w_ey_e''$.
 Since $y_e'$ and $y_e''$ are $0$ for all $e \in \mathcal{E}_0^{\breve{y}}$ we would have
 \begin{align*}
@@ -483,7 +483,7 @@ which tighten an outer relaxation of the multicut polytope and contrary to our m
 \begin{figure}
 \centering
 \input{polytope-tikz.tex}
-\caption{Each move can be interpreted as an optimization of an inner polytope.
+\caption{Each fusion move can be interpreted as an optimization of an inner polytope.
 Each inner polytope includes the current vertex. Starting with $y_0$ we optimize over the red polytope 
 and find $y_1$ as optima. When optimize over the blue polytope we stay in $y_1$ as optima.
 When optimizing over the green polytope we find $y_2$ which we will never leave again or any polytope containing~$y_2$. 
@@ -767,7 +767,7 @@ This procedure is one magnitude faster, but might cause a few extra outer iterat
   \hypersetup{linkcolor = red}
   \end{center}
     \caption{Comparison of the Multicut implementation of OpenGM and 
-    our modified implementation, which can deal better with large scale problems. 
+    our modified implementation, which improves the runtime.
     However, for large scale problems it still does not scale.}
     \label{fig:at:knott-450b}
   \end{figure}
@@ -779,9 +779,9 @@ Fig.~\ref{fig:parameterchoice} shows an evaluation of the impact of this paramet
 The runtime depends on the number of clusters in the proposal (Fig.~\ref{fig:parameterchoice} left), which controls the size of the auxiliary move problems.
 The level of noise has no major impact on the runtime.
 The energy of the final solution improves with finer proposals since this increases the search space of the moves.
-The level of noise has to be large enough to generate diverse proposals but not to large to generate proposals with low quality.
+The level of noise has to be large enough to generate diverse proposals, but not too large which would lead to proposals with low quality.
 As shown in Fig.~\ref{fig:parameterchoice} right the useful parameter set is quite large. This allows us to use the same parameters for \emph{all}
-experiments. However we would like to note, that in practice we can improve the performance by adjusting these parameters for the specific problem setting.
+experiments. However we would like to note that in practice we can improve the performance by adjusting these parameters for the specific problem setting.
 %
 %
 \begin{figure}[th]
@@ -878,41 +878,41 @@ experiments. However we would like to note, that in practice we can improve the 
    \centering
    \caption{Evaluation by Variation of Information (VOI) and Rand Index (RI) for datasets with available ground truth.}
    \label{tab:eval}
-   \begin{tabular}{lllllll}
+   \begin{tabular}{llllll}
       \toprule
-         VOI              &  image-seg   & knott-3d-150 & knott-3d-300   & knott-3d-450 & knott-3d-550 &3d-seg\\
+         VOI              &  image-seg   & knott-3d-150 & knott-3d-300   & knott-3d-450 &3d-seg\\
       \midrule 
-         PIVOT-BOEM       &\rd$ 4.9633$  &\rd $ 2.9936$ &\rd $ 4.4986$   &      --      &    --        &  --\\ 
-         HC               &   $ 2.5967$  &    $ 1.5477$ &    $ 2.3513$   &    $ 2.9155$ &    --        & $       2.8395$\\
-         HC-CGC           &   $ 2.5164$  &    $ 0.9052$ &    $ 1.7636$   &    $ 2.2256$ &    --        & $       1.7603$ \\
-         CGC              &   $ 2.5247$  &    $ 0.9267$ &    $ 1.8822$   &    $ 2.3104$ &    --        & $\rd    6.8908$ \\
-         KL               &   $ 2.6432$  &\rd $ 2.0648$ &\rd $ 4.1318$   &\rd $ 4.9270$ &    --        & $\rd    7.1057$\\
-         FUSION           &$\bf 2.1406$  &\rd $ 2.8787$ &\rd $ 4.0744$   &\rd $ 4.6616$ &    --        & $\rd    6.5366$ \\
-         MC-R             &   $ 2.5471$  &    $ 0.9178$ &    $ 1.6369$   &    $ 2.8710$ &    --        & $\rd    6.5058$\\   
-         MC-I             &   $ 2.5367$  & $\bf 0.9063$ & $\bf 1.6352$   & $\bf 2.0037$ &    --        & $\rd    4.3319$\\  
-         CC-Fusion-HC-MC   &   $ 2.5319$  &    $ 0.9629$ &    $ 1.6516$   &    $ 2.0801$ &    --        & $\bf    1.3347$ \\  
-         CC-Fusion-HC-CGC  &$\bf 2.4961$  &    $ 0.9679$ &    $ 1.7673$   &    $ 2.3809$ &    --        & $       2.1347$ \\  
-         CC-Fusion-WS-MC   &   $ 2.5340$  &    $ 0.9629$ &    $ 1.6742$   &    $ 2.0739$ &    --        & $\bf    1.3334$ \\  
-         CC-Fusion-WS-CGC  &   $ 2.5192$  &    $ 1.0585$ &    $ 2.1344$   &    $ 2.7487$ &    --        & $       3.3514$ \\      
+         PIVOT-BOEM       &\rd$ 4.9633$  &\rd $ 2.9936$ &\rd $ 4.4986$   &      --       &  --\\ 
+         HC               &   $ 2.5967$  &    $ 1.5477$ &    $ 2.3513$   &    $ 2.9155$  & $       2.8395$\\
+         HC-CGC           &   $ 2.5164$  &    $ 0.9052$ &    $ 1.7636$   &    $ 2.2256$  & $       1.7603$ \\
+         CGC              &   $ 2.5247$  &    $ 0.9267$ &    $ 1.8822$   &    $ 2.3104$  & $\rd    6.8908$ \\
+         KL               &   $ 2.6432$  &\rd $ 2.0648$ &\rd $ 4.1318$   &\rd $ 4.9270$  & $\rd    7.1057$\\
+         FUSION           &$\bf 2.1406$  &\rd $ 2.8787$ &\rd $ 4.0744$   &\rd $ 4.6616$  & $\rd    6.5366$ \\
+         MC-R             &   $ 2.5471$  &    $ 0.9178$ &    $ 1.6369$   &    $ 2.8710$  & $\rd    6.5058$\\   
+         MC-I             &   $ 2.5367$  & $\bf 0.9063$ & $\bf 1.6352$   & $\bf 2.0037$  & $\rd    4.3319$\\  
+         CC-Fusion-HC-MC   &   $ 2.5319$  &    $ 0.9629$ &    $ 1.6516$   &    $ 2.0801$ & $\bf    1.3347$ \\  
+         CC-Fusion-HC-CGC  &$\bf 2.4961$  &    $ 0.9679$ &    $ 1.7673$   &    $ 2.3809$ & $       2.1347$ \\  
+         CC-Fusion-WS-MC   &   $ 2.5340$  &    $ 0.9629$ &    $ 1.6742$   &    $ 2.0739$ & $\bf    1.3334$ \\  
+         CC-Fusion-WS-CGC  &   $ 2.5192$  &    $ 1.0585$ &    $ 2.1344$   &    $ 2.7487$ & $       3.3514$ \\      
       \bottomrule
    \end{tabular}
 
-   \begin{tabular}{lllllll}
+   \begin{tabular}{llllll}
       \toprule
-          RI              &  image-seg   & knott-3d-150 & knott-3d-300   & knott-3d-450 & knott-3d-550 &3d-seg\\
+          RI              &  image-seg   & knott-3d-150 & knott-3d-300   & knott-3d-450  &3d-seg\\
       \midrule 
-         PIVOT-BOEM       &   $ 0.7438$  &\rd $ 0.7851$ &    $  0.8792$  &      --      &    --        &  --\\ 
-         HC               &   $ 0.7560$  &\rd $ 0.8139$ &\rd $  0.8084$  &\rd $ 0.7610$ &    --        &   $ 0.9651$\\
-         HC-CGC           &   $ 0.7724$  &    $ 0.9226$ &    $  0.8713$  &    $ 0.8433$ &    --        &   $ 0.9861$ \\
-         CGC              &   $ 0.7590$  &    $ 0.9206$ &    $  0.8666$  &    $ 0.8341$ &    --        &\rd$ 0.6024$ \\
-         KL               &\rd$ 0.6400$  &\rd $ 0.8085$ &\rd $  0.6858$  &\rd $ 0.6409$ &    --        &\rd$ 0.5849$\\
-         FUSION           &\rd$ 0.5480$  &\rd $ 0.2849$ &\rd $  0.1420$  &\rd $ 0.0998$ &    --        &\rd$ 0.0345$ \\
-         MC-R             &   $ 0.7822$  &    $ 0.9232$ & $\bf  0.8849$  &\rd $ 0.6713$ &    --        &\rd$ 0.0432$ \\   
-         MC-I             &   $ 0.7821$  & $\bf 0.9236$ & $\bf  0.8849$  & $\bf 0.8670$ &    --        &\rd$ 0.5461$\\  
-         CC-Fusion-HC-MC   &   $ 0.7801$  &    $ 0.9042$ &    $  0.8824$  &    $ 0.8573$ &    --        &$\bf 0.9906$ \\  
-         CC-Fusion-HC-CGC  &   $ 0.7780$  &    $ 0.9031$ &    $  0.8763$  &    $ 0.8470$ &    --        &   $ 0.9775$ \\  
-         CC-Fusion-WS-MC   &$\bf 0.7825$  &    $ 0.9042$ &    $  0.8802$  &    $ 0.8582$ &    --        &   $ 0.8895$ \\  
-         CC-Fusion-WS-CGC  &   $ 0.7750$  &    $ 0.8951$ &    $  0.8596$  &    $ 0.8394$ &    --        &   $\bf 0.9906$ \\      
+         PIVOT-BOEM       &   $ 0.7438$  &\rd $ 0.7851$ &    $  0.8792$  &      --       &  --\\ 
+         HC               &   $ 0.7560$  &\rd $ 0.8139$ &\rd $  0.8084$  &\rd $ 0.7610$  &   $ 0.9651$\\
+         HC-CGC           &   $ 0.7724$  &    $ 0.9226$ &    $  0.8713$  &    $ 0.8433$  &   $ 0.9861$ \\
+         CGC              &   $ 0.7590$  &    $ 0.9206$ &    $  0.8666$  &    $ 0.8341$  &\rd$ 0.6024$ \\
+         KL               &\rd$ 0.6400$  &\rd $ 0.8085$ &\rd $  0.6858$  &\rd $ 0.6409$  &\rd$ 0.5849$\\
+         FUSION           &\rd$ 0.5480$  &\rd $ 0.2849$ &\rd $  0.1420$  &\rd $ 0.0998$  &\rd$ 0.0345$ \\
+         MC-R             &   $ 0.7822$  &    $ 0.9232$ & $\bf  0.8849$  &\rd $ 0.6713$  &\rd$ 0.0432$ \\   
+         MC-I             &   $ 0.7821$  & $\bf 0.9236$ & $\bf  0.8849$  & $\bf 0.8670$  &\rd$ 0.5461$\\  
+         CC-Fusion-HC-MC   &   $ 0.7801$  &    $ 0.9042$ &    $  0.8824$  &    $ 0.8573$ &$\bf 0.9906$ \\  
+         CC-Fusion-HC-CGC  &   $ 0.7780$  &    $ 0.9031$ &    $  0.8763$  &    $ 0.8470$ &   $ 0.9775$ \\  
+         CC-Fusion-WS-MC   &$\bf 0.7825$  &    $ 0.9042$ &    $  0.8802$  &    $ 0.8582$ &   $ 0.8895$ \\  
+         CC-Fusion-WS-CGC  &   $ 0.7750$  &    $ 0.8951$ &    $  0.8596$  &    $ 0.8394$ &   $\bf 0.9906$ \\      
       \bottomrule
    \end{tabular}
 \end{table}
@@ -983,12 +983,12 @@ by a fusion with proposal solutions.
 The fusion move itself is formulated as correlation
 clustering on a smaller graph with fewer edges and nodes
 and can therefore be solved much faster than the original problem.
-
+%
 Our evaluation shows that several CC-Fusion algorithms
-outperforms state-of-the-art solvers w.r.t. any time performance 
+outperform state-of-the-art solvers w.r.t. any time performance 
 with increasing problem size.
 
-
+\enlargethispage{0.4cm}
     
 
 
