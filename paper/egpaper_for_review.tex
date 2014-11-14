@@ -645,7 +645,7 @@ of each edge.
 Doing so, a random subset of negative edges is forced
 to be cut within each proposal.
 For additional \emph{diversity}, noise $\mathcal{N} (0, \sigma_{ws})$
-is added to the edge weighs.
+is added to the edge weighs \cite{straehle_2012}.
 
 %\input{inputs/fig_hc.tex}
 
@@ -655,12 +655,11 @@ is added to the edge weighs.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Experiments}\label{sec:exp}
-In our experiments we compare to the following methods with public available implementation.
+In our experiments we compare to the following methods with publicly available implementation.
 %
-For \textbf{CGC}~\cite{beier_2014_cvpr} we used the public available implementation\footnote{\label{opengm-cvpr2014}{\url{github.com/opengm/opengm/tree/cgc-cvpr2014}}}
-of Beier~\etal and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{github.com/opengm/opengm}}.
-For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we use an modified version of
- the public available implementation in OpenGM\footref{opengm-master} of Kappes~\etal, as described in Sec.~\ref{sec:tunedMC}.
+For \textbf{CGC}~\cite{beier_2014_cvpr} we used the publicly available implementation\footnote{\label{opengm-cvpr2014}{\url{github.com/opengm/opengm/tree/cgc-cvpr2014}}} and for \textbf{KL}~\cite{Kernighan-1970} the implementation in OpenGM\footlabel{opengm-master}{\url{github.com/opengm/opengm}}.
+For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cite{kappes_2013_arxiv} we use a modified version of
+ the publicly available implementation in OpenGM\footref{opengm-master}, as described in Sec.~\ref{sec:tunedMC}.
 %
 %We realize that their implementation has some limitations on large problems and make the following modifications.
 %Firstly, we use \emph{index-min-heap}~\cite{Sedgewick-2011} within the shortest path search by the Dykstra algorithm - this gives a speed up for MC-R.
@@ -671,14 +670,14 @@ For integer multicuts (\textbf{MC-I}) and relaxed multicuts (\textbf{MC-R})~\cit
 %For MC-R this search procedure is not sufficient and need to be followed by a search for a shortest non-chordal paths.
 %
 From the field of data-mining we compare to the PIVOT-algorithm~\cite{Ailon-2008} followed by a round of BOEM~\cite{Gionis-2007} denoted by \textbf{PIVOT-BOEM}.
-We use the public available code of Micha Elsner\footnote{\url{http://www.ling.ohio-state.edu/~melsner/resources/correlation-readme.html}}.
-While this implementation uses full adjacency matrixes it does not scale as well and can not be applied on all datasets.
+We use the publicly available code\footnote{\url{http://www.ling.ohio-state.edu/~melsner/resources/correlation-readme.html}}.
+While this implementation uses full adjacency matrices it does not scale as well and can not be applied on all datasets.
 We also run classical fusion moves~\cite{Lempitsky-2010} (\textbf{Fusion}) and select distinct labels for the two candidate segmentations.
 %
-As reported in~\cite{beier_2014_cvpr}, CGC is faster and gives better energies then PlanarCC~\cite{yarkony_2012_eccv} and Expand \& Explore~\cite{bagon_2011_arxiv}.
+As reported in~\cite{beier_2014_cvpr}, CGC is faster and gives better energies than PlanarCC~\cite{yarkony_2012_eccv} and Expand \& Explore~\cite{bagon_2011_arxiv}.
 Therefore we exclude those in our experiments.
 
-We compare this methods to the following methods suggested in the present paper.
+We compare these methods to the following methods suggested in the present paper.
 %
 Energy Based Based Hierarchical Clustering (\textbf{EHC}),
 as described in Sec.~\ref{sec:ehc}.
@@ -691,14 +690,14 @@ The proposed correlation cluster fusion algorithm with EHC-based and watershed-b
 \textbf{-HC-CGC},
 \textbf{-WS-MC}, and 
 \textbf{-WS-CGC}, respectively.
-We set the size of the proposals fix to $10\%$ of the original problem size
+We set the size of the proposals to $10\%$ of the original problem size
 and use random edge noise with $\sigma=1.5$.
 %
 As stopping condition we choose $10^4$ iterations and $100$ iterations with no improvement.
 
 All experiments were run on Intel Core i5-4570 CPUs
 with 3.20 GHz, equipped with 32 GB of RAM.
-In our evaluation we make not use of multiple threads.
+In our evaluation we make no use of multiple threads.
 The methods were stopped if they exceed 30 minutes at the next possible interrupt point.
 
 % An overview of the used datasets is given in Tab.~\ref{tab:instance_sizes} and described in detail in Sec.\ref{sec:nets} and \ref{sec:imseg}.
