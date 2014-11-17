@@ -111,7 +111,7 @@
 % \cvprfinalcopy % *** Uncomment this line for the final submission
 
 
-\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\cvprPaperID{1881} % *** Enter the CVPR Paper ID here
 \def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
 
 \newcommand{\realplot}[1]{
@@ -145,10 +145,10 @@
   \addplot[color=yellow!50!black,mark=square] table[x=time, y=ogm-mcfusion-HC-CF*]{data3/#1.data};  \addlegendentry{Fusion}
   \addplot[color=purple,mark=o] table[x=time, y=MCR-CCFDB]{data3/#1.data};     \addlegendentry{MC-R}
   \addplot[color=blue,mark=o] table[x=time, y=MCI-CCIFD]{data3/#1.data};       \addlegendentry{MC-I}
-  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data3/#1.data};    \addlegendentry{CCFusion-HC-MC}
-  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data3/#1.data};    \addlegendentry{CCFusion-HC-CGC}
-  \addplot[color=orange,mark=o] table[x=time, y=DYNCC-WS-MC]{data3/#1.data};  \addlegendentry{CCFusion-WS-MC}
-  \addplot[color=pink,mark=x] table[x=time, y=DYNCC-WS-CGC]{data3/#1.data};  \addlegendentry{CCFusion-WS-CGC}
+  \addplot[color=green,mark=o] table[x=time, y=DYNCC-HC-MC]{data3/#1.data};    \addlegendentry{CC-Fusion-HC-MC}
+  \addplot[color=cyan,mark=x] table[x=time, y=DYNCC-HC-CGC]{data3/#1.data};    \addlegendentry{CC-Fusion-HC-CGC}
+  \addplot[color=orange,mark=o] table[x=time, y=DYNCC-WS-MC]{data3/#1.data};  \addlegendentry{CC-Fusion-WS-MC}
+  \addplot[color=pink,mark=x] table[x=time, y=DYNCC-WS-CGC]{data3/#1.data};  \addlegendentry{CC-Fusion-WS-CGC}
 }
 %  \addplot[color=yellow!50!black,mark=o] table[x=time, y=ogm-mcfusion-HC-CF*]{data3/#1.data};  \addlegendentry{Fusion}
   %\addplot[color=green!50,mark=o] table[x=time, y=PIVOT*]{data3/#1.data};          \addlegendentry{PIVOT-BOEM}
@@ -159,7 +159,7 @@
 %%%%%%%%% TITLE
 \include{my_macros.tex}
 %\title{Correlation Clustering with Dynamic Super-Nodes (DySNCC)}
-\title{Fusion Moves for Correlation Clustering}
+\title{Fusion Moves for Correlation Clustering\\(Supplementary Material)}
 
 \author{First Author\\
 Institution1\\
@@ -180,19 +180,18 @@ First line of institution2 address\\
 \maketitle
 %\thispagestyle{empty}
 
-
+ \tableofcontents
 %%%%%%%%% ABSTRACT
-\begin{abstract}
-\end{abstract}
-\section{Anytime Tables}
-
-\section{Anytime Plots}
+%\begin{abstract}
+%\end{abstract}
+\newpage
+\section{Anytime Plots (Full)}
 %!TEX root = egpaper_for_review.tex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \pgfplotsset{every axis legend/.append style={
 at={(1.0,1.2)},
 anchor=north east}} 
-\begin{figure*}[p]
+\begin{figure*}[h]
   \begin{subfigure}[b]{0.33\textwidth}
   \centering
   \begin{tikzpicture}
@@ -379,7 +378,233 @@ anchor=north east}}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newpage
+\section{Anytime Plots (Zommed)}
+%!TEX root = egpaper_for_review.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pgfplotsset{every axis legend/.append style={
+at={(1.0,1.2)},
+anchor=north east}} 
+\begin{figure*}[h]
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  restrict y to domain=0:4520,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ]
+  \addplot[color=yellow,mark=o] table[x=time, y=PIVOT*]{data3/image-seg.data};    \addlegendentry{PIVOT-BOEM}  
+  \anytimeplot{image-seg}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  
+  \caption{image-seg}\label{fig:at:image-seg2}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  \begin{subfigure}[b]{0.33\textwidth}
+    \centering
+    \begin{tikzpicture}
+    \begin{semilogxaxis}[  mark size=1pt,
+    restrict y to domain=-6000:-4550,
+    xlabel = {runtime},
+    xmin = 0,
+    xmax = 100,
+    width = 1.0\columnwidth,
+    scaled ticks = false,
+    every axis legend/.code={\let\addlegendentry\relax} 
+    ] 
+    \addplot[color=yellow,mark=o] table[x=time, y=PIVOT*]{data3/knott-3d-150.data};          \addlegendentry{PIVOT-BOEM}
+    \anytimeplot{knott-3d-150}
+  
+    \end{semilogxaxis}
+    \end{tikzpicture}
+    \caption{knott-3d-150}\label{fig:at:knott-1502}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  restrict y to domain=-40000:-27000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  %legend to name = ledgendPosition,
+  legend columns=6,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ]  
+  \anytimeplot{knott-3d-300}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-300}\label{fig:at:knott-3002}
+  \end{subfigure}
+  \newline
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  restrict y to domain=-80000:-75000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ] 
+  \anytimeplot{knott-3d-450} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-450}\label{fig:at:knott-4502}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  restrict y to domain=-10000000:-130000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ]
+  \anytimeplot{knott-3d-550} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{knott-3d-550}\label{fig:at:knott-5502}
+  \end{subfigure}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\begin{subfigure}[H]
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=-10000000:-100000,
+  restrict y to domain=-10000000:850000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ] 
+  \anytimeplot{seg-3d} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{seg-3d}\label{fig:at:seg3d2}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=-10000000:-100000,
+  restrict y to domain=-10000000:80000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ]  
+  \anytimeplot{socialnets} 
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{social nets}\label{fig:at:socialnets2}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=-10000000:-100000,
+  restrict y to domain=-10000000:4000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  scaled ticks = false,
+  every axis legend/.code={\let\addlegendentry\relax} 
+  ] 
+  \anytimeplot{normalizedsocialnets}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{normalized social nets}\label{fig:at:nsocialnets2}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{subfigure}[b]{0.33\textwidth}
+  \centering
+  \begin{tikzpicture}
+  \begin{semilogxaxis}[  mark size=1pt,
+  %restrict y to domain=-10000000:-100000,
+  restrict y to domain=-10000000:100000,
+  xlabel = {runtime},
+  xmin = 0,
+  xmax = 4100,
+  width = 1.0\columnwidth,
+  legend to name = ledgendPosition2,
+  legend columns=6,
+  scaled ticks = false%,
+  %every axis legend/.code={\let\addlegendentry\relax} 
+  ]
+  \addplot[color=yellow,mark=o] table[x=time, y=PIVOT*]{data3/modularity-clustering.data};    \addlegendentry{PIVOT-BOEM} 
+  \anytimeplot{modularity-clustering}
+  \end{semilogxaxis}
+  \end{tikzpicture}
+  \caption{modularity clustering}\label{fig:at:modularity2}
+  \end{subfigure}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+  \begin{center}
+  \hypersetup{linkcolor = black}
+  \ref{ledgendPosition2}
+  \hypersetup{linkcolor = red}
+  \end{center}
+
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newpage
+\section{Anytime Tables (per Dataset)}
+\input{anytimetables/image-seg.tex}
+\input{anytimetables/knott-3d-150.tex}
+\input{anytimetables/knott-3d-300.tex}
+\input{anytimetables/knott-3d-450.tex}
+\input{anytimetables/knott-3d-550.tex}
+\input{anytimetables/seg-3d.tex}
+\input{anytimetables/socialnets.tex}
+\input{anytimetables/normalizedsocialnets.tex}
+\input{anytimetables/modularity-clustering.tex}
+
+\newpage
+\section{Anytime Tables (per Instance)}
+\subsection{image-seg}
+\input{anytimetables/image-seg-PI.tex}
+\subsection{knott-3d-150}
+\input{anytimetables/knott-3d-150-PI.tex}
+\subsection{knott-3d-300}
+\input{anytimetables/knott-3d-300-PI.tex}
+\subsection{knott-3d-450}
+\input{anytimetables/knott-3d-450-PI.tex}
+\subsection{knott-3d-550}
+\input{anytimetables/knott-3d-550-PI.tex}
+\subsection{seg-3d}
+\input{anytimetables/seg-3d-PI.tex}
+\subsection{socialnets}
+\input{anytimetables/socialnets-PI.tex}
+\subsection{normalized socialnets}
+\input{anytimetables/normalizedsocialnets-PI.tex}
+\subsection{modularity-clustering}
+\input{anytimetables/modularity-clustering-PI.tex}
 
 
 \end{document}

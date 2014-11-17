@@ -1,0 +1,25 @@
+\begin{table}[H]
+\scriptsize
+\centering
+\caption{normalizedsocialnets (2 instances)}
+\label{tab:anytimetable-normalizedsocialnets}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+           algorithm &                                   \multicolumn{8}{c}{value} & \multicolumn{1}{c}{time}   \\  
+\cmidrule(lr){2-9}\cmidrule(lr){10-10}   
+                     & \multicolumn{1}{c}{(0.5 sec)} & \multicolumn{1}{c}{(1 sec)} & \multicolumn{1}{c}{(10 sec)} & \multicolumn{1}{c}{(60 sec)} & \multicolumn{1}{c}{(300 sec)} & \multicolumn{1}{c}{(600 sec)} & \multicolumn{1}{c}{(1800 sec)} & \multicolumn{1}{c}{(end)} & \multicolumn{1}{c}{(end)}   \\ \midrule 
+                 CGC & $      8304.07$ & $      8304.07$ & $      8304.07$ & $      8304.07$ & $      8304.07$ & $      8304.07$ & $      4129.02$ & $      2547.10$ & $      2771.35$ sec   \\ 
+                  HC & $      8304.07$ & $      8304.07$ & $      7375.42$ & $      7375.42$ & $      7375.42$ & $      7375.42$ & $      7375.42$ & $      7375.42$ & $        10.17$ sec   \\ 
+              HC-CGC & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $          NaN$ & $          NaN$ sec   \\ 
+              ogm-KL & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $          NaN$ & $          NaN$ sec   \\ 
+    CC-Fusion-HC-CGC & $      4132.22$ & $      4132.22$ & $      4058.67$ & $      3655.71$ & $      3207.35$ & $      3057.04$ & $      2910.77$ & $      2910.77$ & $      1804.26$ sec   \\ 
+     CC-Fusion-HC-MC & $      4132.22$ & $      4132.22$ & $      4032.30$ & $      3643.70$ & $      3187.09$ & $      3033.03$ & $      2875.74$ & $      2875.65$ & $      1804.24$ sec   \\ 
+    CC-Fusion-WS-CGC & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4045.33$ & $      3672.84$ & $      3392.00$ & $      2018.43$ sec   \\ 
+     CC-Fusion-WS-MC & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $          NaN$ & $          NaN$ sec   \\ 
+\cmidrule{1-1} 
+           MCR-CCFDB & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4320.10$ sec   \\ 
+\cmidrule{1-1} 
+           MCI-CCIFD & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      4132.22$ & $      3087.45$ sec   \\ 
+\bottomrule
+\end{tabular}
+\end{table}

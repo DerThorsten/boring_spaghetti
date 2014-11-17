@@ -1,0 +1,25 @@
+\begin{table}[H]
+\scriptsize
+\centering
+\caption{socialnets (2 instances)}
+\label{tab:anytimetable-socialnets}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+           algorithm &                                   \multicolumn{8}{c}{value} & \multicolumn{1}{c}{time}   \\  
+\cmidrule(lr){2-9}\cmidrule(lr){10-10}   
+                     & \multicolumn{1}{c}{(0.5 sec)} & \multicolumn{1}{c}{(1 sec)} & \multicolumn{1}{c}{(10 sec)} & \multicolumn{1}{c}{(60 sec)} & \multicolumn{1}{c}{(300 sec)} & \multicolumn{1}{c}{(600 sec)} & \multicolumn{1}{c}{(1800 sec)} & \multicolumn{1}{c}{(end)} & \multicolumn{1}{c}{(end)}   \\ \midrule 
+                 CGC & $    119638.00$ & $    119638.00$ & $    119638.00$ & $    119638.00$ & $    119638.00$ & $     64244.50$ & $     60883.50$ & $     60882.50$ & $      3673.15$ sec   \\ 
+                  HC & $    119638.00$ & $    119638.00$ & $    119638.00$ & $    119638.00$ & $    119638.00$ & $    119638.00$ & $    119638.00$ & $    119638.00$ & $        20.42$ sec   \\ 
+              HC-CGC & $    119638.00$ & $    119638.00$ & $    119638.00$ & $    119309.50$ & $    119309.50$ & $     69550.00$ & $     60916.00$ & $     60915.00$ & $      4708.54$ sec   \\ 
+              ogm-KL & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $          NaN$ & $          NaN$ sec   \\ 
+    CC-Fusion-HC-CGC & $     94861.00$ & $     94861.00$ & $     93700.50$ & $     83766.00$ & $     72063.00$ & $     68472.00$ & $     65204.50$ & $     65202.00$ & $      1803.23$ sec   \\ 
+     CC-Fusion-HC-MC & $     94861.00$ & $     94861.00$ & $     93700.50$ & $     83768.00$ & $     71898.50$ & $     68023.00$ & $     64625.00$ & $     64622.00$ & $      1804.59$ sec   \\ 
+    CC-Fusion-WS-CGC & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     72480.00$ & $     66223.00$ & $     62596.00$ & $     62353.50$ & $      1946.90$ sec   \\ 
+     CC-Fusion-WS-MC & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $          NaN$ & $          NaN$ sec   \\ 
+\cmidrule{1-1} 
+           MCR-CCFDB & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     94861.00$ & $      3536.21$ sec   \\ 
+\cmidrule{1-1} 
+           MCI-CCIFD & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     94861.00$ & $     94861.00$ & $      2968.81$ sec   \\ 
+\bottomrule
+\end{tabular}
+\end{table}
