@@ -1,0 +1,55 @@
+We thank all reviews for their constructive comments.
+
+All reviewers mention the
+ * clear presentation
+ * Detailed experiments
+ * improves state-of-the-art 
+
+---
+**R1: Analogues of the proposed EHC in the literature?**
+???
+
+**R1: Misses important prior work outside computer vision (multi-level graph partitioning algorithm)**
+As stated by Buluc et al it is assumed that edge weights are positive and a volume constrained are used. 
+The METIS software can not applied on our graphs with include positive and _negative_ weighted edges.
+
+From the algorithmic view our proposed method is different to multi-level graph partitioning. 
+We refine the graph with respect to the current labeling and solve the problem on the finer graph and not on a coarser (In Fig 5 (c) is finer than (a)).
+
+**Remarks:**
+We will improve the readability of the figures  
+---
+
+**R2: The proposed method is rather straightforward**
+We belief that this is a clear pro of our method and not a con. Important is its novelty.
+
+**R2: The proposed fusion move's convergence is sometimes worse than the CGC**
+For the social nets we belief that our proposal generator is not a good choice and parameters can be tuned. But even whit this default it works fine.  
+
+**R2: Proposal generation algorithms themselves are not validated**
+Due to lack of space we skipped this. However, (E)HC is compared in Fig. 9. One can see that proposals are not globally meaningful.
+
+**R2: The effect of the proposed third criterion "size" **
+See Fig. 8. If the size is to large the subproblems become intractable.
+
+**R2: Generated proposals not divergent**
+Empirically we observe that the proposals are divergent. 
+Of cause that requires that the signal to noise ratio is not to small. 
+
+**R2: parameter selection for the proposal generation is verified with only a single instance**
+We never claim that we have found the optimal parameter. We expect that we can improve the results by tuning the parameters what we have _not_ done. 
+
+**R2: Theorem 1 and eq. 5**
+R2 is right it is "for any y" and "\breve{y}=y". We will make this more clear.
+While this looks obvious on first glance it isn't on the second. 
+We feel that its important to proof this.
+
+**R2: no theoretical guarantee**
+Theorem 1 and Sec 4.2 give some theoretical interpretation, e.g. that the method is not energy increasing.
+Since there is no free lunch we have to give up the lower bound for faster speed.
+---
+
+
+**R3: Will the implementation become available if paper is accepted?**
+We will our implementation public available if paper is accepted. 
+Beyond the theoretical contribution in includes several implementation issues which we could not discuss to lack of space.
