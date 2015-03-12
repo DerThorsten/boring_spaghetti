@@ -2,7 +2,7 @@
 %
 \section{Introduction}
 Correlation clustering~\cite{Bansal-2002}, also known as the multicut problem~\cite{chopra_1993_mp} 
-is a basic primitive in computer vision~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad} and data mining~\cite{Chierichetti-2014,Arasu-2009,Sadikov-2010,Chen-2012}.
+is a basic primitive in computer vision~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad} and data mining~\cite{Arasu-2009,Sadikov-2010,Chen-2012,Chierichetti-2014}.
 See Sec.~\ref{sec:problem_formulation} for its formal definition of clustering the nodes of a graph.
  
 Its merit is, firstly, that it accommodates both positive (attractive) \emph{and} negative (repulsive) edge weights.
@@ -11,7 +11,7 @@ Secondly, it does not require a specification of the number of clusters beforeha
 
 
 In signed social networks, where positive and negative edges encode friend and foe relationships, respectively,
-correlation clustering is a natural way to detect communities~\cite{Chierichetti-2014,Chen-2012}.
+correlation clustering is a natural way to detect communities~\cite{Chen-2012,Chierichetti-2014}.
 Correlation clustering can also be used to cluster query refinements in web search~\cite{Sadikov-2010}.
 Because social and web-related networks are often huge, heuristic methods, \eg the PIVOT-algorithm~\cite{Ailon-2008},
 are popular~\cite{Chierichetti-2014}.
@@ -57,7 +57,7 @@ Such an outer relaxation can be iteratively tightened. However, intermediate sol
 For the latter approach column generating methods exist, which work best on planar graphs~\cite{yarkony_2012_eccv}. %or almost planar \cite{yarkony-andres-2013} graphs. 
 
 Another line of work uses move making algorithms 
-to optimize correlation clustering~\cite{bagon_2011_arxiv,beier_2014_cvpr,Kernighan-1970}.
+to optimize correlation clustering~\cite{Kernighan-1970,bagon_2011_arxiv,beier_2014_cvpr}.
 Starting with an initial segmentation, auxiliary max-cut problems are (approximately) solved,
 such that the segmentation is strictly improved.
 As shown in~\cite{beier_2014_cvpr} only Cut, Glue \& Cut (CGC)
