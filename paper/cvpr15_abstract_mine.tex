@@ -1,0 +1,104 @@
+% Use class option [extendedabs] to prepare the 1-page extended abstract.
+\documentclass[extendedabs]{bmvc2k}
+\usepackage[colorlinks = true,
+            linkcolor = blue,
+            urlcolor  = blue,
+            citecolor = blue,
+            anchorcolor = blue]{hyperref}
+
+% Document starts here
+\begin{document}
+
+
+\title{Fusion Moves for Correlation Clustering}
+\addauthor{
+Thorsten Beier$^1$, 
+Fred A. Hamprecht$^2$
+J\"org H. Kappes$^3$
+}{}{1}
+\addinstitution{
+$^1$thorsten.beier@iwr.uni-heidelberg.de 
+$^2$fred.hamprecht@iwr.uni-heidelberg.de
+$^3$kappes@math.uni-heidelberg.de
+}
+ 
+ 
+\maketitle
+\let\thefootnote\relax\footnote{This is an extended abstract. The full paper is available at the \href{http://www.cv-foundation.org/openaccess/CVPR2015.py}{Computer Vision Foundation webpage}. }
+\vspace{-0.2in}
+
+
+
+% Extended abstract begins here.  In a one-page document, there is
+% little need for section headers, but you may use \section etc if you
+% wish.
+
+\noindent
+Correlation clustering, or multicut partitioning,
+is widely used in image segmentation for
+partitioning an undirected graph or image with positive and negative edge weights 
+such that the sum of cut edge weights is minimized.
+%
+Due to its NP-hardness, exact solvers do not scale and approximative solvers often give unsatisfactory results.
+We investigate scalable methods for correlation clustering.
+To this end we define fusion moves for the correlation clustering problem.
+
+Our algorithm iteratively fuses the current and a proposed partitioning which 
+monotonously improves
+the partitioning and maintains a valid partitioning at all times.
+Furthermore, it scales to larger datasets, gives near optimal solutions, and at the same time shows
+a good anytime performance.
+
+
+
+
+Correlation clustering~\cite{Bansal-2002}, also known as the multicut problem~\cite{chopra_1993_mp} 
+is a basic primitive in computer vision~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad} and data mining~\cite{Arasu-2009,Sadikov-2010,Chen-2012,Chierichetti-2014}.
+%See Sec.~\ref{sec:problem_formulation} for its formal definition of clustering the nodes of a graph.
+ 
+Its merit is, firstly, that it accommodates both positive (attractive) \emph{and} negative (repulsive) edge weights.
+This allows doing justice to evidence in the data that two nodes or pixels do not wish or do wish to end up in the same cluster or segment, respectively.
+Secondly, it does not require a specification of the number of clusters beforehand.
+
+
+In signed social networks, where positive and negative edges encode friend and foe relationships, respectively,
+correlation clustering is a natural way to detect communities~\cite{Chen-2012,Chierichetti-2014}.
+Correlation clustering can also be used to cluster query refinements in web search~\cite{Sadikov-2010}.
+Because social and web-related networks are often huge, heuristic methods, \eg the PIVOT-algorithm~\cite{Ailon-2008},
+are popular~\cite{Chierichetti-2014}.
+
+In computer vision applications, unsupervised image segmentation algorithms often start with an over-segmentation
+into superpixels (superregions), which are then clustered into ``perceptually meaningful''
+regions by correlation clustering.
+Such an approach has been shown to yield
+state-of-the-art results on the Berkeley Segmentation Database
+\cite{andres_2011_iccv,Kim-2011,yarkony_2012_eccv,alush_2013_simbad}.
+
+While it has a clear mathematical formulation and nice properties,
+correlation clustering suffers from NP-hardness. 
+%
+Consequently, partition problems on large scale data, \eg
+huge volume images in computational neuroscience~\cite{kroeger_2012_eccv}
+or social networks~\cite{Leskovec-2010}, 
+are not tractable because reasonable solutions cannot be computed in acceptable time.
+
+
+\vspace{0.1cm}
+\noindent \textbf{Contribution.}
+In this work we present novel approaches that are designed for large scale correlation clustering problems.
+First, we define a novel energy based agglomerative clustering algorithm that monotonically increases the energy.
+With this at hand we show how to improve the anytime performance of Cut, Clue \& Cut~\cite{beier_2014_cvpr}.
+%
+Second, we improve the anytime performance of polyhedral multicut methods~\cite{kappes_2013_arxiv} by more efficient separation procedures.
+%
+Third, we introduce cluster-fusion moves, which extend the original fusion moves~\cite{Lempitsky-2010} 
+used in supervised segmentation to the unsupervised case and give a polyhedral interpretation of this algorithm.
+Finally, we propose two versatile proposal generators, and evaluate the proposed methods on existing and new benchmark problems.
+Experiments show that we can improve the computation time by one to two magnitudes without worsening the segmentation 
+quality significantly.
+
+
+
+\bibliography{egbib}
+
+\end{document}
