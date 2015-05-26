@@ -14,7 +14,7 @@
 
 
     
-
+\usepackage{multicol}
 \usepackage{tikz,pgfplots}
 \usepackage{pgfplotstable}
 
@@ -51,6 +51,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
+\setbeamertemplate{bibliography item}{[\theenumiv]}
 \begin{frame}
   \begin{columns}
     % ---------------------------------------------------------%
@@ -64,33 +65,47 @@
             % fill each column with content            
             \begin{block}{Introduction}
 
+            \small  
+            \begin{itemize}
+                \item  Correlation clustering~\cite{Bansal-2002}, or multicut partitioning~\cite{chopra_1993_mp} ,
+                is widely used partitioning an undirected graph with positive and negative edge weights
+                ~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad}. 
+                \item NP-hard,  exact solvers do not scale and approximative solvers often give bad results.
+                \item Inspired by \cite{Lempitsky-2010} we define fusion moves for the correlation clustering
+                where we iteratively fuses the current and a proposed partitioning and monotonously improve the partitioning
+                \item Scales well, gives near optimal solutions, has good anytime performance
+            \end{itemize}
 
-            Correlation clustering~\cite{Bansal-2002}, or multicut partitioning~\cite{chopra_1993_mp} ,
-            is widely used partitioning an undirected graph with positive and negative edge weights
-            ~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad}.
-            Since it is NP-hard, exact solvers do not scale and approximative solvers often give bad results.
-            Inspired by \cite{Lempitsky-2010} Here we define fusion moves for the correlation clustering problem.
-            Our algorithm iteratively fuses the current and a proposed partitioning which  monotonously improves
-            the partitioning. It scales well gives near optimal solutions, and has
-            a good anytime performance.
+            % Correlation clustering~\cite{Bansal-2002}, or multicut partitioning~\cite{chopra_1993_mp} ,
+            % is widely used partitioning an undirected graph with positive and negative edge weights
+            % ~\cite{andres_2011_iccv,kroeger_2012_eccv,yarkony_2012_eccv,alush_2013_simbad}.
+            % Since it is NP-hard, exact solvers do not scale and approximative solvers often give bad results.
+            % Inspired by \cite{Lempitsky-2010} Here we define fusion moves for the correlation clustering problem.
+            % Our algorithm iteratively fuses the current and a proposed partitioning which  monotonously improves
+            % the partitioning. It scales well gives near optimal solutions, and has
+            % a good anytime performance.
            
             \end{block}
             \vfill
             \begin{block}{Correlation Clustering / Multicut Objective:}
-
-            Given a weighted graph $G=(V,E,w)$ we consider the problem of segmenting $G$ such that the costs
-            of the edges between distinct segments is minimized. This can be formulated in the node domain
+            \begin{small}
+            \begin{itemize}
+            \item Given a weighted graph $G=(V,E,w)$ 
+            \item We consider the problem of segmenting $G$ such that the costs
+            of the edges between distinct segments is minimized. 
+            \item Can be formulated in the node domain
             by assigning each node $i$ a label $l_i \in \mathbb{N}$
             \begin{align}
               l^* &= \argmin_{l \in \mathbb{N}^{|V|}} \sum_{ (i,j) \in E } w_{ij} \cdot [l_{i} \neq l_{j}], \label{eq:nodeproblem}
             \end{align} 
-            or in the edge domain, by labeling each edge $e$ as cut $y_e=1$ or uncut $y_e=0$ 
+            \item Can be formulated in in the edge domain, by labeling each edge $e$ as cut $y_e=1$ or uncut $y_e=0$ 
             \begin{align}
               y^* &= \argmin_{y \in P(G)} \sum_{ (i,j) \in E } w_{ij} \cdot y_{ij} \label{eq:edgeproblem}.%\\ 
             \end{align}
+            \end{itemize}
             \centering
             \includegraphics[width=0.9\linewidth]{ne-crop.pdf}
-
+            \end{small}
 
             \end{block}
 
@@ -98,9 +113,11 @@
 
             \vfill
             \begin{block}{Correlation Clustering Fusion Moves}
+              \begin{small}
 
-              Given two proposal solutions $y'$ and $y''$,
-              $E_0^{\breve{y}}$ is the set of edges
+              \begin{itemize}
+
+              \item Given two proposal solutions $y'$ and $y''$, $E_0^{\breve{y}}$ is the set of edges
               which are uncut in $y'$ and $y''$.
               %
               \begin{align}
@@ -108,7 +125,7 @@
               E_0^{\breve{y}}  & =  \{ ij \in E \; | \; \breve{y}_{ij} = 0 \}
               \end{align}
               %
-              The fusion move for correlation clustering is solving Eq.~\ref{eq:edgeproblem}
+              \item The fusion move for correlation clustering is solving Eq.~\ref{eq:edgeproblem}
               with additional \emph{must-link constraints} for all edges in $E_0^{\breve{y}}$.
               %
               \begin{align}
@@ -117,12 +134,13 @@
               \end{align}
               %
               
-              We can reformulate~\ref{eq:fusion_move_a}
+              \item We can reformulate~\ref{eq:fusion_move_a}
               into a correlation clustering problem on a coarsened graph, where all nodes which are connected
-              via must-link constraints are merged into single nodes. We call this graph a \emph{contracted graph}.
+              via must-link constraints are merged into single nodes.  We call this graph a \emph{contracted graph}.
 
-              Any clustering $\bar{y}$ of the contracted graph $G_y=(V_y,E_y)$ can be \emph{back projected} to a clustering $\tilde{y}$ of the original graph $G=(V,E)$
-
+              \item Any clustering $\bar{y}$ of the contracted graph $G_y=(V_y,E_y)$ can be \emph{back projected} to a clustering $\tilde{y}$ of the original graph $G=(V,E)$
+              \end{itemize}
+              \end{small}
               \vfill
               \vspace{2cm}
               \centering
@@ -132,7 +150,7 @@
             \end{block}
             \vfill
             \begin{block}{Proposal Generators}
-
+            \begin{small}
             As discussed in~\cite{Lempitsky-2010}, proposals
             should have two properties: \emph{high quality} 
             and \emph{large diversity}.
@@ -149,7 +167,7 @@
                 with random seeds can be used to find
                 cheap proposals.
             \end{itemize}
-
+            \end{small}
             \end{block}
 
           }
@@ -170,15 +188,19 @@
             % fill each column with content
             
             \begin{block}{Results}
+            \small{
             Among all proposed solvers, Fusion-HC-MC has the best overall anytime performance.
+            }
             \includegraphics[width=0.9\linewidth]{res_images.pdf}
 
 
             \end{block}
             \vfill
             \begin{block}{Evaluation by Segmentation Metrics}
+                \small{
                 Evaluation by Variation of Information (VOI) and
                 Rand Index (RI) for datasets with available ground truth:
+                }
                 \vspace{1cm}
 
 
@@ -205,9 +227,11 @@
             % \end{block}
             \vfill
             \begin{block}{References}
+                \begin{multicols}{2}
                 \footnotesize
                 \bibliographystyle{ieee}
                 \bibliography{egbib}
+                \end{multicols}
             \end{block}
             \vfill
           }
