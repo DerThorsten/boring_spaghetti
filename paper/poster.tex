@@ -13,9 +13,11 @@
 \usepackage[orientation=portrait,size=a0,scale=1.4,debug]{beamerposter}
 
 
+    
 
 \usepackage{tikz,pgfplots}
 \usepackage{pgfplotstable}
+
 
 
 
@@ -135,7 +137,7 @@
             should have two properties: \emph{high quality} 
             and \emph{large diversity}.
             For correlation clustering fusion we add a third
-            property: \emph{size}.
+            property: \emph{size}.  
             We use the following two proposal generators (see paper for details):
             \begin{itemize}
                 \item \textbf{Randomized Hierarchical Clustering (RHC):}
@@ -174,12 +176,17 @@
 
             \end{block}
             \vfill
-            \begin{block}{Evaluation by Variation of Information (VI) and Rand Index (RI)}
+            \begin{block}{Evaluation by Segmentation Metrics}
+                Evaluation by Variation of Information (VOI) and
+                Rand Index (RI) for datasets with available ground truth:
+                \vspace{1cm}
+
+
               \centering
               \includegraphics[width=0.7\linewidth]{virib.pdf}            
             \end{block}
             \vfill
-            % \begin{block}{Conclusions}
+            % \begin{block}{Cofonclusions}
             %     We have presented a fast and scalable 
             %     approximate solver for correlation 
             %     clustering, named Correlation Clustering Fusion (CC-Fusion).
