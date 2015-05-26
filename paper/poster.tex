@@ -69,8 +69,7 @@
             Since it is NP-hard, exact solvers do not scale and approximative solvers often give bad results.
             Inspired by \cite{Lempitsky-2010} Here we define fusion moves for the correlation clustering problem.
             Our algorithm iteratively fuses the current and a proposed partitioning which  monotonously improves
-            the partitioning and maintains a valid partitioning at all times.
-            Furthermore, it scales to larger datasets, gives near optimal solutions, and at the same time shows
+            the partitioning. It scales well gives near optimal solutions, and has
             a good anytime performance.
            
             \end{block}
@@ -130,6 +129,26 @@
 
             \end{block}
             \vfill
+            \begin{block}{Proposal Generators}
+
+            As discussed in~\cite{Lempitsky-2010}, proposals
+            should have two properties: \emph{high quality} 
+            and \emph{large diversity}.
+            For correlation clustering fusion we add a third
+            property: \emph{size}.
+            We use the following two proposal generators (see paper for details):
+            \begin{itemize}
+                \item \textbf{Randomized Hierarchical Clustering (RHC):}
+                we add normally distributed noise  $\mathcal{N}(0, \sigma_{ehc})$ to each edge weight.
+                In each step the edge with the highest weight is contracted.
+
+                \item \textbf{Randomized Watersheds (RWS):}
+                The edge weighted watershed algorithm~\cite{meyer_2013}
+                with random seeds can be used to find
+                cheap proposals.
+            \end{itemize}
+
+            \end{block}
 
           }
         \end{minipage}
@@ -149,10 +168,7 @@
             % fill each column with content
             
             \begin{block}{Results}
-            Among all proposed solvers, Fusion-HC-MC has the best overall anytime performance. With increasing problems
-            size (9b-9e and 9f) the runtimes of MC-I, MC-R and CGC increase drastically, while the proposed solvers still scale well.
-
-
+            Among all proposed solvers, Fusion-HC-MC has the best overall anytime performance.
             \includegraphics[width=0.9\linewidth]{res_images.pdf}
 
 
@@ -160,7 +176,7 @@
             \vfill
             \begin{block}{Evaluation by Variation of Information (VI) and Rand Index (RI)}
               \centering
-              \includegraphics[width=0.8\linewidth]{virib.pdf}            
+              \includegraphics[width=0.7\linewidth]{virib.pdf}            
             \end{block}
             \vfill
             % \begin{block}{Conclusions}
@@ -182,7 +198,7 @@
             % \end{block}
             \vfill
             \begin{block}{References}
-                \small
+                \footnotesize
                 \bibliographystyle{ieee}
                 \bibliography{egbib}
             \end{block}
